@@ -21,5 +21,5 @@ TransformationRule >> executeOn: anEngine [
 
 { #category : #accessing }
 TransformationRule >> priority [
-	^ self shouldBeImplemented
+	^ 0
 ]
