@@ -22,6 +22,28 @@ sqlModel := MocoRdbOracleToSqlFacade transform: dbModel.
 sqlModel elements collect: [ :each | each innerElement toSql ].'.
 ]
 
+{ #category : #'as yet unclassified' }
+MocoToolbarUi class >> runTransformations: aModel [
+	| ontoModel umlModel dbModel sqlModel |
+
+	ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: aModel.
+	umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
+	dbModel := MocoUmlToRdbOracleFacade transform: umlModel.
+	sqlModel := MocoRdbOracleToSqlFacade transform: dbModel.
+	
+	Transcript clear.
+	
+	MocoModelPrinter printToTranscript: ontoModel withTitle: 'OntoUML'.
+	Transcript cr.
+	MocoModelPrinter printToTranscript: umlModel withTitle: 'UML'.
+	Transcript cr.
+	MocoModelPrinter printToTranscript: dbModel withTitle: 'Database'.
+	Transcript cr.
+	MocoModelPrinter printToTranscript: sqlModel withTitle: 'SQL'.
+	
+	Transcript openLabel: 'Transformation Result'.
+]
+
 { #category : #toolbar }
 MocoToolbarUi class >> toolbarMenu: aBuilder [
 	<opEditorToolbarMenu: #OPUmlClassEditorPlugin>
@@ -33,4 +55,9 @@ MocoToolbarUi class >> toolbarMenu: aBuilder [
 		icon: OPCoreIcons openponkIcon;
 		action: [ 
 			self openMocoPlayground: (aBuilder model diagramController model) ].
+		
+	(aBuilder item: 'Run Moco transformations')
+		icon: OPCoreIcons openponkIcon;
+		action: [ 
+			self runTransformations: (aBuilder model diagramController model) ].
 ]
