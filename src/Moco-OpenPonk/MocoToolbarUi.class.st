@@ -2,13 +2,13 @@
 OntoUML editor toolbar extension.
 "
 Class {
-	#name : #MocoToolbarUI,
+	#name : #MocoToolbarUi,
 	#superclass : #SpPresenter,
-	#category : #'Moco-OpenPonk-UI'
+	#category : #'Moco-OpenPonk-Ui'
 }
 
 { #category : #'as yet unclassified' }
-MocoToolbarUI class >> openMocoPlayground: aModel [
+MocoToolbarUi class >> openMocoPlayground: aModel [
 	MocoOntoUmlModelStorage model: aModel.
 	
 	StPlayground openContents: '| ontoModel |
@@ -16,7 +16,7 @@ ontoModel := MocoOntoUmlModelStorage model.'.
 ]
 
 { #category : #toolbar }
-MocoToolbarUI class >> toolbarMenu: aBuilder [
+MocoToolbarUi class >> toolbarMenu: aBuilder [
 	<opEditorToolbarMenu: #OPUmlClassEditorPlugin>
 	| appliedProfiles |
 	appliedProfiles := aBuilder model diagramController model profileApplications collect: #appliedProfile.
