@@ -11,14 +11,15 @@ Class {
 MocoToolbarUi class >> openMocoPlayground: aModel [
 	MocoOpenPonkModelStorage ontoUmlModel: aModel.
 	
-	StPlayground openContents: '| openPonkModel ontoModel umlModel dbModel |
+	StPlayground openContents: '| openPonkModel ontoModel umlModel dbModel sqlModel |
 openPonkModel := MocoOpenPonkModelStorage ontoUmlModel.
 
 ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: openPonkModel.
 umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
 dbModel := MocoUmlToRdbOracleFacade transform: umlModel.
+sqlModel := MocoRdbOracleToSqlFacade transform: dbModel.
 
-dbModel elements collect: [ :each | each innerElement ].'.
+sqlModel elements collect: [ :each | each innerElement toSql ].'.
 ]
 
 { #category : #toolbar }
