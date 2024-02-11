@@ -2,20 +2,20 @@
 Stores a OntoUML model in a globally accessible storage.
 "
 Class {
-	#name : #MocoOntoUmlModelStorage,
+	#name : #MocoOpenPonkModelStorage,
 	#superclass : #Object,
 	#classVars : [
-		'Model'
+		'OntoUmlModel'
 	],
 	#category : #'Moco-OpenPonk-Utils'
 }
 
 { #category : #'as yet unclassified' }
-MocoOntoUmlModelStorage class >> model [
-	^ Model
+MocoOpenPonkModelStorage class >> ontoUmlModel [
+	^ OntoUmlModel
 ]
 
 { #category : #accessing }
-MocoOntoUmlModelStorage class >> model: aModel [
-	Model := aModel
+MocoOpenPonkModelStorage class >> ontoUmlModel: aModel [
+	OntoUmlModel := aModel
 ]
