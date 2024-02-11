@@ -17,6 +17,7 @@ MocoTransformationEngine >> applyRule: aRule [
 	"Executes the given transformation rule repeatedly until the output model no longer changes."
 
 	[
+		outModel meta didChange: false.
 		aRule executeOn: self.
 		outModel meta didChange.
 	] whileTrue.
@@ -66,6 +67,7 @@ MocoTransformationEngine >> transform [
 	"Transforms the model using transformation rules."
 
 	[
+		outModel meta didChange: false.
 		self applyRules.
 		outModel meta didChange.
 	] whileTrue.
