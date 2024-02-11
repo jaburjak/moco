@@ -9,10 +9,16 @@ Class {
 
 { #category : #'as yet unclassified' }
 MocoToolbarUi class >> openMocoPlayground: aModel [
-	MocoOntoUmlModelStorage model: aModel.
+	MocoOpenPonkModelStorage ontoUmlModel: aModel.
 	
-	StPlayground openContents: '| ontoModel |
-ontoModel := MocoOntoUmlModelStorage model.'.
+	StPlayground openContents: '| openPonkModel ontoModel umlModel |
+openPonkModel := MocoOpenPonkModelStorage ontoUmlModel.
+
+ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: openPonkModel.
+
+umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
+
+umlModel elements collect: [ :each | each innerElement ].'.
 ]
 
 { #category : #toolbar }
