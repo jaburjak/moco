@@ -30,3 +30,15 @@ MocoOntoUmlKind >> name [
 MocoOntoUmlKind >> name: aString [
 	name := aString
 ]
+
+{ #category : #printing }
+MocoOntoUmlKind >> printTo: aStream [
+	aStream
+		nextPutAll: '|--OntoUML-------';
+		cr;
+		nextPutAll: '| <<Kind>>';
+		cr;
+		nextPutAll: '| ' , name;
+		cr;
+		nextPutAll: '|----------------'.
+]

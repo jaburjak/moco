@@ -30,3 +30,15 @@ MocoUmlClass >> name [
 MocoUmlClass >> name: aString [
 	name := aString
 ]
+
+{ #category : #printing }
+MocoUmlClass >> printTo: aStream [
+	aStream
+		nextPutAll: '|--UML-----------';
+		cr;
+		nextPutAll: '| <<Class>>';
+		cr;
+		nextPutAll: '| ' , name;
+		cr;
+		nextPutAll: '|----------------'.
+]

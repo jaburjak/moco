@@ -19,3 +19,15 @@ MocoRdbOracleTable >> name [
 MocoRdbOracleTable >> name: aString [
 	name := aString
 ]
+
+{ #category : #printing }
+MocoRdbOracleTable >> printTo: aStream [
+	aStream
+		nextPutAll: '|--RDB-----------';
+		cr;
+		nextPutAll: '| <<Table>>';
+		cr;
+		nextPutAll: '| ' , name;
+		cr;
+		nextPutAll: '|----------------'.
+]
