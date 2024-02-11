@@ -17,7 +17,8 @@ MocoWrappedElement class >> from: anElement [
 	
 	| inst |
 	
-	inst := self class new.
+	inst := self basicNew.
+	inst initialize.
 	inst innerElement: anElement.
 	
 	^ inst

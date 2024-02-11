@@ -9,7 +9,16 @@ Class {
 
 { #category : #'instance creation' }
 MocoTransformationRule class >> new [
-	self error: 'TransformationRule should not be instanciated, send new to concrete implementors instead.'
+	| inst |
+
+	self className = 'MocoTransformationRule' ifTrue: [ self error: 'MocoTransformationRule should not be instanciated, send new to concrete implementors instead.' ].
+	
+	inst := self basicNew.
+	inst initialize.
+	
+	^ inst
+	
+	
 ]
 
 { #category : #accessing }
