@@ -2,7 +2,7 @@
 Holds additional meta data about a WrappedModel.
 "
 Class {
-	#name : #ModelMetaData,
+	#name : #MocoModelMetaData,
 	#superclass : #Object,
 	#instVars : [
 		'didChange'
@@ -11,17 +11,17 @@ Class {
 }
 
 { #category : #accessing }
-ModelMetaData >> didChange [
+MocoModelMetaData >> didChange [
 	^ didChange
 ]
 
 { #category : #accessing }
-ModelMetaData >> didChange: aBoolean [
+MocoModelMetaData >> didChange: aBoolean [
 	didChange := aBoolean
 ]
 
 { #category : #initialization }
-ModelMetaData >> initialize [
+MocoModelMetaData >> initialize [
 	super initialize.
 	
 	didChange := false

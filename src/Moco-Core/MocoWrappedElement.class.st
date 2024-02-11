@@ -2,7 +2,7 @@
 Wraps a model element with additional meta data.
 "
 Class {
-	#name : #WrappedElement,
+	#name : #MocoWrappedElement,
 	#superclass : #Object,
 	#instVars : [
 		'innerElement',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-WrappedElement class >> from: anElement [
+MocoWrappedElement class >> from: anElement [
 	"Creates a new instance with the given element."
 	
 	| inst |
@@ -24,35 +24,35 @@ WrappedElement class >> from: anElement [
 ]
 
 { #category : #'instance creation' }
-WrappedElement class >> new [
+MocoWrappedElement class >> new [
 	^ self error: 'WrappedElement should only be created using from:'
 ]
 
 { #category : #initialization }
-WrappedElement >> initialize [
+MocoWrappedElement >> initialize [
 	super initialize.
 	
-	meta := ElementMetaData new.
+	meta := MocoElementMetaData new.
 ]
 
 { #category : #accessing }
-WrappedElement >> innerElement [
+MocoWrappedElement >> innerElement [
 	^ innerElement
 ]
 
 { #category : #accessing }
-WrappedElement >> innerElement: anInnerElement [
+MocoWrappedElement >> innerElement: anInnerElement [
 	innerElement := anInnerElement
 ]
 
 { #category : #testing }
-WrappedElement >> isWrappingType: aClass [
+MocoWrappedElement >> isWrappingType: aClass [
 	"Checks whether the inner element is of the given type."
 
 	^ innerElement isKindOf: aClass
 ]
 
 { #category : #initialization }
-WrappedElement >> meta [
+MocoWrappedElement >> meta [
 	^ meta
 ]

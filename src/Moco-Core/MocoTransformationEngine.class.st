@@ -2,7 +2,7 @@
 Transforms one model to another according to specified rules.
 "
 Class {
-	#name : #TransformationEngine,
+	#name : #MocoTransformationEngine,
 	#superclass : #Object,
 	#instVars : [
 		'rules',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #'private - transforming' }
-TransformationEngine >> applyRule: aRule [
+MocoTransformationEngine >> applyRule: aRule [
 	"Executes the given transformation rule repeatedly until the output model no longer changes."
 
 	[
@@ -23,46 +23,46 @@ TransformationEngine >> applyRule: aRule [
 ]
 
 { #category : #'private - transforming' }
-TransformationEngine >> applyRules [
+MocoTransformationEngine >> applyRules [
 	"Applies transformation rules."
 
 	rules do: [ :rule | self applyRule: rule ]
 ]
 
 { #category : #accessing }
-TransformationEngine >> inModel [
+MocoTransformationEngine >> inModel [
 	^ inModel
 ]
 
 { #category : #accessing }
-TransformationEngine >> inModel: aWrappedModel [
+MocoTransformationEngine >> inModel: aWrappedModel [
 	inModel := aWrappedModel
 ]
 
 { #category : #initialization }
-TransformationEngine >> initialize [
+MocoTransformationEngine >> initialize [
 	super initialize.
 	
 	rules := SortedCollection sortBlock: [ :a :b | (a priority) > (b priority) ].
 ]
 
 { #category : #accessing }
-TransformationEngine >> outModel [
+MocoTransformationEngine >> outModel [
 	^ outModel
 ]
 
 { #category : #accessing }
-TransformationEngine >> outModel: aWrappedModel [
+MocoTransformationEngine >> outModel: aWrappedModel [
 	outModel := aWrappedModel
 ]
 
 { #category : #accessing }
-TransformationEngine >> rules [
+MocoTransformationEngine >> rules [
 	^ rules
 ]
 
 { #category : #transforming }
-TransformationEngine >> transform [
+MocoTransformationEngine >> transform [
 	"Transforms the model using transformation rules."
 
 	[
@@ -74,7 +74,7 @@ TransformationEngine >> transform [
 ]
 
 { #category : #'as yet unclassified' }
-TransformationEngine >> verifyTransformSucceeded [
+MocoTransformationEngine >> verifyTransformSucceeded [
 	"Throws an error in case the input model contains non-exhausted elements."
 
 	(inModel elements anySatisfy: [ :e | e meta exhausted not ]) ifTrue: [ self error: 'Could not transform all elements in the model.' ]

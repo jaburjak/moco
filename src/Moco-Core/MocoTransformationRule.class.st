@@ -2,24 +2,24 @@
 Represents a Transformation Rule.
 "
 Class {
-	#name : #TransformationRule,
+	#name : #MocoTransformationRule,
 	#superclass : #Object,
 	#category : #'Moco-Core-Rule'
 }
 
 { #category : #'instance creation' }
-TransformationRule class >> new [
+MocoTransformationRule class >> new [
 	self error: 'TransformationRule should not be instanciated, send new to concrete implementors instead.'
 ]
 
 { #category : #accessing }
-TransformationRule >> executeOn: anEngine [
+MocoTransformationRule >> executeOn: anEngine [
 	"Executes this transformation rule on the given TransformationEngine."
 
 	^ self shouldBeImplemented
 ]
 
 { #category : #accessing }
-TransformationRule >> priority [
+MocoTransformationRule >> priority [
 	^ 0
 ]

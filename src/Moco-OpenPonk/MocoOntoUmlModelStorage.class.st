@@ -2,7 +2,7 @@
 Stores a OntoUML model in a globally accessible storage.
 "
 Class {
-	#name : #OntoUMLModelStorage,
+	#name : #MocoOntoUmlModelStorage,
 	#superclass : #Object,
 	#classVars : [
 		'Model'
@@ -11,11 +11,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-OntoUMLModelStorage class >> model [
+MocoOntoUmlModelStorage class >> model [
 	^ Model
 ]
 
 { #category : #accessing }
-OntoUMLModelStorage class >> model: aModel [
+MocoOntoUmlModelStorage class >> model: aModel [
 	Model := aModel
 ]

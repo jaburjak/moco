@@ -2,7 +2,7 @@
 Container for WrappedElement instances.
 "
 Class {
-	#name : #WrappedModel,
+	#name : #MocoWrappedModel,
 	#superclass : #Object,
 	#instVars : [
 		'elements',
@@ -12,19 +12,19 @@ Class {
 }
 
 { #category : #accessing }
-WrappedModel >> elements [
+MocoWrappedModel >> elements [
 	^ elements
 ]
 
 { #category : #initialization }
-WrappedModel >> initialize [
+MocoWrappedModel >> initialize [
 	super initialize.
 	
 	elements := OrderedCollection new.
-	meta := ModelMetaData new.
+	meta := MocoModelMetaData new.
 ]
 
 { #category : #accessing }
-WrappedModel >> meta [
+MocoWrappedModel >> meta [
 	^ meta
 ]

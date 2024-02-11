@@ -2,7 +2,7 @@
 Stores meta data about a WrappedElement.
 "
 Class {
-	#name : #ElementMetaData,
+	#name : #MocoElementMetaData,
 	#superclass : #Object,
 	#instVars : [
 		'outElements',
@@ -12,17 +12,17 @@ Class {
 }
 
 { #category : #accessing }
-ElementMetaData >> exhausted [
+MocoElementMetaData >> exhausted [
 	^ exhausted
 ]
 
 { #category : #accessing }
-ElementMetaData >> exhausted: aBoolean [
+MocoElementMetaData >> exhausted: aBoolean [
 	exhausted := aBoolean
 ]
 
 { #category : #initialization }
-ElementMetaData >> initialize [
+MocoElementMetaData >> initialize [
 	super initialize.
 	
 	exhausted := false.
@@ -30,6 +30,6 @@ ElementMetaData >> initialize [
 ]
 
 { #category : #accessing }
-ElementMetaData >> outElements [
+MocoElementMetaData >> outElements [
 	^ outElements
 ]

@@ -9,10 +9,10 @@ Class {
 
 { #category : #'as yet unclassified' }
 MocoToolbarUI class >> openMocoPlayground: aModel [
-	OntoUMLModelStorage model: aModel.
+	MocoOntoUmlModelStorage model: aModel.
 	
 	StPlayground openContents: '| ontoModel |
-ontoModel := OntoUMLModelStorage model.'.
+ontoModel := MocoOntoUmlModelStorage model.'.
 ]
 
 { #category : #toolbar }
