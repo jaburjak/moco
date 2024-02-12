@@ -16,8 +16,8 @@ BaselineOfMoco >> baseline: spec [
 				"Packages"
 				spec
 					package: 'Moco-Core';
-					package: 'Moco-OntoUml' with: [ spec requires: #('Moco-Core') ];
 					package: 'Moco-Uml' with: [ spec requires: #('Moco-Core') ];
+					package: 'Moco-OntoUml' with: [ spec requires: #('Moco-Core' 'Moco-Uml') ];
 					package: 'Moco-O2U' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-Uml') ];
 					package: 'Moco-RdbOracle' with: [ spec requires: #('Moco-Core') ];
 					package: 'Moco-U2D' with: [ spec requires: #('Moco-Core' 'Moco-Uml' 'Moco-RdbOracle') ];
