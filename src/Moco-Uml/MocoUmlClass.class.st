@@ -6,7 +6,8 @@ Class {
 	#superclass : #MocoUmlModelElement,
 	#instVars : [
 		'name',
-		'abstract'
+		'abstract',
+		'attributes'
 	],
 	#category : #'Moco-Uml-Model'
 }
@@ -19,6 +20,19 @@ MocoUmlClass >> abstract [
 { #category : #accessing }
 MocoUmlClass >> abstract: aBoolean [
 	abstract := aBoolean
+]
+
+{ #category : #accessing }
+MocoUmlClass >> attributes [
+	^ attributes
+]
+
+{ #category : #initialization }
+MocoUmlClass >> initialize [
+	super initialize.
+	
+	abstract := false.
+	attributes := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -39,6 +53,10 @@ MocoUmlClass >> printTo: aStream [
 		nextPutAll: '| <<Class>>';
 		cr;
 		nextPutAll: '| ' , name;
-		cr;
+		cr.
+
+	attributes do: [ :each | each printTo: aStream. aStream cr. ].
+
+	aStream
 		nextPutAll: '|----------------'.
 ]

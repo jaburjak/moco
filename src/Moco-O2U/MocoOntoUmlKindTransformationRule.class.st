@@ -39,5 +39,7 @@ MocoOntoUmlKindTransformationRule >> toUmlClass: aKind [
 	uml name: (aKind name);
 		abstract: (aKind abstract).
 	
+	uml attributes addAll: (aKind attributes).
+	
 	^ uml
 ]
