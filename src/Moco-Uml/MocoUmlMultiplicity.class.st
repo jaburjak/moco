@@ -13,19 +13,25 @@ Class {
 	#category : #'Moco-Uml-Model'
 }
 
+{ #category : #initialization }
+MocoUmlMultiplicity >> initialize [
+	lower := MocoUmlMultiplicityBound value: 0.
+	upper := MocoUmlMultiplicityBound unbounded.
+]
+
 { #category : #accessing }
 MocoUmlMultiplicity >> lower [
 	^ lower
 ]
 
 { #category : #accessing }
-MocoUmlMultiplicity >> lower: aNumber [
-	lower := (aNumber = '*') ifTrue: [ nil ] ifFalse: [ aNumber ]
+MocoUmlMultiplicity >> lower: aBound [
+	lower := aBound
 ]
 
 { #category : #printing }
 MocoUmlMultiplicity >> printTo: aStream [
-	((lower = nil or: lower = 0) and: (upper = nil)) ifTrue: [ aStream nextPutAll: '[*]' ] ifFalse: [ aStream nextPutAll: '[' , (lower ifNil: [ '*' ] ifNotNil: [ lower asString ]), '..' , (upper ifNil: [ '*' ] ifNotNil: [ upper asString ]) , ']' ]
+	(((lower isUnbounded) or: (lower value = 0)) and: (upper isUnbounded)) ifTrue: [ aStream nextPutAll: '[*]' ] ifFalse: [ aStream nextPutAll: '[' , (lower asString), '..' , (upper asString) , ']' ]
 ]
 
 { #category : #accessing }
@@ -34,6 +40,6 @@ MocoUmlMultiplicity >> upper [
 ]
 
 { #category : #accessing }
-MocoUmlMultiplicity >> upper: aNumber [
-	upper := (aNumber = '*') ifTrue: [ nil ] ifFalse: [ aNumber ]
+MocoUmlMultiplicity >> upper: aBound [
+	upper := aBound
 ]
