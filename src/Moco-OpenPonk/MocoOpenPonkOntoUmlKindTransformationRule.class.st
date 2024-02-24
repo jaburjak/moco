@@ -49,10 +49,7 @@ MocoOpenPonkOntoUmlKindTransformationRule >> toMocoKind: aKind [
 	| moco |
 	moco := MocoOntoUmlKind new.
 	
-	moco name: (aKind name);
-		abstract: (aKind isAbstract).
-		
-	moco attributes addAll: (self toMocoAttributes: aKind).
+	MocoOpenPonkOntoUmlSortalHelper initialize: moco from: aKind.
 		
 	^ moco
 ]
