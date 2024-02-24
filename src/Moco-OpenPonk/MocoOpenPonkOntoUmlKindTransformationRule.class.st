@@ -27,23 +27,6 @@ MocoOpenPonkOntoUmlKindTransformationRule >> executeOn: anEngine [
 	]
 ]
 
-{ #category : #'private - transforming' }
-MocoOpenPonkOntoUmlKindTransformationRule >> toMocoAttributes: aKind [
-	^ aKind ownedAttributes collect: [ :each |
-		| attr |
-		attr := MocoOntoUmlAttribute new.
-		
-		attr name: each name.
-		each visibility ifNil: [ attr visibility: MocoUmlVisibility public. ] ifNotNil: [ attr visibility visibility: each visibility asSymbol ].
-		attr static: each isStatic.
-		attr multiplicity lower: each lowerValue value.
-		attr multiplicity upper: each upperValue value.
-		each type ifNotNil: [ attr type: each type name ].
-		
-		attr.
-	].
-]
-
 { #category : #'as yet unclassified' }
 MocoOpenPonkOntoUmlKindTransformationRule >> toMocoKind: aKind [
 	| moco |

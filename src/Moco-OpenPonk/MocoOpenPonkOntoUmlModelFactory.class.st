@@ -13,20 +13,23 @@ MocoOpenPonkOntoUmlModelFactory class >> create: aModel [
 	model := MocoWrappedModel new.
 	
 	self wrapKindsFrom: aModel in: model.
+	self wrapSubKindsFrom: aModel in: model.
 	
 	^ model
 ]
 
 { #category : #'as yet unclassified' }
 MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
-	| wrappedModel engine mocoModel |
+	| wrappedModel engine mocoModel rules |
 	wrappedModel := self create: anOpenPonkModel.
 	
 	mocoModel := MocoWrappedModel new.
 	
 	engine := MocoTransformationEngine new.
+	rules := engine rules.
 
-	engine rules add: (MocoOpenPonkOntoUmlKindTransformationRule new).
+	rules add: (MocoOpenPonkOntoUmlKindTransformationRule new);
+		add: (MocoOpenPonkOntoUmlSubKindTransformationRule new).
 	
 	engine inModel: wrappedModel;
 		outModel: mocoModel.
@@ -42,6 +45,21 @@ MocoOpenPonkOntoUmlModelFactory class >> wrapKindsFrom: anOpenPonkModel in: aWra
 	kinds := anOpenPonkModel packagedElements select: [ :e | MocoOpenPonkUmlQuery isElement: e ofStereotype: 'OntoUMLKind' ].
 	
 	kinds do: [ :element |
+		| wrappedElement |
+		wrappedElement := MocoWrappedElement from: element.
+		
+		aWrappedModel elements add: wrappedElement.
+		
+		aWrappedModel meta didChange: true.
+	]
+]
+
+{ #category : #'as yet unclassified' }
+MocoOpenPonkOntoUmlModelFactory class >> wrapSubKindsFrom: anOpenPonkModel in: aWrappedModel [
+	| subkinds |
+	subkinds := anOpenPonkModel packagedElements select: [ :e | MocoOpenPonkUmlQuery isElement: e ofStereotype: 'OntoUMLSubKind' ].
+	
+	subkinds do: [ :element |
 		| wrappedElement |
 		wrappedElement := MocoWrappedElement from: element.
 		
