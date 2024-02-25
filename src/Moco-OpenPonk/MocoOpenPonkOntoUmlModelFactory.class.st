@@ -12,8 +12,10 @@ MocoOpenPonkOntoUmlModelFactory class >> create: aModel [
 	| model |
 	model := MocoWrappedModel new.
 	
-	self wrapKindsFrom: aModel in: model.
-	self wrapSubKindsFrom: aModel in: model.
+	self
+		wrapKindsFrom: aModel in: model;
+		wrapSubKindsFrom: aModel in: model;
+		wrapAssociationsFrom: aModel in: model.
 	
 	^ model
 ]
@@ -29,7 +31,8 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 	rules := engine rules.
 
 	rules add: (MocoOpenPonkOntoUmlKindTransformationRule new);
-		add: (MocoOpenPonkOntoUmlSubKindTransformationRule new).
+		add: (MocoOpenPonkOntoUmlSubKindTransformationRule new);
+		add: (MocoOpenPonkOntoUmlAssociationTransformationRule new).
 	
 	engine inModel: wrappedModel;
 		outModel: mocoModel.
@@ -37,6 +40,21 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 	engine transform.
 	
 	^ mocoModel
+]
+
+{ #category : #'as yet unclassified' }
+MocoOpenPonkOntoUmlModelFactory class >> wrapAssociationsFrom: anOpenPonkModel in: aWrappedModel [
+	| associations |
+	associations := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLAssociation ].
+	
+	associations do: [ :element |
+		| wrappedElement |
+		wrappedElement := MocoWrappedElement from: element.
+		
+		aWrappedModel elements add: wrappedElement.
+		
+		aWrappedModel meta didChange: true.
+	]
 ]
 
 { #category : #'as yet unclassified' }
