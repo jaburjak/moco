@@ -34,5 +34,5 @@ MocoOpenPonkOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 
 { #category : #accessing }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> priority [
-	^ 50
+	^ 51
 ]
