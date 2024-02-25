@@ -58,8 +58,7 @@ MocoOntoUmlAssociation >> printTo: aStream [
 
 	source printTo: aStream.
 	
-	aStream cr; nextPutAll: 'v '.
-	
+	aStream cr; nextPutAll: '| '.
 	target printTo: aStream.
 
 	aStream
