@@ -8,7 +8,8 @@ Class {
 		'element',
 		'name',
 		'visibility',
-		'multiplicity'
+		'multiplicity',
+		'shareability'
 	],
 	#category : #'Moco-OntoUml-Model'
 }
@@ -59,6 +60,17 @@ MocoOntoUmlAssociationSide >> printTo: aStream [
 	element ifNotNil: [ aStream nextPutAll: ' : ' , element name ].
 	aStream nextPutAll: ' '.
 	multiplicity printTo: aStream.
+	shareability ifShared: [ aStream nextPutAll: ' (shared)' ]; ifExclusive: [ aStream nextPutAll: ' (exclusive)' ].
+]
+
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> shareability [
+	^ shareability
+]
+
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> shareability: aShareability [
+	shareability := aShareability
 ]
 
 { #category : #accessing }
