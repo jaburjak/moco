@@ -38,7 +38,8 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 		add: (MocoOpenPonkOntoUmlSubCollectionOfAssociationTransformationRule new);
 		add: (MocoOpenPonkOntoUmlSubQuantityOfAssociationTransformationRule new);
 		add: (MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlContainmentAssociationTransformationRule new).
+		add: (MocoOpenPonkOntoUmlContainmentAssociationTransformationRule new);
+		add: (MocoOpenPonkOntoUmlFormalAssociationTransformationRule new).
 	
 	engine inModel: wrappedModel;
 		outModel: mocoModel.
