@@ -27,6 +27,11 @@ MocoOpenPonkOntoUmlKindTransformationRule >> executeOn: anEngine [
 	]
 ]
 
+{ #category : #accessing }
+MocoOpenPonkOntoUmlKindTransformationRule >> priority [
+	^ 100
+]
+
 { #category : #'as yet unclassified' }
 MocoOpenPonkOntoUmlKindTransformationRule >> toMocoKind: aKind [
 	| moco |
