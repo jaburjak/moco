@@ -25,6 +25,8 @@ MocoOntoUmlAssociation >> derived: aBoolean [
 
 { #category : #initialization }
 MocoOntoUmlAssociation >> initialize [
+	super initialize.
+
 	name := ''.
 	derived := false.
 	source := MocoOntoUmlAssociationSide new.

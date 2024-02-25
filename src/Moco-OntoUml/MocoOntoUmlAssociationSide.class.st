@@ -26,6 +26,8 @@ MocoOntoUmlAssociationSide >> element: anObject [
 
 { #category : #initialization }
 MocoOntoUmlAssociationSide >> initialize [
+	super initialize.
+
 	multiplicity := MocoUmlMultiplicity new.
 	name := ''.
 	visibility := MocoUmlVisibility public.

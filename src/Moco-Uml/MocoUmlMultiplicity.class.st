@@ -15,6 +15,8 @@ Class {
 
 { #category : #initialization }
 MocoUmlMultiplicity >> initialize [
+	super initialize.
+
 	lower := MocoUmlMultiplicityBound value: 0.
 	upper := MocoUmlMultiplicityBound unbounded.
 ]
