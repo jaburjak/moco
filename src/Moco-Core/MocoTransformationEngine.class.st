@@ -30,6 +30,11 @@ MocoTransformationEngine >> applyRules [
 	rules do: [ :rule | self applyRule: rule ]
 ]
 
+{ #category : #'as yet unclassified' }
+MocoTransformationEngine >> findOutElementsFor: anElement [
+	^ ((inModel elements select: [ :each | each innerElement == anElement ]) flatCollect: [ :each | each meta outElements ]).
+]
+
 { #category : #accessing }
 MocoTransformationEngine >> inModel [
 	^ inModel
