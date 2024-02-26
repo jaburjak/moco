@@ -11,8 +11,7 @@ Class {
 MocoOpenPonkOntoUmlSubKindTransformationRule >> executeOn: anEngine [
 	| subkinds |
 
-	subkinds := anEngine inModel elements select: [ :e | MocoOpenPonkUmlQuery isElement: (e innerElement) ofStereotype: 'OntoUMLSubKind' ].
-	subkinds := subkinds select: [ :e | e meta outElements isEmpty ].
+	subkinds := MocoOpenPonkUmlQuery selectElementsFrom: (anEngine inModel) ofStereotype: 'OntoUMLSubKind'.
 	
 	subkinds do: [ :element |
 		| outElement |

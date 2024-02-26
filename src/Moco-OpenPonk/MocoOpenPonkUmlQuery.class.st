@@ -20,3 +20,21 @@ MocoOpenPonkUmlQuery class >> isElement: anElement ofStereotype: aString [
 MocoOpenPonkUmlQuery class >> isElement: anElement ofStereotype: aString ofClass: aClass [
 	^ (anElement isKindOf: aClass) and: (self isElement: anElement ofStereotype: aString)
 ]
+
+{ #category : #selecting }
+MocoOpenPonkUmlQuery class >> selectElementsFrom: aWrappedModel ofStereotype: aString [
+	| elems |
+	elems := aWrappedModel elements select: [ :e | self isElement: (e innerElement) ofStereotype: aString ].
+	elems := elems select: [ :e | e meta outElements isEmpty ].
+	
+	^ elems
+]
+
+{ #category : #selecting }
+MocoOpenPonkUmlQuery class >> selectElementsFrom: aWrappedModel ofStereotype: aString ofClass: aClass [
+	| elems |
+	elems := aWrappedModel elements select: [ :e | self isElement: (e innerElement) ofStereotype: aString ofClass: aClass ].
+	elems := elems select: [ :e | e meta outElements isEmpty ].
+	
+	^ elems
+]

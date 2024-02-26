@@ -10,9 +10,8 @@ Class {
 { #category : #accessing }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 	| associations helper |
-
-	associations := anEngine inModel elements select: [ :e | MocoOpenPonkUmlQuery isElement: (e innerElement) ofStereotype: nil ofClass: OPUMLAssociation ].
-	associations := associations select: [ :e | e meta outElements isEmpty ].
+	
+	associations := MocoOpenPonkUmlQuery selectElementsFrom: (anEngine inModel) ofStereotype: nil ofClass: OPUMLAssociation.
 	
 	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: anEngine.
 	
