@@ -32,6 +32,7 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 	rules add: (MocoOpenPonkOntoUmlClassTransformationRule new);
 		add: (MocoOpenPonkOntoUmlKindTransformationRule new);
 		add: (MocoOpenPonkOntoUmlSubKindTransformationRule new);
+		add: (MocoOpenPonkOntoUmlRoleTransformationRule new);
 		add: (MocoOpenPonkOntoUmlAssociationTransformationRule new);
 		add: (MocoOpenPonkOntoUmlComponentOfAssociationTransformationRule new);
 		add: (MocoOpenPonkOntoUmlMemberOfAssociationTransformationRule new);
