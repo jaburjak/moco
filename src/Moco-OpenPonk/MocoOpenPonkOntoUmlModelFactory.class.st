@@ -7,7 +7,7 @@ Class {
 	#category : #'Moco-OpenPonk-Utils'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - processing' }
 MocoOpenPonkOntoUmlModelFactory class >> create: aModel [
 	| model |
 	model := MocoWrappedModel new.
@@ -19,31 +19,16 @@ MocoOpenPonkOntoUmlModelFactory class >> create: aModel [
 	^ model
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #processing }
 MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
-	| wrappedModel engine mocoModel rules |
+	| wrappedModel engine mocoModel |
 	wrappedModel := self create: anOpenPonkModel.
 	
 	mocoModel := MocoWrappedModel new.
 	
 	engine := MocoTransformationEngine new.
-	rules := engine rules.
 
-	rules add: (MocoOpenPonkOntoUmlClassTransformationRule new);
-		add: (MocoOpenPonkOntoUmlKindTransformationRule new);
-		add: (MocoOpenPonkOntoUmlSubKindTransformationRule new);
-		add: (MocoOpenPonkOntoUmlRoleTransformationRule new);
-		add: (MocoOpenPonkOntoUmlAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlComponentOfAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlMemberOfAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlSubCollectionOfAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlSubQuantityOfAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlContainmentAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlFormalAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlMaterialAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlMediationAssociationTransformationRule new);
-		add: (MocoOpenPonkOntoUmlGeneralizationTransformationRule new).
+	engine rules addAll: (self listTransformationRules collect: [ :each | each new ]).
 	
 	engine inModel: wrappedModel;
 		outModel: mocoModel.
@@ -53,7 +38,16 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 	^ mocoModel
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - accessing' }
+MocoOpenPonkOntoUmlModelFactory class >> listTransformationRules [
+	^ (RPackageOrganizer default packageNamed: 'Moco-OpenPonk') definedClasses select: [ :each |
+		|  className |
+		className := each asString.
+		(className beginsWith: 'MocoOpenPonkOntoUml') and: [ className endsWith: 'TransformationRule' ]
+	]
+]
+
+{ #category : #'private - transforming' }
 MocoOpenPonkOntoUmlModelFactory class >> wrapAssociationsFrom: anOpenPonkModel in: aWrappedModel [
 	| associations |
 	associations := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLAssociation ].
@@ -68,7 +62,7 @@ MocoOpenPonkOntoUmlModelFactory class >> wrapAssociationsFrom: anOpenPonkModel i
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - transforming' }
 MocoOpenPonkOntoUmlModelFactory class >> wrapClassesFrom: anOpenPonkModel in: aWrappedModel [
 	| classes |
 	classes := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLClass ].
