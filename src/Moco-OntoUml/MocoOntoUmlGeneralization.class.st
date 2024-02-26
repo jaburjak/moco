@@ -18,7 +18,7 @@ MocoOntoUmlGeneralization >> printTo: aStream [
 		cr;
 		nextPutAll: '| <<Generalization>>';
 		cr;
-		nextPutAll: '| ' , supertype name , ' is a supertype of ' , subtype name;
+		nextPutAll: '| ' , supertype name , ' <- ' , subtype name;
 		cr;
 		nextPutAll: '|----------------'.
 ]

@@ -47,16 +47,36 @@ MocoOpenPonkOntoUmlGeneralizationHelper >> getMocoGeneralizationsFrom: anOpenPon
 	| op |
 	op := self class extractGeneralizationsFrom: anOpenPonkOntoUmlClass.
 	
-	^ op collect: [ :each | self toMocoGeneralization: each ]
+	^ op flatCollect: [ :each | self toMocoGeneralization: each ]
 ]
 
 { #category : #'private - transforming' }
 MocoOpenPonkOntoUmlGeneralizationHelper >> toMocoGeneralization: anOpenPonkGeneralization [
-	| moco |
+	| coll moco |
+	coll := OrderedCollection new.
 	moco := MocoOntoUmlGeneralization new.
 	
 	moco supertype: ((engine findOutElementsFor: (anOpenPonkGeneralization general)) first innerElement);
 		subtype: ((engine findOutElementsFor: (anOpenPonkGeneralization specific)) first innerElement).
 	
-	^ moco
+	coll add: moco.
+	
+	anOpenPonkGeneralization generalizationSets do: [ :each |
+		| set |
+		set := engine outModel elements select: [ :e | (e innerElement isKindOf: MocoOntoUmlGeneralizationSet) and: [ (e innerElement name) = (each name) ] ].
+		set := set ifEmpty: [ nil ] ifNotEmpty: [ set first innerElement ].
+		
+		set ifNil: [
+			set := MocoOntoUmlGeneralizationSet new.
+			set name: (each name);
+				disjoint: (each isDisjoint);
+				covering: (each isCovering).
+				
+			coll add: set.
+		].
+	
+		set members add: moco.
+	].
+	
+	^ coll
 ]
