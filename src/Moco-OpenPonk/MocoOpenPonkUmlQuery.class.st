@@ -18,7 +18,7 @@ MocoOpenPonkUmlQuery class >> isElement: anElement ofStereotype: aString [
 
 { #category : #testing }
 MocoOpenPonkUmlQuery class >> isElement: anElement ofStereotype: aString ofClass: aClass [
-	^ (anElement isKindOf: aClass) and: (self isElement: anElement ofStereotype: aString)
+	^ (anElement isKindOf: aClass) and: [ self isElement: anElement ofStereotype: aString ]
 ]
 
 { #category : #selecting }
