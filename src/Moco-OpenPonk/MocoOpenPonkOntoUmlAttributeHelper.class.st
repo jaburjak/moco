@@ -15,7 +15,7 @@ MocoOpenPonkOntoUmlAttributeHelper class >> getMocoAttributesFrom: anOpenPonkSor
 		attr static: each isStatic.
 		attr multiplicity lower: (MocoUmlMultiplicityBound value: (each lowerValue value)).
 		attr multiplicity upper: (MocoUmlMultiplicityBound value: (each upperValue value)).
-		each type ifNotNil: [ attr type: each type name ].
+		each type ifNotNil: [ attr type: (MocoOntoUmlType newFromName: (each type name)) ].
 		
 		attr.
 	].
