@@ -44,7 +44,7 @@ MocoUmlAttribute >> printTo: aStream [
 	static ifTrue: [ aStream nextPutAll: '_' ].
 	visibility printTo: aStream.
 	aStream nextPutAll: ' ' , name.
-	type ifNotNil: [ aStream nextPutAll: ' : ' , type ].
+	type ifNotNil: [ aStream nextPutAll: ' : ' , (type name) ].
 	aStream nextPutAll: ' '.
 	multiplicity printTo: aStream.
 ]
@@ -65,8 +65,8 @@ MocoUmlAttribute >> type [
 ]
 
 { #category : #accessing }
-MocoUmlAttribute >> type: aString [
-	type := aString
+MocoUmlAttribute >> type: aMocoUmlType [
+	type := aMocoUmlType
 ]
 
 { #category : #accessing }
