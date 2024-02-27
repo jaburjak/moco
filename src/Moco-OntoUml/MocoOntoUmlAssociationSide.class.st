@@ -31,6 +31,7 @@ MocoOntoUmlAssociationSide >> initialize [
 	multiplicity := MocoUmlMultiplicity new.
 	name := ''.
 	visibility := MocoUmlVisibility public.
+	shareability := MocoOntoUmlAssociationShareability new.
 	
 	^ self
 ]
