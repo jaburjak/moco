@@ -42,7 +42,11 @@ MocoOntoUmlAssociationSide >> multiplicity [
 
 { #category : #accessing }
 MocoOntoUmlAssociationSide >> multiplicity: aMultiplicity [
-	multiplicity := aMultiplicity
+	aMultiplicity ifNil: [
+		multiplicity := MocoUmlMultiplicity new.
+	] ifNotNil: [
+		multiplicity := aMultiplicity
+	]
 ]
 
 { #category : #accessing }
@@ -52,7 +56,11 @@ MocoOntoUmlAssociationSide >> name [
 
 { #category : #accessing }
 MocoOntoUmlAssociationSide >> name: aString [
-	name := aString
+	aString ifNil: [
+		name := ''
+	] ifNotNil: [
+		name := aString
+	]
 ]
 
 { #category : #printing }
@@ -72,7 +80,11 @@ MocoOntoUmlAssociationSide >> shareability [
 
 { #category : #accessing }
 MocoOntoUmlAssociationSide >> shareability: aShareability [
-	shareability := aShareability
+	aShareability ifNil: [
+		shareability := MocoOntoUmlAssociationShareability new.
+	] ifNotNil: [
+		shareability := aShareability
+	]
 ]
 
 { #category : #accessing }
@@ -82,5 +94,9 @@ MocoOntoUmlAssociationSide >> visibility [
 
 { #category : #accessing }
 MocoOntoUmlAssociationSide >> visibility: aVisibility [
-	visibility := aVisibility
+	aVisibility ifNil: [
+		visibility := MocoUmlVisibility public.
+	] ifNotNil: [
+		visibility := aVisibility
+	]
 ]

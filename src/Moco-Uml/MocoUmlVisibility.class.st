@@ -37,6 +37,13 @@ MocoUmlVisibility class >> public [
 	^ inst
 ]
 
+{ #category : #initialization }
+MocoUmlVisibility >> initialize [
+	super initialize.
+	
+	visibility := #public
+]
+
 { #category : #printing }
 MocoUmlVisibility >> printTo: aStream [
 	visibility = #public ifTrue: [ aStream nextPutAll: '+' ].
@@ -51,5 +58,11 @@ MocoUmlVisibility >> visibility [
 
 { #category : #accessing }
 MocoUmlVisibility >> visibility: aSymbol [
-	visibility := aSymbol
+	aSymbol ifNil: [
+		visibility := #public
+	] ifNotNil: [
+		(#(public protected private) noneSatisfy: [ :each | each = aSymbol ]) ifTrue: [ self error: 'Invalid visibility value.' ].
+		
+		visibility := aSymbol
+	]
 ]

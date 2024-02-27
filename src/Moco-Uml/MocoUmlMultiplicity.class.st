@@ -28,7 +28,11 @@ MocoUmlMultiplicity >> lower [
 
 { #category : #accessing }
 MocoUmlMultiplicity >> lower: aBound [
-	lower := aBound
+	aBound ifNil: [
+		lower := MocoUmlMultiplicityBound value: 0.
+	] ifNotNil: [
+		lower := aBound
+	]
 ]
 
 { #category : #printing }
@@ -43,5 +47,9 @@ MocoUmlMultiplicity >> upper [
 
 { #category : #accessing }
 MocoUmlMultiplicity >> upper: aBound [
-	upper := aBound
+	aBound ifNil: [
+		upper := MocoUmlMultiplicityBound unbounded.
+	] ifNotNil: [
+		upper := aBound
+	]
 ]

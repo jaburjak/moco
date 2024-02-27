@@ -18,6 +18,7 @@ Class {
 MocoUmlAttribute >> initialize [
 	super initialize.
 	
+	name := ''.
 	static := false.
 	visibility := MocoUmlVisibility public.
 	multiplicity := MocoUmlMultiplicity new.
@@ -35,7 +36,11 @@ MocoUmlAttribute >> name [
 
 { #category : #accessing }
 MocoUmlAttribute >> name: aString [
-	name := aString
+	aString ifNil: [
+		name := ''
+	] ifNotNil: [
+		name := aString
+	]
 ]
 
 { #category : #printing }
@@ -56,7 +61,11 @@ MocoUmlAttribute >> static [
 
 { #category : #accessing }
 MocoUmlAttribute >> static: aBoolean [
-	static := aBoolean
+	aBoolean ifNil: [
+		static := false
+	] ifNotNil: [
+		static := aBoolean
+	]
 ]
 
 { #category : #accessing }
@@ -76,5 +85,9 @@ MocoUmlAttribute >> visibility [
 
 { #category : #accessing }
 MocoUmlAttribute >> visibility: aVisibility [
-	visibility := aVisibility
+	aVisibility ifNil: [
+		visibility := MocoUmlVisibility public.
+	] ifNotNil: [
+		visibility := aVisibility
+	]
 ]

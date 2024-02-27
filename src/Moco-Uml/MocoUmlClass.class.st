@@ -19,7 +19,11 @@ MocoUmlClass >> abstract [
 
 { #category : #accessing }
 MocoUmlClass >> abstract: aBoolean [
-	abstract := aBoolean
+	aBoolean ifNil: [
+		abstract := false
+	] ifNotNil: [
+		abstract := aBoolean
+	]
 ]
 
 { #category : #accessing }
@@ -42,7 +46,11 @@ MocoUmlClass >> name [
 
 { #category : #accessing }
 MocoUmlClass >> name: aString [
-	name := aString
+	aString ifNil: [
+		name := ''
+	] ifNotNil: [
+		name := aString
+	]
 ]
 
 { #category : #printing }

@@ -63,5 +63,9 @@ MocoOntoUmlAssociationShareability >> type [
 
 { #category : #'private - accessing' }
 MocoOntoUmlAssociationShareability >> type: aSymbol [
+	aSymbol ifNotNil: [
+		(#(shared exclusive) noneSatisfy: [ :each | each = aSymbol ]) ifTrue: [ self error: 'Invalid shareability type.' ]
+	].
+
 	type := aSymbol
 ]

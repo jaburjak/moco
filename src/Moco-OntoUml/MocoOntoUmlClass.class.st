@@ -19,7 +19,11 @@ MocoOntoUmlClass >> abstract [
 
 { #category : #accessing }
 MocoOntoUmlClass >> abstract: aBoolean [
-	abstract := aBoolean
+	aBoolean ifNil: [
+		abstract := false
+	] ifNotNil: [
+		abstract := aBoolean
+	]
 ]
 
 { #category : #accessing }
@@ -31,6 +35,7 @@ MocoOntoUmlClass >> attributes [
 MocoOntoUmlClass >> initialize [
 	super initialize.
 	
+	name := ''.
 	abstract := false.
 	attributes := OrderedCollection new.
 ]
@@ -42,7 +47,11 @@ MocoOntoUmlClass >> name [
 
 { #category : #accessing }
 MocoOntoUmlClass >> name: aString [
-	name := aString
+	aString ifNil: [
+		name := ''
+	] ifNotNil: [
+		name := aString
+	]
 ]
 
 { #category : #printing }

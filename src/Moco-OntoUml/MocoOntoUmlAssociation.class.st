@@ -20,7 +20,11 @@ MocoOntoUmlAssociation >> derived [
 
 { #category : #accessing }
 MocoOntoUmlAssociation >> derived: aBoolean [
-	derived := aBoolean
+	aBoolean ifNil: [ 
+		derived := false
+	] ifNotNil: [
+		derived := aBoolean
+	]
 ]
 
 { #category : #initialization }
@@ -42,7 +46,11 @@ MocoOntoUmlAssociation >> name [
 
 { #category : #accessing }
 MocoOntoUmlAssociation >> name: aString [
-	name := aString
+	aString ifNil: [
+		name := ''
+	] ifNotNil: [
+		name := aString
+	]
 ]
 
 { #category : #printing }

@@ -20,7 +20,11 @@ MocoOntoUmlGeneralizationSet >> covering [
 
 { #category : #testing }
 MocoOntoUmlGeneralizationSet >> covering: aBoolean [
-	covering := aBoolean
+	aBoolean ifNil: [
+		covering := false
+	] ifNotNil: [
+		covering := aBoolean
+	]
 ]
 
 { #category : #accessing }
@@ -30,7 +34,11 @@ MocoOntoUmlGeneralizationSet >> disjoint [
 
 { #category : #testing }
 MocoOntoUmlGeneralizationSet >> disjoint: aBoolean [
-	disjoint := aBoolean
+	aBoolean ifNil: [
+		disjoint := false
+	] ifNotNil: [
+		disjoint := aBoolean
+	]
 ]
 
 { #category : #testing }
@@ -75,7 +83,11 @@ MocoOntoUmlGeneralizationSet >> name [
 
 { #category : #testing }
 MocoOntoUmlGeneralizationSet >> name: aString [
-	name := aString
+	aString ifNil: [
+		name := ''
+	] ifNotNil: [
+		name := aString
+	]
 ]
 
 { #category : #printing }

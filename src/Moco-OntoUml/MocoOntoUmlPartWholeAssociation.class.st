@@ -23,7 +23,11 @@ MocoOntoUmlPartWholeAssociation >> essential [
 
 { #category : #accessing }
 MocoOntoUmlPartWholeAssociation >> essential: aBoolean [
-	essential := aBoolean
+	aBoolean ifNil: [
+		essential := false
+	] ifNotNil: [
+		essential := aBoolean
+	]
 ]
 
 { #category : #initialization }
@@ -41,7 +45,11 @@ MocoOntoUmlPartWholeAssociation >> inseparable [
 
 { #category : #accessing }
 MocoOntoUmlPartWholeAssociation >> inseparable: aBoolean [
-	inseparable := aBoolean
+	aBoolean ifNil: [
+		inseparable := false
+	] ifNotNil: [
+		inseparable := aBoolean
+	]
 ]
 
 { #category : #printing }
