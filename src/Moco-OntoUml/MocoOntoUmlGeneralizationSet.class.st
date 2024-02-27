@@ -96,7 +96,7 @@ MocoOntoUmlGeneralizationSet >> printTo: aStream [
 			covering ifTrue: [ aStream nextPutAll: ', ' ].
 		].
 	
-		covering ifTrue: [ aStream nextPutAll: 'covering' ].
+		covering ifTrue: [ aStream nextPutAll: 'complete' ].
 		
 		aStream nextPutAll: '}'; cr.
 	].
