@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'rules',
 		'inModel',
-		'outModel'
+		'outModel',
+		'spApplication'
 	],
 	#category : #'Moco-Core-Engine'
 }
@@ -28,6 +29,26 @@ MocoTransformationEngine >> applyRules [
 	"Applies transformation rules."
 
 	rules do: [ :rule | self applyRule: rule ]
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
+	| dialog |
+	dialog := (self spApplication) new: MocoChoicePresenter.
+	
+	dialog question: (aMocoChoiceBuilder question).
+	
+	aMocoChoiceBuilder choices do: [ :each |
+		dialog addChoice: (each label) withId: (each id)
+	].
+
+	dialog openAndWait.
+	
+	dialog choice ifNil: [
+		^ aMocoChoiceBuilder choices first id
+	] ifNotNil: [
+		^ dialog choice
+	]
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,6 +86,15 @@ MocoTransformationEngine >> outModel: aWrappedModel [
 { #category : #accessing }
 MocoTransformationEngine >> rules [
 	^ rules
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> spApplication [
+	spApplication ifNil: [
+		spApplication := MocoSpApplication new.
+	].
+
+	^ spApplication
 ]
 
 { #category : #transforming }
