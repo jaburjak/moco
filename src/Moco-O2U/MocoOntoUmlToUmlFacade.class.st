@@ -7,12 +7,21 @@ Class {
 	#category : #'Moco-O2U-Facade'
 }
 
+{ #category : #'private - accessing' }
+MocoOntoUmlToUmlFacade class >> listTransformationRules [
+	^ (RPackageOrganizer default packageNamed: 'Moco-O2U') definedClasses select: [ :each |
+		|  className |
+		className := each asString.
+		(className beginsWith: 'MocoOntoUml') and: [ className endsWith: 'TransformationRule' ]
+	]
+]
+
 { #category : #accessing }
 MocoOntoUmlToUmlFacade class >> transform: aOntoUmlModel [
 	| engine outModel |
 	engine := MocoTransformationEngine new.
 
-	engine rules add: (MocoOntoUmlKindTransformationRule new).
+	self listTransformationRules do: [ :each | engine rules add: (each new) ].
 
 	outModel := MocoWrappedModel new.
 	
