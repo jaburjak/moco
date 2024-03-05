@@ -11,7 +11,7 @@ Class {
 MocoOntoUmlGeneralizationTransformationRule >> executeOn: anEngine [
 	| gens |
 
-	gens := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlGeneralizationTransformationRule ].
+	gens := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | e meta outElements isEmpty ].
 	
 	gens do: [ :element |
 		| outElement |

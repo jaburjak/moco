@@ -14,19 +14,24 @@ MocoOntoUmlGeneralizationSetTransformationRule >> executeOn: anEngine [
 	gens := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralizationSet ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlGeneralizationSetTransformationRule ].
 	
 	gens do: [ :element |
-		| outElement |
-		outElement := MocoWrappedElement from: (self toUmlGeneralizationSet: (element innerElement) on: anEngine).
+		| uml outElement |
+		uml := self toUmlGeneralizationSet: (element innerElement) on: anEngine.
 		
-		anEngine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoOntoUmlGeneralizationSetTransformationRule.
-		
-		outElement innerElement covering ifTrue: [
-			outElement innerElement members do: [ :each | each supertype abstract: true ]
+		uml ifNotNil: [
+			outElement := MocoWrappedElement from: (self toUmlGeneralizationSet: (element innerElement) on: anEngine).
+
+			anEngine outModel elements add: outElement.
+
+			element meta outElements add: outElement.
+
+			outElement innerElement covering ifTrue: [
+				outElement innerElement members do: [ :each | each supertype abstract: true ]
+			].
+
+			anEngine outModel meta didChange: true.
 		].
-			
-		anEngine outModel meta didChange: true.
+	
+		element meta markProcessedBy: #MocoOntoUmlGeneralizationSetTransformationRule.
 	]
 ]
 
@@ -45,11 +50,13 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toUmlGeneralizationSet: aGener
 		name: (aGeneralizationSet name).
 	
 	aGeneralizationSet members do: [ :each |
-		| member |
-		member := (anEngine findOutElementsFor: each) first innerElement.
+		| outElems |
+		outElems := anEngine findOutElementsFor: each.
 		
-		uml members add: member.
+		outElems ifNotEmpty: [ uml members add: (outElems first innerElement) ].
 	].
-	
-	^ uml
+
+	uml members ifEmpty: [ ^ nil ]. "Members of the OntoUML generalization set are not present in the UML model."
+	                                "They were probably transformed into a different construct, making this generalization"
+	^ uml                           "set unnecessary."
 ]
