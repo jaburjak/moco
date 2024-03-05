@@ -9,11 +9,12 @@ Class {
 
 { #category : #'private - accessing' }
 MocoOntoUmlToUmlFacade class >> listTransformationRules [
-	^ (RPackageOrganizer default packageNamed: 'Moco-O2U') definedClasses select: [ :each |
-		|  className |
-		className := each asString.
-		(className beginsWith: 'MocoOntoUml') and: [ className endsWith: 'TransformationRule' ]
-	]
+	^ (RPackageOrganizer default packageNamed: 'Moco-O2U') definedClasses
+		select: [ :each |
+			|  className |
+			className := each asString.
+			(className beginsWith: 'MocoOntoUml') and: [ (className endsWith: 'TransformationRule') and: [ (className = 'MocoOntoUmlClassTransformationRule') not ] ]
+		]
 ]
 
 { #category : #accessing }
