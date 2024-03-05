@@ -1,3 +1,6 @@
+"
+Represents a lower or upper bound of an association multiplicity.
+"
 Class {
 	#name : #MocoUmlMultiplicityBound,
 	#superclass : #Object,

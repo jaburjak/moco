@@ -13,6 +13,28 @@ Class {
 	#category : #'Moco-Uml-Model'
 }
 
+{ #category : #'instance creation' }
+MocoUmlMultiplicity class >> lower: aLowerNumber upper: anUpperNumber [
+	| inst |
+	inst := self new.
+	
+	inst lower: aLowerNumber;
+		upper: anUpperNumber.
+		
+	^ inst
+]
+
+{ #category : #'instance creation' }
+MocoUmlMultiplicity class >> value: aNumber [
+	| inst |
+	inst := self new.
+	
+	inst lower: aNumber;
+		upper: aNumber.
+	
+	^ inst
+]
+
 { #category : #initialization }
 MocoUmlMultiplicity >> initialize [
 	super initialize.
@@ -31,7 +53,9 @@ MocoUmlMultiplicity >> lower: aBound [
 	aBound ifNil: [
 		lower := MocoUmlMultiplicityBound value: 0.
 	] ifNotNil: [
-		lower := aBound
+		(aBound isKindOf: Number)
+			ifTrue: [ lower := MocoUmlMultiplicityBound value: aBound ]
+			ifFalse: [ lower := aBound ]
 	]
 ]
 
@@ -50,6 +74,8 @@ MocoUmlMultiplicity >> upper: aBound [
 	aBound ifNil: [
 		upper := MocoUmlMultiplicityBound unbounded.
 	] ifNotNil: [
-		upper := aBound
+		(aBound isKindOf: Number)
+			ifTrue: [ upper := MocoUmlMultiplicityBound value: aBound ]
+			ifFalse: [ upper := aBound ]
 	]
 ]
