@@ -58,7 +58,7 @@ MocoUmlClass >> printTo: aStream [
 	aStream
 		nextPutAll: '|--UML-----------';
 		cr;
-		nextPutAll: '| <<Class>>';
+		nextPutAll: '| <<' , (abstract ifTrue: [ 'Abstract' ] ifFalse: [ '' ]) , 'Class>>';
 		cr;
 		nextPutAll: '| ' , name;
 		cr.
