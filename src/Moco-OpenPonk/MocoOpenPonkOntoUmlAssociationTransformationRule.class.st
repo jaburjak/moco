@@ -11,7 +11,7 @@ Class {
 MocoOpenPonkOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 	| associations helper |
 	
-	associations := MocoOpenPonkUmlQuery selectElementsFrom: (anEngine inModel) ofStereotype: nil ofClass: OPUMLAssociation.
+	associations := MocoOpenPonkUmlQuery selectElementsFrom: (anEngine inModel) ofStereotype: nil ofClass: OPUMLAssociation ignore: #MocoOpenPonkOntoUmlAssociationTransformationRule.
 	
 	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: anEngine.
 	
@@ -25,7 +25,7 @@ MocoOpenPonkOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 		anEngine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
-		element meta exhausted: true.
+		element meta markProcessedBy: #MocoOpenPonkOntoUmlAssociationTransformationRule.
 			
 		anEngine outModel meta didChange: true.
 	]

@@ -7,11 +7,11 @@ Class {
 	#category : #'Moco-O2U-Rule'
 }
 
-{ #category : #accessing }
+{ #category : #transforming }
 MocoOntoUmlKindTransformationRule >> executeOn: anEngine [
 	| kinds |
 
-	kinds := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlKind ]) select: [ :e | e meta outElements isEmpty ].
+	kinds := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlKind ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlKindTransformationRule ].
 	
 	kinds do: [ :element |
 		| outElement |
@@ -20,7 +20,7 @@ MocoOntoUmlKindTransformationRule >> executeOn: anEngine [
 		anEngine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
-		element meta exhausted: true.
+		element meta markProcessedBy: #MocoOntoUmlKindTransformationRule.
 			
 		anEngine outModel meta didChange: true.
 	]
@@ -31,7 +31,7 @@ MocoOntoUmlKindTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - transforming' }
 MocoOntoUmlKindTransformationRule >> toUmlClass: aKind [
 	| uml |
 	

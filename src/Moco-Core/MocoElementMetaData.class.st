@@ -6,30 +6,40 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'outElements',
-		'exhausted'
+		'processedBy'
 	],
 	#category : #'Moco-Core-Model'
 }
-
-{ #category : #accessing }
-MocoElementMetaData >> exhausted [
-	^ exhausted
-]
-
-{ #category : #accessing }
-MocoElementMetaData >> exhausted: aBoolean [
-	exhausted := aBoolean
-]
 
 { #category : #initialization }
 MocoElementMetaData >> initialize [
 	super initialize.
 	
-	exhausted := false.
 	outElements := OrderedCollection new.
+	processedBy := OrderedCollection new.
+]
+
+{ #category : #testing }
+MocoElementMetaData >> isNotProcessedBy: anObject [
+	^ (self isProcessedBy: anObject) not
+]
+
+{ #category : #testing }
+MocoElementMetaData >> isProcessedBy: anObject [
+	^ processedBy includes: anObject
+]
+
+{ #category : #accessing }
+MocoElementMetaData >> markProcessedBy: anObject [
+	processedBy add: anObject
 ]
 
 { #category : #accessing }
 MocoElementMetaData >> outElements [
 	^ outElements
+]
+
+{ #category : #'private - accessing' }
+MocoElementMetaData >> processedBy [
+	^ processedBy
 ]

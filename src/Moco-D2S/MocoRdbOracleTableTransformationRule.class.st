@@ -11,7 +11,7 @@ Class {
 MocoRdbOracleTableTransformationRule >> executeOn: anEngine [
 	| tables |
 
-	tables := (anEngine inModel elements select: [ :e | e isWrappingType: MocoRdbOracleTable ]) select: [ :e | e meta outElements isEmpty ].
+	tables := (anEngine inModel elements select: [ :e | e isWrappingType: MocoRdbOracleTable ]) select: [ :e | e meta isNotProcessedBy: #MocoRdbOracleTableTransformationRule ].
 	
 	tables do: [ :element |
 		| outElement |
@@ -20,7 +20,7 @@ MocoRdbOracleTableTransformationRule >> executeOn: anEngine [
 		anEngine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
-		element meta exhausted: true.
+		element meta markProcessedBy: #MocoRdbOracleTableTransformationRule.
 			
 		anEngine outModel meta didChange: true.
 	]

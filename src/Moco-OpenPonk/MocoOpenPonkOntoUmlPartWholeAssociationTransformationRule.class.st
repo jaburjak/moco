@@ -12,7 +12,7 @@ MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> executeOn: anEngine
 	| associations helper |
 
 	associations := anEngine inModel elements select: [ :e | (e innerElement isKindOf: OPUMLAssociation) and: [ e innerElement appliedStereotypes anySatisfy: [ :each | each isKindOf: self class stereotypeSelector ] ] ].
-	associations := associations select: [ :e | e meta outElements isEmpty ].
+	associations := associations select: [ :e | (e meta isProcessedBy: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule) not ].
 	
 	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: anEngine.
 	
@@ -29,7 +29,7 @@ MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> executeOn: anEngine
 		anEngine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
-		element meta exhausted: true.
+		element meta markProcessedBy: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule.
 			
 		anEngine outModel meta didChange: true.
 	]

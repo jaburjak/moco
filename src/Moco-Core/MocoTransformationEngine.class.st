@@ -110,9 +110,9 @@ MocoTransformationEngine >> transform [
 	self verifyTransformSucceeded.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - testing' }
 MocoTransformationEngine >> verifyTransformSucceeded [
 	"Throws an error in case the input model contains non-exhausted elements."
 
-	(inModel elements anySatisfy: [ :e | e meta exhausted not ]) ifTrue: [ self error: 'Could not transform all elements in the model.' ]
+	(inModel elements anySatisfy: [ :e | e meta processedBy isEmpty ]) ifTrue: [ self error: 'Could not transform all elements in the model.' ]
 ]

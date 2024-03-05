@@ -23,11 +23,12 @@ MocoOpenPonkUmlQuery class >> isElement: anElement ofStereotype: aString ofClass
 
 { #category : #selecting }
 MocoOpenPonkUmlQuery class >> selectElementsFrom: aWrappedModel ofStereotype: aString [
-	| elems |
-	elems := aWrappedModel elements select: [ :e | self isElement: (e innerElement) ofStereotype: aString ].
-	elems := elems select: [ :e | e meta outElements isEmpty ].
-	
-	^ elems
+	^ aWrappedModel elements select: [ :e | self isElement: (e innerElement) ofStereotype: aString ].
+]
+
+{ #category : #selecting }
+MocoOpenPonkUmlQuery class >> selectElementsFrom: aWrappedModel ofStereotype: aString ignore: anObject [
+	^ (self selectElementsFrom: aWrappedModel ofStereotype: aString) select: [ :each | (each meta isProcessedBy: anObject) not ]
 ]
 
 { #category : #selecting }
@@ -37,4 +38,9 @@ MocoOpenPonkUmlQuery class >> selectElementsFrom: aWrappedModel ofStereotype: aS
 	elems := elems select: [ :e | e meta outElements isEmpty ].
 	
 	^ elems
+]
+
+{ #category : #selecting }
+MocoOpenPonkUmlQuery class >> selectElementsFrom: aWrappedModel ofStereotype: aString ofClass: aClass ignore: anObject [
+	^ (self selectElementsFrom: aWrappedModel ofStereotype: aString ofClass: aClass) select: [ :each | (each meta isProcessedBy: anObject) not ]
 ]

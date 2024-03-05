@@ -11,7 +11,7 @@ Class {
 MocoUmlClassTransformationRule >> executeOn: anEngine [
 	| classes |
 
-	classes := (anEngine inModel elements select: [ :e | e isWrappingType: MocoUmlClass ]) select: [ :e | e meta outElements isEmpty ].
+	classes := (anEngine inModel elements select: [ :e | e isWrappingType: MocoUmlClass ]) select: [ :e | e meta isNotProcessedBy: #MocoUmlClassTransformationRule ].
 	
 	classes do: [ :element |
 		| outElement |
@@ -20,7 +20,7 @@ MocoUmlClassTransformationRule >> executeOn: anEngine [
 		anEngine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
-		element meta exhausted: true.
+		element meta markProcessedBy: #MocoUmlClassTransformationRule.
 			
 		anEngine outModel meta didChange: true.
 	]

@@ -11,7 +11,7 @@ Class {
 MocoOpenPonkOntoUmlGeneralizationTransformationRule >> executeOn: anEngine [
 	| elements helper |
 	elements := anEngine inModel elements select: [ :e | (e innerElement class canUnderstand: #generalizations) and: [ e innerElement generalizations isEmpty not ] ].
-	elements := elements select: [ :e | e meta outElements noneSatisfy: [ :o | o innerElement isKindOf: MocoOntoUmlGeneralization ] ].
+	elements := elements select: [ :e | (e meta isProcessedBy: #MocoOntoUmlGeneralizationTransformationRule) not ].
 	
 	helper := MocoOpenPonkOntoUmlGeneralizationHelper withEngine: anEngine.
 	
@@ -22,6 +22,7 @@ MocoOpenPonkOntoUmlGeneralizationTransformationRule >> executeOn: anEngine [
 		
 		anEngine outModel elements addAll: generalizations.
 		each meta outElements addAll: generalizations.
+		each meta markProcessedBy: #MocoOntoUmlGeneralizationTransformationRule.
 		
 		generalizations isEmpty ifFalse: [ anEngine outModel meta didChange: true ].
 	].
