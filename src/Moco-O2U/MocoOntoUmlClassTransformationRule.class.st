@@ -42,14 +42,14 @@ MocoOntoUmlClassTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlClassTransformationRule >> toUmlClass: aKind [
+MocoOntoUmlClassTransformationRule >> toUmlClass: aMocoOntoUmlClass [
 	| uml |
 	
 	uml := (self class umlClass) new.
-	uml name: (aKind name);
-		abstract: (aKind abstract).
+	uml name: (aMocoOntoUmlClass name);
+		abstract: (aMocoOntoUmlClass abstract).
 	
-	uml attributes addAll: (aKind attributes).
+	uml attributes addAll: (aMocoOntoUmlClass attributes).
 	
 	^ uml
 ]
