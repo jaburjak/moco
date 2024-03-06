@@ -41,7 +41,7 @@ MocoToolbarUi class >> runTransformations: aModel [
 	Transcript cr.
 	MocoModelPrinter printToTranscript: sqlModel withTitle: 'SQL'."
 	
-	Transcript openLabel: 'Transformation Result'.
+	(Transcript openLabel: 'Transformation Result') maximize.
 ]
 
 { #category : #toolbar }
