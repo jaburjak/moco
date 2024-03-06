@@ -13,22 +13,40 @@ MocoOntoUmlPartWholeAssociationTransformationRule class >> modelSelector [
 ]
 
 { #category : #'private - processing' }
+MocoOntoUmlPartWholeAssociationTransformationRule >> findPartSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlPartWholeAssociation [
+	((aMocoOntoUmlPartWholeAssociation source shareability type isNotNil) and: [ aMocoOntoUmlPartWholeAssociation target shareability type isNil ])
+		ifTrue: [
+			^ aMocoUmlAssociation source
+		].
+	
+	((aMocoOntoUmlPartWholeAssociation source shareability type isNil) and: [ aMocoOntoUmlPartWholeAssociation target shareability type isNotNil ])
+		ifTrue: [
+			^ aMocoUmlAssociation target
+		].
+	
+	^ nil
+]
+
+{ #category : #'private - processing' }
+MocoOntoUmlPartWholeAssociationTransformationRule >> findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlPartWholeAssociation [
+	((aMocoOntoUmlPartWholeAssociation source shareability type isNotNil) and: [ aMocoOntoUmlPartWholeAssociation target shareability type isNil ])
+		ifTrue: [
+			^ aMocoUmlAssociation target
+		].
+	
+	((aMocoOntoUmlPartWholeAssociation source shareability type isNil) and: [ aMocoOntoUmlPartWholeAssociation target shareability type isNotNil ])
+		ifTrue: [
+			^ aMocoUmlAssociation source
+		].
+	
+	^ nil
+]
+
+{ #category : #'private - processing' }
 MocoOntoUmlPartWholeAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement onEngine: anEngine [
 	| partSide wholeSide |
-	partSide := nil.
-	wholeSide := nil.
-	
-	((aMocoWrappedElement innerElement source shareability type isNotNil) and: [ aMocoWrappedElement innerElement target shareability type isNil ])
-		ifTrue: [
-			partSide := aMocoUmlAssociation source.
-			wholeSide := aMocoUmlAssociation target
-		].
-	
-	((aMocoWrappedElement innerElement source shareability type isNil) and: [ aMocoWrappedElement innerElement target shareability type isNotNil ])
-		ifTrue: [
-			partSide := aMocoUmlAssociation target.
-			wholeSide := aMocoUmlAssociation source
-		].
+	partSide := (self findPartSide: aMocoUmlAssociation fromOriginal: (aMocoWrappedElement innerElement)).
+	wholeSide := (self findWholeSide: aMocoUmlAssociation fromOriginal: (aMocoWrappedElement innerElement)).
 
 	((partSide isNotNil) and: [ aMocoWrappedElement innerElement essential ])
 		ifTrue: [
