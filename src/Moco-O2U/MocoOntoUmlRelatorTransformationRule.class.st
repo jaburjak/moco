@@ -12,11 +12,6 @@ MocoOntoUmlRelatorTransformationRule class >> modelSelector [
 	^ MocoOntoUmlRelator
 ]
 
-{ #category : #transforming }
-MocoOntoUmlRelatorTransformationRule >> executeOn: anEngine [
-	super executeOn: anEngine.
-]
-
 { #category : #accessing }
 MocoOntoUmlRelatorTransformationRule >> priority [
 	^ 100
