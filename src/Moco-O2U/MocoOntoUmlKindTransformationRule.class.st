@@ -11,3 +11,8 @@ Class {
 MocoOntoUmlKindTransformationRule class >> modelSelector [
 	^ MocoOntoUmlKind
 ]
+
+{ #category : #accessing }
+MocoOntoUmlKindTransformationRule >> priority [
+	^ 100
+]

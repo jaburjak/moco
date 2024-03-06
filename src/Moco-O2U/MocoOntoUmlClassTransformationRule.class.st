@@ -9,7 +9,7 @@ Class {
 
 { #category : #'private - accessing' }
 MocoOntoUmlClassTransformationRule class >> modelSelector [
-	^ self shouldBeImplemented
+	^ MocoOntoUmlClass
 ]
 
 { #category : #'private - accessing' }
@@ -38,7 +38,7 @@ MocoOntoUmlClassTransformationRule >> executeOn: anEngine [
 
 { #category : #accessing }
 MocoOntoUmlClassTransformationRule >> priority [
-	^ 100
+	^ 95
 ]
 
 { #category : #'private - transforming' }
