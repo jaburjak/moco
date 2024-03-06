@@ -52,7 +52,7 @@ MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations: anEngine [
 		
 		association source: source;
 			target: target;
-			name: 'Role ' , each innerElement subtype name , ' of ' , each innerElement supertype name.
+			name: (MocoNamingUtils toCamelCase: (each innerElement subtype name)) , 'Role'.
 		
 		outElement := MocoWrappedElement from: association.
 		
