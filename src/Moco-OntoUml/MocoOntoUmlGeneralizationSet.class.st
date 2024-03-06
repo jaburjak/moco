@@ -96,9 +96,9 @@ MocoOntoUmlGeneralizationSet >> printTo: aStream [
 		nextPutAll: '|--OntoUML-------';
 		cr;
 		nextPutAll: '| <<GeneralizationSet>>';
-		cr;
-		nextPutAll: '| ' , name;
 		cr.
+	
+	name ifNotEmpty: [ aStream nextPutAll: '| ' , name; cr. ].
 	
 	(disjoint or: covering) ifTrue: [
 		aStream nextPutAll: '| {'.
