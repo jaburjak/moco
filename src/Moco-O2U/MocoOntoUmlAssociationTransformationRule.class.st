@@ -58,5 +58,5 @@ MocoOntoUmlAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociati
 
 { #category : #accessing }
 MocoOntoUmlAssociationTransformationRule >> priority [
-	^ 44
+	^ 43
 ]
