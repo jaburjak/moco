@@ -9,23 +9,27 @@ Class {
 
 { #category : #accessing }
 MocoOpenPonkOntoUmlGeneralizationTransformationRule >> executeOn: anEngine [
-	| elements helper |
-	elements := anEngine inModel elements select: [ :e | (e innerElement class canUnderstand: #generalizations) and: [ e innerElement generalizations isEmpty not ] ].
+	| elements |
+	elements := anEngine inModel elements select: [ :e | (e innerElement class canUnderstand: #generalizations) and: [ (e isWrappingType: OPUMLGeneralizationSet) not ] ].
 	elements := elements select: [ :e | (e meta isProcessedBy: #MocoOntoUmlGeneralizationTransformationRule) not ].
 	
-	helper := MocoOpenPonkOntoUmlGeneralizationHelper withEngine: anEngine.
+	elements do: [ :el |
+		el innerElement generalizations do: [ :each |
+			| gen out |
+			gen := MocoOntoUmlGeneralization new.
+		
+			gen supertype: ((anEngine findOutElementsFor: (each general)) first innerElement);
+			subtype: ((anEngine findOutElementsFor: (each specific)) first innerElement).
+			
+			out := MocoWrappedElement from: gen.
+			
+			el meta outElements add: out.
+			anEngine outModel elements add: out.
+			anEngine outModel meta didChange: true.
+		].
 	
-	elements do: [ :each |
-		| generalizations |
-		generalizations := helper getMocoGeneralizationsFrom: (each innerElement).
-		generalizations := generalizations collect: [ :g | MocoWrappedElement from: g ].
-		
-		anEngine outModel elements addAll: generalizations.
-		each meta outElements addAll: generalizations.
-		each meta markProcessedBy: #MocoOntoUmlGeneralizationTransformationRule.
-		
-		generalizations isEmpty ifFalse: [ anEngine outModel meta didChange: true ].
-	].
+		el meta markProcessedBy: #MocoOntoUmlGeneralizationTransformationRule.
+	]
 ]
 
 { #category : #accessing }

@@ -73,6 +73,19 @@ MocoOpenPonkOntoUmlModelFactory class >> wrapClassesFrom: anOpenPonkModel in: aW
 		
 		aWrappedModel elements add: wrappedElement.
 		
+		(element class canUnderstand: #generalizations) ifTrue: [ 
+			| sets |
+			sets := Set new.
+			
+			(element generalizations do: [ :each |
+				each generalizationSets do: [ :set |
+					(aWrappedModel elements contains: [ :e | (e innerElement) == set ]) ifFalse: [
+						aWrappedModel elements add: (MocoWrappedElement from: set)
+					]
+				]
+			]).
+		].
+		
 		aWrappedModel meta didChange: true.
 	]
 ]
