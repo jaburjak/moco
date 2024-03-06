@@ -7,6 +7,11 @@ Class {
 	#category : #'Moco-OpenPonk-Rule'
 }
 
+{ #category : #'instance creation' }
+MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule class >> new [
+	(self asString = 'MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
+]
+
 { #category : #accessing }
 MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> executeOn: anEngine [
 	| associations helper |
