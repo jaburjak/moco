@@ -43,14 +43,5 @@ MocoUmlClassTransformationRule >> toTable: anUmlClass [
 
 { #category : #'as yet unclassified' }
 MocoUmlClassTransformationRule >> transformClassName: aString [
-	| name |
-	name := OrderedCollection new.
-
-	aString do: [ :l | (l isLetter and: (l = (l asUppercase))) ifTrue: [ name add: '_' ]. name add: l asString asUppercase ].
-
-	(name first = '_') ifTrue: [ name := name allButFirst: 1 ].
-
-	name := String streamContents: [ :stream | name do: [ :each | (each = ' ') ifTrue: [ stream nextPutAll: '_' ] ifFalse: [ stream nextPutAll: each ] ] ].
-	
-	^ name
+	^ MocoNamingUtils toUpperSnakeCase: aString
 ]
