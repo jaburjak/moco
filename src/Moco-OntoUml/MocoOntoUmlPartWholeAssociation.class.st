@@ -60,7 +60,11 @@ MocoOntoUmlPartWholeAssociation >> printTo: aStream [
 		nextPutAll: '| <<' , self associationStereotype , '>>';
 		cr.
 		
-	aStream nextPutAll: '| ' , (derived ifTrue: [ '/' ] ifFalse: [ '' ]), name; cr.
+	(derived or: [ name isNotEmpty ]) ifTrue: [
+		aStream
+			nextPutAll: '| ' , (derived ifTrue: [ '/' ] ifFalse: [ '' ]), name;
+			cr.
+	 ].
 	
 	(essential or: inseparable) ifTrue: [ 
 		aStream nextPutAll: '| {'.

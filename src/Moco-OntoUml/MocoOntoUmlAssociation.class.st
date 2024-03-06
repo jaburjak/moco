@@ -59,11 +59,15 @@ MocoOntoUmlAssociation >> printTo: aStream [
 		nextPutAll: '|--OntoUML-------';
 		cr;
 		nextPutAll: '| <<Association>>';
-		cr;
-		nextPutAll: '| ' , (derived ifTrue: [ '/' ] ifFalse: [ '' ]), name;
-		cr;
-		nextPutAll: '| '.
+		cr.
+	
+	(derived or: [ name isNotEmpty ]) ifTrue: [
+		aStream
+			nextPutAll: '| ' , (derived ifTrue: [ '/' ] ifFalse: [ '' ]), name;
+			cr.
+	 ].
 
+	aStream nextPutAll: '| '.
 	source printTo: aStream.
 	
 	aStream cr; nextPutAll: '| '.

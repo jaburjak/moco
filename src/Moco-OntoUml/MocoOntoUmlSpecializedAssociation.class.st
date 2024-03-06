@@ -24,12 +24,14 @@ MocoOntoUmlSpecializedAssociation >> printTo: aStream [
 		cr;
 		nextPutAll: '| <<' , self associationStereotype , '>>';
 		cr.
-		
-	aStream
-		nextPutAll: '| ' , (derived ifTrue: [ '/' ] ifFalse: [ '' ]), name;
-		cr;
-		nextPutAll: '| '.
-
+	
+	(derived or: [ name isNotEmpty ]) ifTrue: [
+		aStream
+			nextPutAll: '| ' , (derived ifTrue: [ '/' ] ifFalse: [ '' ]), name;
+			cr.
+	 ].
+	
+	aStream nextPutAll: '| '.
 	source printTo: aStream.
 
 	aStream cr; nextPutAll: '| '.
