@@ -28,7 +28,7 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 	
 	engine := MocoTransformationEngine new.
 
-	engine rules addAll: (self listTransformationRules collect: [ :each | each new ]).
+	engine rules addAll: ((self listTransformationRules collect: [ :each | [ each new ] on: SubclassResponsibility do: [ nil ] ]) select: [ :each | each isNotNil ]).
 	
 	engine inModel: wrappedModel;
 		outModel: mocoModel.

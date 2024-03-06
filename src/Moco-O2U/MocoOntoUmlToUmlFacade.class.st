@@ -13,7 +13,7 @@ MocoOntoUmlToUmlFacade class >> listTransformationRules [
 		select: [ :each |
 			|  className |
 			className := each asString.
-			(className beginsWith: 'MocoOntoUml') and: [ (className endsWith: 'TransformationRule') and: [ (className = 'MocoOntoUmlClassTransformationRule') not ] ]
+			(className beginsWith: 'MocoOntoUml') and: [ className endsWith: 'TransformationRule' ]
 		]
 ]
 
@@ -22,7 +22,7 @@ MocoOntoUmlToUmlFacade class >> transform: aOntoUmlModel [
 	| engine outModel |
 	engine := MocoTransformationEngine new.
 
-	self listTransformationRules do: [ :each | engine rules add: (each new) ].
+	engine rules addAll: (((self listTransformationRules) collect: [ :each | [ each new ] on: SubclassResponsibility do: [ nil ] ]) select: [ :each | each isNotNil ]).
 
 	outModel := MocoWrappedModel new.
 	
