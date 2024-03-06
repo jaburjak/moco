@@ -83,6 +83,68 @@ MocoOntoUmlPhaseTransformationRule >> transformPhases: anEngine [
 ]
 
 { #category : #'private - transforming' }
+MocoOntoUmlPhaseTransformationRule >> transformUsingAp: aMocoWrappedElement on: anEngine [
+	| partName abstract abstractOut source target association associationOut genSet genSetOut |
+	partName := self generatePhasePartitionName: aMocoWrappedElement on: anEngine.
+
+	abstract := MocoUmlClass new.
+	abstract abstract: true;
+		name: (aMocoWrappedElement innerElement members first supertype name) , partName.
+	
+	abstractOut := MocoWrappedElement from: abstract.
+	anEngine outModel elements add: abstractOut.
+	
+	association := MocoUmlAssociation new.
+	source := MocoUmlAssociationSide new.
+	source element: (self findOutElementFor: (aMocoWrappedElement innerElement members first supertype) on: anEngine);
+		frozen: true;
+		multiplicity: (MocoUmlMultiplicity value: 1);
+		name: 'identityBearer'.
+	target := MocoUmlAssociationSide new.
+	target element: abstract;
+		multiplicity: (MocoUmlMultiplicity value: 1);
+		name: 'condition'.
+	association source: source;
+		target: target;
+		name: (MocoNamingUtils toCamelCase: partName).
+	
+	associationOut := MocoWrappedElement from: association.
+	anEngine outModel elements add: associationOut.
+	
+	genSet := MocoUmlGeneralizationSet new.
+	genSet name: (aMocoWrappedElement innerElement name);
+		disjoint: (aMocoWrappedElement innerElement disjoint);
+		covering: (aMocoWrappedElement innerElement covering).
+	
+	aMocoWrappedElement innerElement members do: [ :each |
+		| generalization outElement meta |
+		
+		generalization := MocoUmlGeneralization new.
+		generalization supertype: abstract;
+			subtype: (self findOutElementFor: (each subtype) on: anEngine).
+		
+		genSet members add: generalization.
+			
+		outElement := MocoWrappedElement from: generalization.
+		
+		meta := ((anEngine inModel elements select: [ :e | (e innerElement) == each ]) first) meta.
+		
+		meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule.
+		meta outElements add: outElement.
+		anEngine outModel elements add: outElement.
+	].
+
+	genSetOut := MocoWrappedElement from: genSet.
+	
+	aMocoWrappedElement meta outElements add: genSetOut.
+	
+	anEngine outModel elements add: genSetOut.
+	
+	aMocoWrappedElement meta outElements add: abstractOut.
+	aMocoWrappedElement meta outElements add: associationOut.
+]
+
+{ #category : #'private - transforming' }
 MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement on: anEngine [
 	| ocl outOcl |
 
