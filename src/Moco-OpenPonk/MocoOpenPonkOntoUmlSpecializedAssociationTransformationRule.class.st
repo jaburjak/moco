@@ -36,6 +36,8 @@ MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> executeOn: anEngi
 		moco := (self class modelClass) new.
 		helper initialize: moco from: (element innerElement).
 		
+		self modifyAssociation: moco.
+		
 		outElement := MocoWrappedElement from: moco.
 		
 		anEngine outModel elements add: outElement.
@@ -45,6 +47,11 @@ MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> executeOn: anEngi
 			
 		anEngine outModel meta didChange: true.
 	]
+]
+
+{ #category : #'private - processing' }
+MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> modifyAssociation: aMocoOntoUmlSpecializedAssociation [
+	"Can be overriden in subclasses."
 ]
 
 { #category : #accessing }

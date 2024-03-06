@@ -16,3 +16,15 @@ MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule class >> modelC
 MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule class >> stereotypeSelector [
 	^ OntoUMLCharacterization
 ]
+
+{ #category : #'private - processing' }
+MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoOntoUmlCharacterizationAssociation [
+	((aMocoOntoUmlCharacterizationAssociation source element isKindOf: MocoOntoUmlQuality) or: [ aMocoOntoUmlCharacterizationAssociation source element isKindOf: MocoOntoUmlMode ])
+		ifTrue: [
+			| tmp |
+			tmp := aMocoOntoUmlCharacterizationAssociation source.
+			
+			aMocoOntoUmlCharacterizationAssociation source: (aMocoOntoUmlCharacterizationAssociation target);
+				target: tmp
+		]
+]
