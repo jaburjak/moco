@@ -7,22 +7,22 @@ Class {
 	#category : #'Moco-U2D-Rule'
 }
 
-{ #category : #accessing }
-MocoUmlClassTransformationRule >> executeOn: anEngine [
+{ #category : #transforming }
+MocoUmlClassTransformationRule >> execute [
 	| classes |
 
-	classes := (anEngine inModel elements select: [ :e | e isWrappingType: MocoUmlClass ]) select: [ :e | e meta isNotProcessedBy: #MocoUmlClassTransformationRule ].
+	classes := (engine inModel elements select: [ :e | e isWrappingType: MocoUmlClass ]) select: [ :e | e meta isNotProcessedBy: #MocoUmlClassTransformationRule ].
 	
 	classes do: [ :element |
 		| outElement |
 		outElement := MocoWrappedElement from: (self toTable: element innerElement).
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoUmlClassTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]
 

@@ -43,7 +43,7 @@ MocoOntoUmlPartWholeAssociationTransformationRule >> findWholeSide: aMocoUmlAsso
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlPartWholeAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement onEngine: anEngine [
+MocoOntoUmlPartWholeAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
 	| partSide wholeSide |
 	partSide := (self findPartSide: aMocoUmlAssociation fromOriginal: (aMocoWrappedElement innerElement)).
 	wholeSide := (self findWholeSide: aMocoUmlAssociation fromOriginal: (aMocoWrappedElement innerElement)).

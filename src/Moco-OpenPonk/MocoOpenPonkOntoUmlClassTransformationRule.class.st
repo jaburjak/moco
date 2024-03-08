@@ -18,11 +18,11 @@ MocoOpenPonkOntoUmlClassTransformationRule class >> stereotypeSelector [
 ]
 
 { #category : #transforming }
-MocoOpenPonkOntoUmlClassTransformationRule >> executeOn: anEngine [
+MocoOpenPonkOntoUmlClassTransformationRule >> execute [
 	| kinds |
 
 	kinds := MocoOpenPonkUmlQuery
-		selectElementsFrom: (anEngine inModel)
+		selectElementsFrom: (engine inModel)
 		ofStereotype: ((self class stereotypeSelector) ifNil: [ nil ] ifNotNil: [ self class stereotypeSelector asString ])
 		ofClass: OPUMLClass
 		ignore: #MocoOpenPonkOntoUmlClassTransformationRule.
@@ -31,12 +31,12 @@ MocoOpenPonkOntoUmlClassTransformationRule >> executeOn: anEngine [
 		| outElement |
 		outElement := MocoWrappedElement from: (self toMocoClass: element innerElement).
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoOpenPonkOntoUmlClassTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]
 

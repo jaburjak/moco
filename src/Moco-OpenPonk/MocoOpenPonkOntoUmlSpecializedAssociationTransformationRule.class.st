@@ -22,14 +22,14 @@ MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule class >> stereotypeS
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
-MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> executeOn: anEngine [
+{ #category : #transforming }
+MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> execute [
 	| associations helper |
 
-	associations := anEngine inModel elements select: [ :e | (e innerElement isKindOf: OPUMLAssociation) and: [ e innerElement appliedStereotypes anySatisfy: [ :each | each isKindOf: self class stereotypeSelector ] ] ].
+	associations := engine inModel elements select: [ :e | (e innerElement isKindOf: OPUMLAssociation) and: [ e innerElement appliedStereotypes anySatisfy: [ :each | each isKindOf: self class stereotypeSelector ] ] ].
 	associations := associations select: [ :e | (e meta isProcessedBy: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule) not ].
 	
-	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: anEngine.
+	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: engine.
 	
 	associations do: [ :element |
 		| moco outElement |
@@ -40,12 +40,12 @@ MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> executeOn: anEngi
 		
 		outElement := MocoWrappedElement from: moco.
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]
 

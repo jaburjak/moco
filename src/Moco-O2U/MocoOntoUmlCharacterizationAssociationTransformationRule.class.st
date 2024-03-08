@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - processing' }
-MocoOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement onEngine: anEngine [
+MocoOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
 	((aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlQuality) or: [ aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlQuality ])
 		ifTrue: [
 			aMocoUmlAssociation source frozen: true.

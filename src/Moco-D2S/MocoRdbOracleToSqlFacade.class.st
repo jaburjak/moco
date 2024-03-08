@@ -12,7 +12,7 @@ MocoRdbOracleToSqlFacade class >> transform: anRdbModel [
 	| engine outModel |
 	engine := MocoTransformationEngine new.
 
-	engine rules add: (MocoRdbOracleTableTransformationRule new).
+	engine rules add: (MocoRdbOracleTableTransformationRule newWithEngine: engine).
 
 	outModel := MocoWrappedModel new.
 	

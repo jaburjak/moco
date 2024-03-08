@@ -8,20 +8,20 @@ Class {
 }
 
 { #category : #accessing }
-MocoOntoUmlGeneralizationSetTransformationRule >> executeOn: anEngine [
+MocoOntoUmlGeneralizationSetTransformationRule >> execute [
 	| gens |
 
-	gens := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralizationSet ])
+	gens := (engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralizationSet ])
 		select: [ :e | (e meta isNotProcessedBy: #MocoOntoUmlGeneralizationSetTransformationRule) and: [ e meta outElements isEmpty ] ].
 	
 	gens do: [ :element |
 		| uml outElement |
-		uml := self toUmlGeneralizationSet: (element innerElement) on: anEngine.
+		uml := self toUmlGeneralizationSet: (element innerElement).
 		
 		uml ifNotNil: [
-			outElement := MocoWrappedElement from: (self toUmlGeneralizationSet: (element innerElement) on: anEngine).
+			outElement := MocoWrappedElement from: uml.
 
-			anEngine outModel elements add: outElement.
+			engine outModel elements add: outElement.
 
 			element meta outElements add: outElement.
 
@@ -29,7 +29,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> executeOn: anEngine [
 				outElement innerElement members do: [ :each | each supertype abstract: true ]
 			].
 
-			anEngine outModel meta didChange: true.
+			engine outModel meta didChange: true.
 		].
 	
 		element meta markProcessedBy: #MocoOntoUmlGeneralizationSetTransformationRule.
@@ -42,7 +42,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlGeneralizationSetTransformationRule >> toUmlGeneralizationSet: aGeneralizationSet on: anEngine [
+MocoOntoUmlGeneralizationSetTransformationRule >> toUmlGeneralizationSet: aGeneralizationSet [
 	| uml |
 	uml := MocoUmlGeneralizationSet new.
 	
@@ -52,7 +52,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toUmlGeneralizationSet: aGener
 	
 	aGeneralizationSet members do: [ :each |
 		| outElems |
-		outElems := anEngine findOutElementsFor: each.
+		outElems := engine findOutElementsFor: each.
 		
 		outElems ifNotEmpty: [ uml members add: (outElems first innerElement) ].
 	].

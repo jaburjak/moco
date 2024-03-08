@@ -12,14 +12,14 @@ MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule class >> new [
 	(self asString = 'MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
 ]
 
-{ #category : #accessing }
-MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> executeOn: anEngine [
+{ #category : #transforming }
+MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> execute [
 	| associations helper |
 
-	associations := anEngine inModel elements select: [ :e | (e innerElement isKindOf: OPUMLAssociation) and: [ e innerElement appliedStereotypes anySatisfy: [ :each | each isKindOf: self class stereotypeSelector ] ] ].
+	associations := engine inModel elements select: [ :e | (e innerElement isKindOf: OPUMLAssociation) and: [ e innerElement appliedStereotypes anySatisfy: [ :each | each isKindOf: self class stereotypeSelector ] ] ].
 	associations := associations select: [ :e | (e meta isProcessedBy: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule) not ].
 	
-	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: anEngine.
+	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: engine.
 	
 	associations do: [ :element |
 		| moco outElement |
@@ -31,11 +31,11 @@ MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> executeOn: anEngine
 		
 		outElement := MocoWrappedElement from: moco.
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]

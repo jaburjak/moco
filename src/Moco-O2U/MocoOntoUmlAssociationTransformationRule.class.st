@@ -12,10 +12,10 @@ MocoOntoUmlAssociationTransformationRule class >> modelSelector [
 	^ MocoOntoUmlAssociation
 ]
 
-{ #category : #accessing }
-MocoOntoUmlAssociationTransformationRule >> executeOn: anEngine [
+{ #category : #transforming }
+MocoOntoUmlAssociationTransformationRule >> execute [
 	| associations |
-	associations := anEngine inModel elements select: [ :each | (each isWrappingType: (self class modelSelector)) and: [ (each meta outElements isEmpty) and: [ (each meta isProcessedBy: #MocoOntoUmlAssociationTransformationRule) not ] ] ].
+	associations := engine inModel elements select: [ :each | (each isWrappingType: (self class modelSelector)) and: [ (each meta outElements isEmpty) and: [ (each meta isProcessedBy: #MocoOntoUmlAssociationTransformationRule) not ] ] ].
 	
 	associations do: [ :each |
 		| uml source target out |
@@ -25,13 +25,13 @@ MocoOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 			derived: (each innerElement derived).
 		
 		source := MocoUmlAssociationSide new.
-		source element: ((anEngine findOutElementsFor: (each innerElement source element)) first innerElement);
+		source element: ((engine findOutElementsFor: (each innerElement source element)) first innerElement);
 			visibility: (each innerElement source visibility);
 			multiplicity: (each innerElement source multiplicity);
 			name: (each innerElement source name).
 		
 		target := MocoUmlAssociationSide new.
-		target element: ((anEngine findOutElementsFor: (each innerElement target element)) first innerElement);
+		target element: ((engine findOutElementsFor: (each innerElement target element)) first innerElement);
 			visibility: (each innerElement target visibility);
 			multiplicity: (each innerElement target multiplicity);
 			name: (each innerElement target name).
@@ -39,12 +39,12 @@ MocoOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 		uml source: source;
 			target: target.
 
-		((self modifyAssociation: uml fromOriginal: each onEngine: anEngine) = false)
+		((self modifyAssociation: uml fromOriginal: each) = false)
 			ifFalse: [
 				out := MocoWrappedElement from: uml.
 				each meta outElements add: out.
-				anEngine outModel elements add: out.
-				anEngine outModel meta didChange: true.
+				engine outModel elements add: out.
+				engine outModel meta didChange: true.
 			].
 		
 		each meta markProcessedBy: #MocoOntoUmlAssociationTransformationRule.
@@ -52,7 +52,7 @@ MocoOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement onEngine: anEngine [
+MocoOntoUmlAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
 	"may be implemented in subclasses"
 ]
 

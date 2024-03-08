@@ -13,15 +13,15 @@ MocoOntoUmlRoleTransformationRule class >> modelSelector [
 ]
 
 { #category : #transforming }
-MocoOntoUmlRoleTransformationRule >> executeOn: anEngine [
-	super executeOn: anEngine.
+MocoOntoUmlRoleTransformationRule >> execute [
+	super execute.
 	
-	self transformRoleGeneralizations: anEngine.
+	self transformRoleGeneralizations.
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlRoleTransformationRule >> findOutElementFor: anObject on: anEngine [
-	^ (anEngine findOutElementsFor: anObject) first innerElement
+MocoOntoUmlRoleTransformationRule >> findOutElementFor: anObject [
+	^ (engine findOutElementsFor: anObject) first innerElement
 ]
 
 { #category : #accessing }
@@ -30,9 +30,9 @@ MocoOntoUmlRoleTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations: anEngine [
+MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations [
 	| gens |
-	gens := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlRoleTransformationRule ].
+	gens := (engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlRoleTransformationRule ].
 	gens := gens select: [ :each | each innerElement subtype isKindOf: MocoOntoUmlRole ].
 	
 	gens do: [ :each |
@@ -41,12 +41,12 @@ MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations: anEngine [
 		source := MocoUmlAssociationSide new.
 		target := MocoUmlAssociationSide new.
 		
-		source element: (self findOutElementFor: (each innerElement supertype) on: anEngine);
+		source element: (self findOutElementFor: (each innerElement supertype));
 			multiplicity: (MocoUmlMultiplicity value: 1);
 			frozen: true;
 			name: 'identityBearer'.
 			
-		target element: (self findOutElementFor: (each innerElement subtype) on: anEngine);
+		target element: (self findOutElementFor: (each innerElement subtype));
 			multiplicity: (MocoUmlMultiplicity lower: 0 upper: 1);
 			name: 'role'.
 		
@@ -59,7 +59,7 @@ MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations: anEngine [
 		each meta outElements add: outElement.
 		each meta markProcessedBy: #MocoOntoUmlRoleTransformationRule.
 		
-		anEngine outModel elements add: outElement.
-		anEngine outModel meta didChange: true.
+		engine outModel elements add: outElement.
+		engine outModel meta didChange: true.
 	]
 ]

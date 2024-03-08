@@ -18,21 +18,21 @@ MocoOntoUmlClassTransformationRule class >> umlClass [
 ]
 
 { #category : #transforming }
-MocoOntoUmlClassTransformationRule >> executeOn: anEngine [
+MocoOntoUmlClassTransformationRule >> execute [
 	| kinds |
 
-	kinds := (anEngine inModel elements select: [ :e | e isWrappingType: (self class modelSelector) ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlClassTransformationRule ].
+	kinds := (engine inModel elements select: [ :e | e isWrappingType: (self class modelSelector) ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlClassTransformationRule ].
 	
 	kinds do: [ :element |
 		| outElement |
 		outElement := MocoWrappedElement from: (self toUmlClass: element innerElement).
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoOntoUmlClassTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]
 

@@ -8,27 +8,27 @@ Class {
 }
 
 { #category : #accessing }
-MocoOntoUmlGeneralizationTransformationRule >> executeOn: anEngine [
+MocoOntoUmlGeneralizationTransformationRule >> execute [
 	| gens |
 
-	gens := (anEngine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | e meta outElements isEmpty ].
+	gens := (engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | e meta outElements isEmpty ].
 	
 	gens do: [ :element |
 		| outElement |
-		outElement := MocoWrappedElement from: (self toUmlGeneralization: (element innerElement) on: anEngine).
+		outElement := MocoWrappedElement from: (self toUmlGeneralization: (element innerElement)).
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoOntoUmlGeneralizationTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlGeneralizationTransformationRule >> findOutElementFor: anElement on: anEngine [
-	^ (anEngine findOutElementsFor: anElement) first innerElement
+MocoOntoUmlGeneralizationTransformationRule >> findOutElementFor: anElement [
+	^ (engine findOutElementsFor: anElement) first innerElement
 ]
 
 { #category : #accessing }
@@ -37,12 +37,12 @@ MocoOntoUmlGeneralizationTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlGeneralizationTransformationRule >> toUmlGeneralization: aGeneralization on: anEngine [
+MocoOntoUmlGeneralizationTransformationRule >> toUmlGeneralization: aGeneralization [
 	| uml |
 	uml := MocoUmlGeneralization new.
 	
-	uml supertype: (self findOutElementFor: (aGeneralization supertype) on: anEngine);
-		subtype: (self findOutElementFor: (aGeneralization subtype) on: anEngine).
+	uml supertype: (self findOutElementFor: (aGeneralization supertype));
+		subtype: (self findOutElementFor: (aGeneralization subtype)).
 	
 	^ uml
 ]

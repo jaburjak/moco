@@ -7,22 +7,22 @@ Class {
 	#category : #'Moco-D2S-Rule'
 }
 
-{ #category : #accessing }
-MocoRdbOracleTableTransformationRule >> executeOn: anEngine [
+{ #category : #transforming }
+MocoRdbOracleTableTransformationRule >> execute [
 	| tables |
 
-	tables := (anEngine inModel elements select: [ :e | e isWrappingType: MocoRdbOracleTable ]) select: [ :e | e meta isNotProcessedBy: #MocoRdbOracleTableTransformationRule ].
+	tables := (engine inModel elements select: [ :e | e isWrappingType: MocoRdbOracleTable ]) select: [ :e | e meta isNotProcessedBy: #MocoRdbOracleTableTransformationRule ].
 	
 	tables do: [ :element |
 		| outElement |
 		outElement := MocoWrappedElement from: (self toCreateTable: element innerElement).
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoRdbOracleTableTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]
 

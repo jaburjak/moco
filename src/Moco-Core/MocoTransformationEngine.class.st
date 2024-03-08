@@ -19,7 +19,7 @@ MocoTransformationEngine >> applyRule: aRule [
 
 	[
 		outModel meta didChange: false.
-		aRule executeOn: self.
+		aRule execute.
 		outModel meta didChange.
 	] whileTrue.
 ]

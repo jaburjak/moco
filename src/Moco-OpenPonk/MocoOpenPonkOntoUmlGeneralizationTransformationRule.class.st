@@ -7,10 +7,10 @@ Class {
 	#category : #'Moco-OpenPonk-Rule'
 }
 
-{ #category : #accessing }
-MocoOpenPonkOntoUmlGeneralizationTransformationRule >> executeOn: anEngine [
+{ #category : #transforming }
+MocoOpenPonkOntoUmlGeneralizationTransformationRule >> execute [
 	| elements |
-	elements := anEngine inModel elements select: [ :e | (e innerElement class canUnderstand: #generalizations) and: [ (e isWrappingType: OPUMLGeneralizationSet) not ] ].
+	elements := engine inModel elements select: [ :e | (e innerElement class canUnderstand: #generalizations) and: [ (e isWrappingType: OPUMLGeneralizationSet) not ] ].
 	elements := elements select: [ :e | (e meta isProcessedBy: #MocoOntoUmlGeneralizationTransformationRule) not ].
 	
 	elements do: [ :el |
@@ -18,14 +18,14 @@ MocoOpenPonkOntoUmlGeneralizationTransformationRule >> executeOn: anEngine [
 			| gen out |
 			gen := MocoOntoUmlGeneralization new.
 		
-			gen supertype: ((anEngine findOutElementsFor: (each general)) first innerElement);
-			subtype: ((anEngine findOutElementsFor: (each specific)) first innerElement).
+			gen supertype: ((engine findOutElementsFor: (each general)) first innerElement);
+			subtype: ((engine findOutElementsFor: (each specific)) first innerElement).
 			
 			out := MocoWrappedElement from: gen.
 			
 			el meta outElements add: out.
-			anEngine outModel elements add: out.
-			anEngine outModel meta didChange: true.
+			engine outModel elements add: out.
+			engine outModel meta didChange: true.
 		].
 	
 		el meta markProcessedBy: #MocoOntoUmlGeneralizationTransformationRule.

@@ -21,7 +21,7 @@ MocoOntoUmlContainmentAssociationTransformationRule >> findPartSide: aMocoUmlAss
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlContainmentAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement onEngine: anEngine [
+MocoOntoUmlContainmentAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
 	| partSide |
 	partSide := (self findPartSide: aMocoUmlAssociation fromOriginal: (aMocoWrappedElement innerElement)).
 

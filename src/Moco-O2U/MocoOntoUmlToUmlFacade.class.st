@@ -22,7 +22,7 @@ MocoOntoUmlToUmlFacade class >> transform: aOntoUmlModel [
 	| engine outModel |
 	engine := MocoTransformationEngine new.
 
-	engine rules addAll: (((self listTransformationRules) collect: [ :each | [ each new ] on: SubclassResponsibility do: [ nil ] ]) select: [ :each | each isNotNil ]).
+	engine rules addAll: (((self listTransformationRules) collect: [ :each | [ each newWithEngine: engine ] on: SubclassResponsibility do: [ nil ] ]) select: [ :each | each isNotNil ]).
 
 	outModel := MocoWrappedModel new.
 	

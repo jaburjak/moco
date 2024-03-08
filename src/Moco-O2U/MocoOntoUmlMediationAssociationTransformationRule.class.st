@@ -13,7 +13,7 @@ MocoOntoUmlMediationAssociationTransformationRule class >> modelSelector [
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlMediationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement onEngine: anEngine [
+MocoOntoUmlMediationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
 	(((aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlRelator) not) and: [ aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlRelator ])
 		ifTrue: [
 			aMocoUmlAssociation source frozen: true

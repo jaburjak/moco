@@ -7,13 +7,13 @@ Class {
 	#category : #'Moco-OpenPonk-Rule'
 }
 
-{ #category : #accessing }
-MocoOpenPonkOntoUmlAssociationTransformationRule >> executeOn: anEngine [
+{ #category : #transforming }
+MocoOpenPonkOntoUmlAssociationTransformationRule >> execute [
 	| associations helper |
 	
-	associations := MocoOpenPonkUmlQuery selectElementsFrom: (anEngine inModel) ofStereotype: nil ofClass: OPUMLAssociation ignore: #MocoOpenPonkOntoUmlAssociationTransformationRule.
+	associations := MocoOpenPonkUmlQuery selectElementsFrom: (engine inModel) ofStereotype: nil ofClass: OPUMLAssociation ignore: #MocoOpenPonkOntoUmlAssociationTransformationRule.
 	
-	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: anEngine.
+	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: engine.
 	
 	associations do: [ :element |
 		| moco outElement |
@@ -22,12 +22,12 @@ MocoOpenPonkOntoUmlAssociationTransformationRule >> executeOn: anEngine [
 		
 		outElement := MocoWrappedElement from: moco.
 		
-		anEngine outModel elements add: outElement.
+		engine outModel elements add: outElement.
 		
 		element meta outElements add: outElement.
 		element meta markProcessedBy: #MocoOpenPonkOntoUmlAssociationTransformationRule.
 			
-		anEngine outModel meta didChange: true.
+		engine outModel meta didChange: true.
 	]
 ]
 

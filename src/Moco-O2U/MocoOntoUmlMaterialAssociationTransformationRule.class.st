@@ -13,7 +13,7 @@ MocoOntoUmlMaterialAssociationTransformationRule class >> modelSelector [
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlMaterialAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement onEngine: anEngine [
+MocoOntoUmlMaterialAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
 	^ false
 ]
 
