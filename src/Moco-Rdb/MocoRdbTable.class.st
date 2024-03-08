@@ -2,26 +2,26 @@
 Represents a table in an Oracle Database.
 "
 Class {
-	#name : #MocoRdbOracleTable,
+	#name : #MocoRdbTable,
 	#superclass : #Object,
 	#instVars : [
 		'name'
 	],
-	#category : #'Moco-RdbOracle-Model'
+	#category : #'Moco-Rdb-Model'
 }
 
 { #category : #accessing }
-MocoRdbOracleTable >> name [
+MocoRdbTable >> name [
 	^ name
 ]
 
 { #category : #accessing }
-MocoRdbOracleTable >> name: aString [
+MocoRdbTable >> name: aString [
 	name := aString
 ]
 
 { #category : #printing }
-MocoRdbOracleTable >> printTo: aStream [
+MocoRdbTable >> printTo: aStream [
 	aStream
 		nextPutAll: '|--RDB-----------';
 		cr;

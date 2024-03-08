@@ -34,7 +34,7 @@ MocoUmlClassTransformationRule >> priority [
 { #category : #'as yet unclassified' }
 MocoUmlClassTransformationRule >> toTable: anUmlClass [
 	| table |
-	table := MocoRdbOracleTable new.
+	table := MocoRdbTable new.
 	
 	table name: (self transformClassName: anUmlClass name).
 	

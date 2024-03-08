@@ -2,13 +2,13 @@
 Facade for transforming a UML model to Oracle relational database.
 "
 Class {
-	#name : #MocoUmlToRdbOracleFacade,
+	#name : #MocoUmlToRdbFacade,
 	#superclass : #Object,
 	#category : #'Moco-U2D-Facade'
 }
 
 { #category : #accessing }
-MocoUmlToRdbOracleFacade class >> transform: aUmlModel [
+MocoUmlToRdbFacade class >> transform: aUmlModel [
 	| engine outModel |
 	engine := MocoTransformationEngine new.
 

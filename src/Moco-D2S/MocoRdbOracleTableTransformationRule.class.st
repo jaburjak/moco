@@ -11,7 +11,7 @@ Class {
 MocoRdbOracleTableTransformationRule >> execute [
 	| tables |
 
-	tables := (engine inModel elements select: [ :e | e isWrappingType: MocoRdbOracleTable ]) select: [ :e | e meta isNotProcessedBy: #MocoRdbOracleTableTransformationRule ].
+	tables := (engine inModel elements select: [ :e | e isWrappingType: MocoRdbTable ]) select: [ :e | e meta isNotProcessedBy: #MocoRdbOracleTableTransformationRule ].
 	
 	tables do: [ :element |
 		| outElement |
