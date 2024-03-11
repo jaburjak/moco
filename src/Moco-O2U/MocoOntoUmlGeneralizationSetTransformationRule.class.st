@@ -52,7 +52,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toUmlGeneralizationSet: aGener
 	
 	aGeneralizationSet members do: [ :each |
 		| outElems |
-		outElems := engine findOutElementsFor: each.
+		outElems := (engine findOutElementsFor: each) select: [ :e | e isWrappingType: MocoUmlGeneralization ].
 		
 		outElems ifNotEmpty: [ uml members add: (outElems first innerElement) ].
 	].

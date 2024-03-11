@@ -155,7 +155,6 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement [
 	outOcl := MocoWrappedElement from: ocl.
 	
 	engine outModel elements add: outOcl.
-	aMocoWrappedElement meta outElements add: outOcl.
 
 	aMocoWrappedElement innerElement members do: [ :each |
 		| source target association outElement generalization |
@@ -185,5 +184,8 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement [
 		generalization meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule.
 		generalization meta outElements add: outElement.
 		engine outModel elements add: outElement.
-	]
+	].
+
+	
+	aMocoWrappedElement meta outElements add: outOcl.
 ]
