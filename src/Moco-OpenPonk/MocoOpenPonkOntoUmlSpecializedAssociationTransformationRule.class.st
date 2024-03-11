@@ -13,8 +13,8 @@ MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule class >> modelClass 
 ]
 
 { #category : #'instance creation' }
-MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule class >> new [
-	(self asString = 'MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
+MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule class >> newWithEngine: anEngine [
+	(self asString = 'MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super newWithEngine: anEngine ]
 ]
 
 { #category : #'private - accessing' }

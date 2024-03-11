@@ -8,8 +8,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule class >> new [
-	(self asString = 'MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
+MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule class >> newWithEngine: anEngine [
+	(self asString = 'MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super newWithEngine: anEngine ]
 ]
 
 { #category : #transforming }

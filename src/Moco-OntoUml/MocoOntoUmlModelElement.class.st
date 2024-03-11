@@ -6,3 +6,8 @@ Class {
 	#superclass : #Object,
 	#category : #'Moco-OntoUml-Model'
 }
+
+{ #category : #'instance creation' }
+MocoOntoUmlModelElement class >> new [
+	(self asString = 'MocoOntoUmlModelElement') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
+]
