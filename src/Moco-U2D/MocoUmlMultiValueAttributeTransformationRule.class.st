@@ -103,5 +103,5 @@ MocoUmlMultiValueAttributeTransformationRule >> generateClassForAttribute: aMoco
 
 { #category : #accessing }
 MocoUmlMultiValueAttributeTransformationRule >> priority [
-	^ 20
+	^ 23
 ]
