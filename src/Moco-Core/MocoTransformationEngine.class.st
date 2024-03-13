@@ -51,6 +51,11 @@ MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
 	]
 ]
 
+{ #category : #accessing }
+MocoTransformationEngine >> findInElementFor: aMocoWrappedElement [
+	^ (inModel elements select: [ :each | each meta outElements anySatisfy: [ :e | e == aMocoWrappedElement ] ]) first
+]
+
 { #category : #'as yet unclassified' }
 MocoTransformationEngine >> findOutElementsFor: anElement [
 	^ ((inModel elements select: [ :each | each innerElement == anElement ]) flatCollect: [ :each | each meta outElements ]).
