@@ -29,7 +29,7 @@ MocoToolbarUi class >> runTransformations: aModel [
 	ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: aModel.
 	umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
 	dbModel := MocoUmlToRdbFacade transform: umlModel.
-	"sqlModel := MocoRdbOracleToSqlFacade transform: dbModel."
+	"sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel last)."
 	
 	Transcript clear.
 	

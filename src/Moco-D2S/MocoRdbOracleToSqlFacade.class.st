@@ -9,10 +9,15 @@ Class {
 
 { #category : #accessing }
 MocoRdbOracleToSqlFacade class >> transform: anRdbModel [
-	| engine outModel |
+	| engine ruleRepo outModel |
 	engine := MocoTransformationEngine new.
 
-	engine rules add: (MocoRdbOracleTableTransformationRule newWithEngine: engine).
+	ruleRepo := MocoTransformationRuleDynamicRepository new.
+	ruleRepo rulesPackage: 'Moco-D2S';
+		rulesTag: 'Rule';
+		classPrefix: 'MocoRdbOracle'.
+		
+	ruleRepo injectTo: engine.
 
 	outModel := MocoWrappedModel new.
 	

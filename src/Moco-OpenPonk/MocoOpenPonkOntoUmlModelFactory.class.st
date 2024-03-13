@@ -21,14 +21,19 @@ MocoOpenPonkOntoUmlModelFactory class >> create: aModel [
 
 { #category : #processing }
 MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
-	| wrappedModel engine mocoModel |
+	| wrappedModel engine ruleRepo mocoModel |
 	wrappedModel := self create: anOpenPonkModel.
 	
 	mocoModel := MocoWrappedModel new.
 	
 	engine := MocoTransformationEngine new.
-
-	engine rules addAll: ((self listTransformationRules collect: [ :each | [ each newWithEngine: engine ] on: SubclassResponsibility do: [ nil ] ]) select: [ :each | each isNotNil ]).
+	
+	ruleRepo := MocoTransformationRuleDynamicRepository new.
+	ruleRepo rulesPackage: 'Moco-OpenPonk';
+		rulesTag: 'Rule';
+		classPrefix: 'MocoOpenPonkOntoUml'.
+	
+	ruleRepo injectTo: engine.
 	
 	engine inModel: wrappedModel;
 		outModel: mocoModel.
@@ -36,15 +41,6 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 	engine transform.
 	
 	^ mocoModel
-]
-
-{ #category : #'private - accessing' }
-MocoOpenPonkOntoUmlModelFactory class >> listTransformationRules [
-	^ (RPackageOrganizer default packageNamed: 'Moco-OpenPonk') definedClasses select: [ :each |
-		|  className |
-		className := each asString.
-		(className beginsWith: 'MocoOpenPonkOntoUml') and: [ className endsWith: 'TransformationRule' ]
-	]
 ]
 
 { #category : #'private - transforming' }
