@@ -11,9 +11,19 @@ Class {
 MocoNamingUtils class >> toCamelCase: aString [
 	| str |
 	str := aString asCamelCase.
-	str := (str first asLowercase asString) , (str allButFirst: 1).
+	str := self toFirstLowerCase: str.
 	
 	^ str
+]
+
+{ #category : #transforming }
+MocoNamingUtils class >> toFirstLowerCase: aString [
+	^ (aString first asLowercase asString) , (aString allButFirst: 1)
+]
+
+{ #category : #transforming }
+MocoNamingUtils class >> toFirstUpperCase: aString [
+	^ (aString first asUppercase asString) , (aString allButFirst: 1)
 ]
 
 { #category : #transforming }
