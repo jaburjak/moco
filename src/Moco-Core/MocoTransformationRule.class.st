@@ -27,6 +27,8 @@ MocoTransformationRule class >> newWithEngine: anEngine [
 	
 	inst engine: anEngine.
 	
+	inst initialize.
+	
 	^ inst
 ]
 
