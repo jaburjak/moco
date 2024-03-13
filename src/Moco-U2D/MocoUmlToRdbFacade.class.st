@@ -7,12 +7,15 @@ Class {
 	#category : #'Moco-U2D-Facade'
 }
 
-{ #category : #accessing }
-MocoUmlToRdbFacade class >> transform: aUmlModel [
+{ #category : #'private - transforming' }
+MocoUmlToRdbFacade class >> preprocess: aUmlModel [
 	| engine outModel |
 	engine := MocoTransformationEngine new.
 
-	engine rules add: (MocoUmlClassTransformationRule newWithEngine: engine).
+	engine rules
+		add: (MocoUmlRdbCopyTransformationRule newWithEngine: engine);
+		add: (MocoUmlNonNativeRdbTypeTransformationRule newWithEngine: engine);
+		add: (MocoUmlMultiValueAttributeTransformationRule newWithEngine: engine).
 
 	outModel := MocoWrappedModel new.
 	
@@ -22,4 +25,14 @@ MocoUmlToRdbFacade class >> transform: aUmlModel [
 	engine transform.
 	
 	^ outModel.
+]
+
+{ #category : #accessing }
+MocoUmlToRdbFacade class >> transform: aUmlModel [
+	| preModel outModel |
+	preModel := self preprocess: aUmlModel.
+	
+	outModel := preModel.
+	
+	^ { preModel. outModel }.
 ]
