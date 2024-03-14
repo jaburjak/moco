@@ -5,10 +5,31 @@ Class {
 	#name : #MocoRdbTable,
 	#superclass : #Object,
 	#instVars : [
-		'name'
+		'name',
+		'columns',
+		'constraints'
 	],
 	#category : #'Moco-Rdb-Model'
 }
+
+{ #category : #accessing }
+MocoRdbTable >> columns [
+	^ columns
+]
+
+{ #category : #accessing }
+MocoRdbTable >> constraints [
+	^ constraints
+]
+
+{ #category : #initialization }
+MocoRdbTable >> initialize [
+	super initialize.
+	
+	name := ''.
+	columns := OrderedCollection new.
+	constraints := OrderedCollection new
+]
 
 { #category : #accessing }
 MocoRdbTable >> name [
@@ -28,6 +49,19 @@ MocoRdbTable >> printTo: aStream [
 		nextPutAll: '| <<Table>>';
 		cr;
 		nextPutAll: '| ' , name;
-		cr;
-		nextPutAll: '|----------------'.
+		cr.
+	
+	columns do: [ :each |
+		aStream nextPutAll: '| * '.
+		each printTo: aStream.
+		aStream cr.
+	].
+	
+	constraints do: [ :each |
+		aStream nextPutAll: '| + '.
+		each printTo: aStream.
+		aStream cr.
+	].
+	
+	aStream nextPutAll: '|----------------'.
 ]
