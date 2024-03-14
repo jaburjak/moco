@@ -146,11 +146,12 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAp: aMocoWrappedElement [
 
 { #category : #'private - transforming' }
 MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement [
-	| ocl outOcl |
+	| context ocl outOcl |
+	context := self findOutElementFor: (aMocoWrappedElement innerElement members first supertype).
 
 	ocl := MocoOclExclusivePhaseCondition new.
-	ocl context: (self findOutElementFor: (aMocoWrappedElement innerElement members first supertype));
-		name: (self generatePhasePartitionName: aMocoWrappedElement).
+	ocl context: context;
+		name: ('EX_' , (self generatePhasePartitionName: aMocoWrappedElement) , '_Condition').
 	
 	outOcl := MocoWrappedElement from: ocl.
 	
