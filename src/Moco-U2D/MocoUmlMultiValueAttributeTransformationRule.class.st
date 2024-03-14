@@ -74,6 +74,8 @@ MocoUmlMultiValueAttributeTransformationRule >> generateAssociationFrom: aMocoWr
 	target multiplicity lower value: (aMocoUmlAttribute multiplicity lower value).
 	target multiplicity upper value: (aMocoUmlAttribute multiplicity upper value).
 	
+	aMocoUmlAttribute immutable ifTrue: [ target frozen: true ].
+	
 	association name: (MocoNamingUtils toCamelCase: ((aMocoWrappedElement innerElement name) , ' ' , (aMocoUmlAttribute name)));
 		source: source;
 		target: target.
@@ -91,7 +93,8 @@ MocoUmlMultiValueAttributeTransformationRule >> generateClassForAttribute: aMoco
 	attribute := MocoUmlAttribute new.
 	
 	attribute name: (aMocoUmlAttribute name);
-		type: (aMocoUmlAttribute type).
+		type: (aMocoUmlAttribute type);
+		immutable: (aMocoUmlAttribute immutable).
 		
 	attribute multiplicity lower value: 1.
 	attribute multiplicity upper value: 1.

@@ -8,11 +8,22 @@ Class {
 		'name',
 		'visibility',
 		'static',
+		'immutable',
 		'multiplicity',
 		'type'
 	],
 	#category : #'Moco-Uml-Model'
 }
+
+{ #category : #accessing }
+MocoUmlAttribute >> immutable [
+	^ immutable
+]
+
+{ #category : #accessing }
+MocoUmlAttribute >> immutable: aBoolean [
+	immutable := aBoolean
+]
 
 { #category : #initialization }
 MocoUmlAttribute >> initialize [
@@ -22,6 +33,7 @@ MocoUmlAttribute >> initialize [
 	static := false.
 	visibility := MocoUmlVisibility public.
 	multiplicity := MocoUmlMultiplicity new.
+	immutable := false
 ]
 
 { #category : #accessing }
@@ -52,6 +64,8 @@ MocoUmlAttribute >> printTo: aStream [
 	type ifNotNil: [ aStream nextPutAll: ' : ' , (type name) ].
 	aStream nextPutAll: ' '.
 	multiplicity printTo: aStream.
+	
+	immutable ifTrue: [ aStream nextPutAll: ' {readOnly}' ]
 ]
 
 { #category : #accessing }
