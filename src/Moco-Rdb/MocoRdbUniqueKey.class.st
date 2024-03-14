@@ -1,0 +1,35 @@
+"
+Represents a UNIQUE KEY constraint in a relational database.
+"
+Class {
+	#name : #MocoRdbUniqueKey,
+	#superclass : #MocoRdbConstraint,
+	#instVars : [
+		'columns'
+	],
+	#category : #'Moco-Rdb-Model'
+}
+
+{ #category : #accessing }
+MocoRdbUniqueKey >> columns [
+	^ columns
+]
+
+{ #category : #accessing }
+MocoRdbUniqueKey >> initialize [
+	super initialize.
+	
+	columns := OrderedCollection new
+]
+
+{ #category : #printing }
+MocoRdbUniqueKey >> printTo: aStream [
+	aStream nextPutAll: '<<unique>> '.
+
+	super printTo: aStream.
+	
+	aStream
+		nextPutAll: '(';
+		nextPutAll: (', ' join: (columns collect: [ :each | each name ]));
+		nextPutAll: ')'
+]
