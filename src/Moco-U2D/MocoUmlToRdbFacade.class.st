@@ -36,7 +36,7 @@ MocoUmlToRdbFacade class >> transform: aUmlModel [
 	
 	outModel := MocoWrappedModel new.
 	
-	"engine := MocoTransformationEngine new.
+	engine := MocoTransformationEngine new.
 	
 	engine inModel: preModel;
 		outModel: outModel.
@@ -48,7 +48,7 @@ MocoUmlToRdbFacade class >> transform: aUmlModel [
 	
 	ruleRepo injectTo: engine.
 	
-	engine transform."
+	engine transform.
 	
 	^ { preModel. outModel }.
 ]
