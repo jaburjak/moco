@@ -11,7 +11,8 @@ Class {
 MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
 	self fixGeneralizations;
 		fixGeneralizationSets;
-		fixAssociations
+		fixAssociations;
+		fixExclusivePhaseConditions
 ]
 
 { #category : #'private - transforming' }
@@ -33,6 +34,33 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixAssociations [
 	].
 
 	associations ifNotEmpty: [
+		engine outModel meta didChange: true
+	]
+]
+
+{ #category : #'private - processing' }
+MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusivePhaseConditions [
+	| ocls |
+	ocls := engine outModel elements select: [ :each | (each isWrappingType: MocoOclExclusivePhaseCondition) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	
+	ocls do: [ :each |
+		| original context associations |
+		original := engine findInElementFor: each.
+		
+		context := (engine findOutElementsFor: (original innerElement context)) first innerElement.
+		
+		associations := original innerElement phaseAssociations collect: [ :a |
+			(engine findOutElementsFor: a) first innerElement
+		].
+		
+		each innerElement context: context.
+		each innerElement phaseAssociations removeAll.
+		each innerElement phaseAssociations addAll: associations.
+		
+		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
+	].
+
+	ocls ifNotEmpty: [
 		engine outModel meta didChange: true
 	]
 ]
