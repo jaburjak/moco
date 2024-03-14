@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #transforming }
-MocoOntoUmlToUmlFacade class >> transform: aOntoUmlModel [
+MocoOntoUmlToUmlFacade class >> transform: aMocoWrappedModel [
 	| engine ruleRepo outModel |
 	engine := MocoTransformationEngine new.
 
@@ -21,7 +21,7 @@ MocoOntoUmlToUmlFacade class >> transform: aOntoUmlModel [
 
 	outModel := MocoWrappedModel new.
 	
-	engine inModel: aOntoUmlModel;
+	engine inModel: (MocoWrappedModelFactory fromModel: aMocoWrappedModel);
 		outModel: outModel.
 		
 	engine transform.

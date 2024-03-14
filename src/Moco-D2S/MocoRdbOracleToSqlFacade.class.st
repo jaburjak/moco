@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-MocoRdbOracleToSqlFacade class >> transform: anRdbModel [
+MocoRdbOracleToSqlFacade class >> transform: aMocoWrappedModel [
 	| engine ruleRepo outModel |
 	engine := MocoTransformationEngine new.
 
@@ -21,7 +21,7 @@ MocoRdbOracleToSqlFacade class >> transform: anRdbModel [
 
 	outModel := MocoWrappedModel new.
 	
-	engine inModel: anRdbModel;
+	engine inModel: (MocoWrappedModelFactory fromModel: aMocoWrappedModel);
 		outModel: outModel.
 		
 	engine transform.

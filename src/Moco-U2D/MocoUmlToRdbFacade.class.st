@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - transforming' }
-MocoUmlToRdbFacade class >> preprocess: aUmlModel [
+MocoUmlToRdbFacade class >> preprocess: aMocoWrappedModel [
 	| engine ruleRepo outModel |
 	engine := MocoTransformationEngine new.
 
@@ -21,7 +21,7 @@ MocoUmlToRdbFacade class >> preprocess: aUmlModel [
 
 	outModel := MocoWrappedModel new.
 	
-	engine inModel: aUmlModel;
+	engine inModel: (MocoWrappedModelFactory fromModel: aMocoWrappedModel);
 		outModel: outModel.
 		
 	engine transform.
@@ -30,15 +30,15 @@ MocoUmlToRdbFacade class >> preprocess: aUmlModel [
 ]
 
 { #category : #accessing }
-MocoUmlToRdbFacade class >> transform: aUmlModel [
+MocoUmlToRdbFacade class >> transform: aMocoWrappedModel [
 	| preModel engine ruleRepo outModel |
-	preModel := self preprocess: aUmlModel.
+	preModel := self preprocess: aMocoWrappedModel.
 	
 	outModel := MocoWrappedModel new.
 	
 	engine := MocoTransformationEngine new.
 	
-	engine inModel: preModel;
+	engine inModel: (MocoWrappedModelFactory fromModel: preModel);
 		outModel: outModel.
 		
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
