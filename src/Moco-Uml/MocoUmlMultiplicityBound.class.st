@@ -41,8 +41,53 @@ MocoUmlMultiplicityBound >> asString [
 ]
 
 { #category : #testing }
+MocoUmlMultiplicityBound >> isBounded [
+	^ self isUnbounded not
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isMandatory [
+	^ (value isNil) or: [ value > 0 ]
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isMultiple [
+	^ (self isUnbounded) or: [ value > 1 ]
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isNotOne [
+	^ (value isNil) or: [ value ~= 1 ]
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isNotZero [
+	^ (value isNil) or: [ value ~= 0 ]
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isOne [
+	^ (value isNotNil) and: [ value = 1 ]
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isOptional [
+	^ (value isNotNil) and: [ value <= 0 ]
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isSingle [
+	^ (self isMultiple) not
+]
+
+{ #category : #testing }
 MocoUmlMultiplicityBound >> isUnbounded [
 	^ value isNil
+]
+
+{ #category : #testing }
+MocoUmlMultiplicityBound >> isZero [
+	^ (value isNotNil) and: [ value = 0 ]
 ]
 
 { #category : #testing }
