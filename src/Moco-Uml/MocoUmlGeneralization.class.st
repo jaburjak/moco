@@ -14,13 +14,13 @@ Class {
 { #category : #accessing }
 MocoUmlGeneralization >> printTo: aStream [
 	aStream
-		nextPutAll: '|--UML-----------';
+		nextPutAll: '+--UML-----------';
 		cr;
 		nextPutAll: '| <<Generalization>>';
 		cr;
 		nextPutAll: '| ' , supertype name , ' <- ' , subtype name;
 		cr;
-		nextPutAll: '|----------------'.
+		nextPutAll: '+----------------'.
 ]
 
 { #category : #accessing }

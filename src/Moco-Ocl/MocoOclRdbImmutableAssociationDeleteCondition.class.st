@@ -45,7 +45,7 @@ MocoOclRdbImmutableAssociationDeleteCondition >> printTo: aStream [
 		nextPutAll: (column name);
 		nextPutAll: '))';
 		cr;
-		nextPutAll: '|----------------'
+		nextPutAll: '+----------------'
 ]
 
 { #category : #accessing }

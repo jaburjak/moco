@@ -29,5 +29,5 @@ MocoOclExclusivePhaseCondition >> printTo: aStream [
 	aStream
 		nextPutAll: '| ', (' XOR ' join: (phaseAssociations collect: [ :each | 'self.' , (each name) , ' <> OclVoid' ]));
 		cr;
-		nextPutAll: '|----------------'
+		nextPutAll: '+----------------'
 ]

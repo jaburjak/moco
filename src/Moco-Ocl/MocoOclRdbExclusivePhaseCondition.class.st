@@ -81,5 +81,5 @@ MocoOclRdbExclusivePhaseCondition >> printTo: aStream [
 		nextPutAll: '| ';
 		nextPutAll: (' XOR ' join: (phaseTables collect: [ :each | self generatePhaseVariableName: each ]));
 		cr;
-		nextPutAll: '|----------------'
+		nextPutAll: '+----------------'
 ]

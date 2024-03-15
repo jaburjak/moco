@@ -56,7 +56,7 @@ MocoUmlClass >> name: aString [
 { #category : #printing }
 MocoUmlClass >> printTo: aStream [
 	aStream
-		nextPutAll: '|--UML-----------';
+		nextPutAll: '+--UML-----------';
 		cr;
 		nextPutAll: '| <<' , (abstract ifTrue: [ 'Abstract' ] ifFalse: [ '' ]) , 'Class>>';
 		cr;
@@ -66,5 +66,5 @@ MocoUmlClass >> printTo: aStream [
 	attributes do: [ :each | each printTo: aStream. aStream cr. ].
 
 	aStream
-		nextPutAll: '|----------------'.
+		nextPutAll: '+----------------'.
 ]

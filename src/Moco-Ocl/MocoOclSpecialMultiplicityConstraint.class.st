@@ -60,7 +60,7 @@ MocoOclSpecialMultiplicityConstraint >> printTo: aStream [
 	].
 	
 	aStream cr;
-		nextPutAll: '|----------------'
+		nextPutAll: '+----------------'
 ]
 
 { #category : #accessing }

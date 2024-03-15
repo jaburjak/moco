@@ -20,7 +20,7 @@ MocoOntoUmlSpecializedAssociation >> associationStereotype [
 { #category : #printing }
 MocoOntoUmlSpecializedAssociation >> printTo: aStream [
 	aStream
-		nextPutAll: '|--OntoUML-------';
+		nextPutAll: '+--OntoUML-------';
 		cr;
 		nextPutAll: '| <<' , self associationStereotype , '>>';
 		cr.
@@ -39,5 +39,5 @@ MocoOntoUmlSpecializedAssociation >> printTo: aStream [
 
 	aStream
 		cr;
-		nextPutAll: '|----------------'.
+		nextPutAll: '+----------------'.
 ]

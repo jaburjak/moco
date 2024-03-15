@@ -44,7 +44,7 @@ MocoRdbTable >> name: aString [
 { #category : #printing }
 MocoRdbTable >> printTo: aStream [
 	aStream
-		nextPutAll: '|--RDB-----------';
+		nextPutAll: '+--RDB-----------';
 		cr;
 		nextPutAll: '| <<Table>>';
 		cr;
@@ -63,5 +63,5 @@ MocoRdbTable >> printTo: aStream [
 		aStream cr.
 	].
 	
-	aStream nextPutAll: '|----------------'.
+	aStream nextPutAll: '+----------------'.
 ]

@@ -33,7 +33,7 @@ MocoOclMandatoryMultiplicityConstraint >> printTo: aStream [
 		nextPutAll: (targetColumn name);
 		nextPutAll: ')';
 		cr;
-		nextPutAll: '|----------------'
+		nextPutAll: '+----------------'
 ]
 
 { #category : #accessing }

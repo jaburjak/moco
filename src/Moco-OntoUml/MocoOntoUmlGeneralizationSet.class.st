@@ -93,7 +93,7 @@ MocoOntoUmlGeneralizationSet >> name: aString [
 { #category : #printing }
 MocoOntoUmlGeneralizationSet >> printTo: aStream [
 	aStream
-		nextPutAll: '|--OntoUML-------';
+		nextPutAll: '+--OntoUML-------';
 		cr;
 		nextPutAll: '| <<GeneralizationSet>>';
 		cr.
@@ -117,5 +117,5 @@ MocoOntoUmlGeneralizationSet >> printTo: aStream [
 		aStream nextPutAll: '| + ' , each supertype name , ' <- ' , each subtype name; cr.
 	].
 	
-	aStream nextPutAll: '|----------------'.
+	aStream nextPutAll: '+----------------'.
 ]

@@ -52,7 +52,7 @@ MocoUmlAssociation >> name: aString [
 { #category : #accessing }
 MocoUmlAssociation >> printTo: aStream [
 	aStream
-		nextPutAll: '|--UML-----------';
+		nextPutAll: '+--UML-----------';
 		cr;
 		nextPutAll: '| <<Association>>';
 		cr.
@@ -71,7 +71,7 @@ MocoUmlAssociation >> printTo: aStream [
 
 	aStream
 		cr;
-		nextPutAll: '|----------------'.
+		nextPutAll: '+----------------'.
 ]
 
 { #category : #accessing }

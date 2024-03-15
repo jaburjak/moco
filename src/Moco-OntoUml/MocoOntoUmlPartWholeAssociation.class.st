@@ -55,7 +55,7 @@ MocoOntoUmlPartWholeAssociation >> inseparable: aBoolean [
 { #category : #printing }
 MocoOntoUmlPartWholeAssociation >> printTo: aStream [
 	aStream
-		nextPutAll: '|--OntoUML-------';
+		nextPutAll: '+--OntoUML-------';
 		cr;
 		nextPutAll: '| <<' , self associationStereotype , '>>';
 		cr.
@@ -81,5 +81,5 @@ MocoOntoUmlPartWholeAssociation >> printTo: aStream [
 
 	aStream
 		cr;
-		nextPutAll: '|----------------'.
+		nextPutAll: '+----------------'.
 ]

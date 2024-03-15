@@ -57,7 +57,7 @@ MocoOntoUmlClass >> name: aString [
 { #category : #printing }
 MocoOntoUmlClass >> printTo: aStream [
 	aStream
-		nextPutAll: '|--OntoUML-------';
+		nextPutAll: '+--OntoUML-------';
 		cr;
 		nextPutAll: '| <<' , (self class asString copyReplaceAll: 'MocoOntoUml' with: '') , '>>';
 		cr;
@@ -67,5 +67,5 @@ MocoOntoUmlClass >> printTo: aStream [
 	attributes do: [ :each | each printTo: aStream. aStream cr. ].
 
 	aStream
-		nextPutAll: '|----------------'.
+		nextPutAll: '+----------------'.
 ]

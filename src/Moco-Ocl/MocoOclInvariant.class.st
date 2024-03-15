@@ -46,7 +46,7 @@ MocoOclInvariant >> name: aString [
 { #category : #printing }
 MocoOclInvariant >> printTo: aStream [
 	aStream
-		nextPutAll: '|--OCL-----------';
+		nextPutAll: '+--OCL-----------';
 		cr;
 		nextPutAll: '| context ' , context name , ' inv ' , name , ':';
 		cr

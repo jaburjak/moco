@@ -62,7 +62,7 @@ MocoOclCondition >> operation: aByteSymbol [
 { #category : #printing }
 MocoOclCondition >> printTo: aStream [
 	aStream
-		nextPutAll: '|--OCL-----------';
+		nextPutAll: '+--OCL-----------';
 		cr;
 		nextPutAll: '| context ';
 		nextPutAll: context name;

@@ -31,5 +31,5 @@ MocoOclRdbImmutableColumnCondition >> printTo: aStream [
 		nextPutAll: (column name);
 		nextPutAll: '@pre';
 		cr;
-		nextPutAll: '|----------------'
+		nextPutAll: '+----------------'
 ]

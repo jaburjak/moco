@@ -93,7 +93,7 @@ MocoUmlGeneralizationSet >> name: aString [
 { #category : #testing }
 MocoUmlGeneralizationSet >> printTo: aStream [
 	aStream
-		nextPutAll: '|--UML-----------';
+		nextPutAll: '+--UML-----------';
 		cr;
 		nextPutAll: '| <<GeneralizationSet>>';
 		cr.
@@ -117,5 +117,5 @@ MocoUmlGeneralizationSet >> printTo: aStream [
 		aStream nextPutAll: '| + ' , each supertype name , ' <- ' , each subtype name; cr.
 	].
 	
-	aStream nextPutAll: '|----------------'.
+	aStream nextPutAll: '+----------------'.
 ]
