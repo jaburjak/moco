@@ -41,6 +41,8 @@ MocoNamingUtils class >> toUpperSnakeCase: aString [
 	
 	aString ifEmpty: [ ^ aString ].
 	
+	(aString asUppercase = aString) ifTrue: [ ^ aString ].
+	
 	str := OrderedCollection new.
 
 	aString do: [ :l | (l isLetter and: (l = (l asUppercase))) ifTrue: [ str add: '_' ]. str add: l asString asUppercase ].
