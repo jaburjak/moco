@@ -18,11 +18,15 @@ MocoNamingUtils class >> toCamelCase: aString [
 
 { #category : #transforming }
 MocoNamingUtils class >> toFirstLowerCase: aString [
+	aString ifEmpty: [ ^ aString ].
+	
 	^ (aString first asLowercase asString) , (aString allButFirst: 1)
 ]
 
 { #category : #transforming }
 MocoNamingUtils class >> toFirstUpperCase: aString [
+	aString ifEmpty: [ ^ aString ].
+	
 	^ (aString first asUppercase asString) , (aString allButFirst: 1)
 ]
 
@@ -34,6 +38,9 @@ MocoNamingUtils class >> toPascalCase: aString [
 { #category : #transforming }
 MocoNamingUtils class >> toUpperSnakeCase: aString [
 	| str |
+	
+	aString ifEmpty: [ ^ aString ].
+	
 	str := OrderedCollection new.
 
 	aString do: [ :l | (l isLetter and: (l = (l asUppercase))) ifTrue: [ str add: '_' ]. str add: l asString asUppercase ].
