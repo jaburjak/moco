@@ -42,5 +42,7 @@ MocoNamingUtils class >> toUpperSnakeCase: aString [
 
 	str := String streamContents: [ :stream | str do: [ :each | (each = ' ') ifTrue: [ stream nextPutAll: '_' ] ifFalse: [ stream nextPutAll: each ] ] ].
 	
+	str := ('_+' asRegex) copy: str replacingMatchesWith: '_'.
+	
 	^ str
 ]
