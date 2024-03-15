@@ -11,3 +11,10 @@ Class {
 MocoOclPostCondition class >> type [
 	^ #post
 ]
+
+{ #category : #initialization }
+MocoOclPostCondition >> initialize [
+	super initialize.
+	
+	operation := #UPDATE
+]
