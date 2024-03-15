@@ -9,7 +9,8 @@ Class {
 		'name',
 		'visibility',
 		'multiplicity',
-		'shareability'
+		'shareability',
+		'frozen'
 	],
 	#category : #'Moco-OntoUml-Model'
 }
@@ -24,6 +25,16 @@ MocoOntoUmlAssociationSide >> element: anObject [
 	element := anObject
 ]
 
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> frozen [
+	^ frozen
+]
+
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> frozen: aBoolean [
+	frozen := aBoolean
+]
+
 { #category : #initialization }
 MocoOntoUmlAssociationSide >> initialize [
 	super initialize.
@@ -32,6 +43,7 @@ MocoOntoUmlAssociationSide >> initialize [
 	name := ''.
 	visibility := MocoUmlVisibility public.
 	shareability := MocoOntoUmlAssociationShareability new.
+	frozen := false.
 	
 	^ self
 ]
@@ -72,6 +84,7 @@ MocoOntoUmlAssociationSide >> printTo: aStream [
 	aStream nextPutAll: ' '.
 	multiplicity printTo: aStream.
 	shareability ifShared: [ aStream nextPutAll: ' (shared)' ]; ifExclusive: [ aStream nextPutAll: ' (exclusive)' ].
+	frozen ifTrue: [ aStream nextPutAll: ' {frozen}' ]
 ]
 
 { #category : #accessing }

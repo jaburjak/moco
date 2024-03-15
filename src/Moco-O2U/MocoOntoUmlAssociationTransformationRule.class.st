@@ -28,13 +28,15 @@ MocoOntoUmlAssociationTransformationRule >> execute [
 		source element: ((engine findOutElementsFor: (each innerElement source element)) first innerElement);
 			visibility: (each innerElement source visibility);
 			multiplicity: (each innerElement source multiplicity);
-			name: (each innerElement source name).
+			name: (each innerElement source name);
+			frozen: (each innerElement source frozen).
 		
 		target := MocoUmlAssociationSide new.
 		target element: ((engine findOutElementsFor: (each innerElement target element)) first innerElement);
 			visibility: (each innerElement target visibility);
 			multiplicity: (each innerElement target multiplicity);
-			name: (each innerElement target name).
+			name: (each innerElement target name);
+			frozen: (each innerElement target frozen).
 		
 		uml source: source;
 			target: target.

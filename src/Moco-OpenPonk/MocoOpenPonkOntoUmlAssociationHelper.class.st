@@ -45,7 +45,8 @@ MocoOpenPonkOntoUmlAssociationHelper >> toMocoSide: aProperty [
 	moco name: aProperty name;
 		element: (engine findOutElementsFor: aProperty type) first innerElement;
 		visibility: (MocoOpenPonkOntoUmlVisibilityHelper toMocoVisibility: aProperty visibility);
-		shareability: (MocoOpenPonkOntoUmlShareabilityHelper toMocoShareability: aProperty aggregation).
+		shareability: (MocoOpenPonkOntoUmlShareabilityHelper toMocoShareability: aProperty aggregation);
+		frozen: (aProperty isReadOnly).
 		
 	((aProperty lowerValue isNil) and: (aProperty upperValue isNil))
 		ifTrue: [
