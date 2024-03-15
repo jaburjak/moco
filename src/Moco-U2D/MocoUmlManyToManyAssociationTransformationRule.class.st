@@ -53,13 +53,19 @@ MocoUmlManyToManyAssociationTransformationRule >> execute [
 
 { #category : #'private - processing' }
 MocoUmlManyToManyAssociationTransformationRule >> generateIntermediatingClass: aMocoUmlAssociation [
-	| class infix |
+	| class infix source target |
 	class := MocoUmlClass new.
 	
 	infix := 'To'.
 	aMocoUmlAssociation name ifNotEmpty: [ infix := MocoNamingUtils toPascalCase: (aMocoUmlAssociation name) ].
 	
-	class name: ((MocoNamingUtils toPascalCase: (aMocoUmlAssociation source name)) , '_' , infix , '_' , (MocoNamingUtils toPascalCase: (aMocoUmlAssociation target name))).
+	source := aMocoUmlAssociation source name.
+	source ifEmpty: [ source := aMocoUmlAssociation source element name ].
+	
+	target := aMocoUmlAssociation target name.
+	target ifEmpty: [ target := aMocoUmlAssociation target element name ].
+	
+	class name: ((MocoNamingUtils toPascalCase: source) , '_' , infix , '_' , (MocoNamingUtils toPascalCase: target)).
 	
 	^ class
 ]
@@ -75,7 +81,7 @@ MocoUmlManyToManyAssociationTransformationRule >> generateSourceAssociation: aMo
 	source multiplicity upper value: (aMocoUmlAssociation target multiplicity upper value).
 	
 	target := MocoUmlAssociationSide new.
-	target element: (aMocoUmlAssociation source);
+	target element: (aMocoUmlAssociation source element);
 		name: (aMocoUmlAssociation source name).
 	target multiplicity lower value: 1.
 	target multiplicity upper value: 1.
@@ -97,7 +103,7 @@ MocoUmlManyToManyAssociationTransformationRule >> generateTargetAssociation: aMo
 	source multiplicity upper value: (aMocoUmlAssociation source multiplicity upper value).
 	
 	target := MocoUmlAssociationSide new.
-	target element: (aMocoUmlAssociation target);
+	target element: (aMocoUmlAssociation target element);
 		name: (aMocoUmlAssociation target name).
 	target multiplicity lower value: 1.
 	target multiplicity upper value: 1.
