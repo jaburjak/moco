@@ -199,7 +199,7 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 		engine outModel elements add: ocl
 	].
 
-	(referencedSide frozen) ifTrue: [
+	((referencedSide frozen) or: [ referencingSide frozen ]) ifTrue: [
 		| ocl |
 		ocl := self generateImmutableColumnConstraintForTable: referencingTable andColumn: column.
 		ocl := MocoWrappedElement from: ocl.
@@ -209,15 +209,12 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 	].
 
 	(referencingSide frozen) ifTrue: [
-		| updOcl delOcl |
-		updOcl := self generateImmutableColumnConstraintForTable: referencingTable andColumn: column.
-		updOcl := MocoWrappedElement from: updOcl.
+		| ocl |
+		ocl := self generateDeleteConstraintForTable: referencingTable andColumn: column withTargetTable: referencedTable andColumn: (foreignKey columns first).
+		ocl := MocoWrappedElement from: ocl.
 		
-		delOcl := self generateDeleteConstraintForTable: referencingTable andColumn: column withTargetTable: referencedTable andColumn: (foreignKey columns first).
-		delOcl := MocoWrappedElement from: delOcl.
-		
-		aMocoWrappedElement meta outElements addAll: { updOcl. delOcl }.
-		engine outModel elements addAll: { updOcl. delOcl }
+		aMocoWrappedElement meta outElements add: ocl.
+		engine outModel elements add: ocl
 	].
 	
 	aMocoWrappedElement meta markProcessedBy: #MocoUmlAssociationTransformationRule
