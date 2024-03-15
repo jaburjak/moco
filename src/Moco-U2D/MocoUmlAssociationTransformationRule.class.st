@@ -31,6 +31,8 @@ MocoUmlAssociationTransformationRule >> findPrimaryKey: aMocoRdbTable [
 
 { #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> findReferencedSideOf: aMocoUmlAssociation [
+	"Returns the referenced (target) side of the association."
+	
 	| referencing |
 	referencing := self findReferencingSideOf: aMocoUmlAssociation.
 	
@@ -41,6 +43,8 @@ MocoUmlAssociationTransformationRule >> findReferencedSideOf: aMocoUmlAssociatio
 
 { #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> findReferencingSideOf: aMocoUmlAssociation [
+	"Returns the referencing (source) side of the association."
+	
 	(aMocoUmlAssociation source multiplicity upper isMultiple)
 		ifTrue: [ ^ (aMocoUmlAssociation source) ]. "many-to-one"
 	
@@ -62,6 +66,34 @@ MocoUmlAssociationTransformationRule >> findTableFor: aMocoUmlClass [
 ]
 
 { #category : #'private - processing' }
+MocoUmlAssociationTransformationRule >> generateDeleteConstraintForTable: aMocoRdbTable andColumn: aMocoRdbColumn withTargetTable: aMocoRdbTable2 andColumn: aMocoRdbColumn2 [
+	| ocl |
+	ocl := MocoOclRdbImmutableAssociationDeleteCondition new.
+	
+	ocl name: ('IM_' , (aMocoRdbTable name) , '_' , (aMocoRdbColumn name) , '_DEL');
+		context: aMocoRdbTable;
+		operation: #DELETE;
+		column: aMocoRdbColumn;
+		targetTable: aMocoRdbTable2;
+		targetColumn: aMocoRdbColumn2.
+	
+	^ ocl
+]
+
+{ #category : #'private - processing' }
+MocoUmlAssociationTransformationRule >> generateImmutableColumnConstraintForTable: aMocoRdbTable andColumn: aMocoRdbColumn [
+	| ocl |
+	ocl := MocoOclRdbImmutableColumnCondition new.
+	
+	ocl name: ('IM_' , (aMocoRdbTable name) , '_' , (aMocoRdbColumn name) , '_UPD');
+		context: aMocoRdbTable;
+		operation: #UPDATE;
+		column: aMocoRdbColumn.
+	
+	^ ocl
+]
+
+{ #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> generateMandatoryMultiplicityConstraintForSourceTable: aMocoRdbTable andColumn: aMocoRdbColumn andTargetTable: aMocoRdbTable2 andColumn: aMocoRdbColumn2 [
 	| ocl |
 	ocl := MocoOclMandatoryMultiplicityConstraint new.
@@ -75,7 +107,7 @@ MocoUmlAssociationTransformationRule >> generateMandatoryMultiplicityConstraintF
 ]
 
 { #category : #'private - processing' }
-MocoUmlAssociationTransformationRule >> generateReferenceColumn: aMocoUmlAssociation [
+MocoUmlAssociationTransformationRule >> generateReferencingColumn: aMocoUmlAssociation [
 	| column referenced referencedTable primaryKey |
 	column := MocoRdbColumn new.
 	referenced := self findReferencedSideOf: aMocoUmlAssociation.
@@ -120,7 +152,7 @@ MocoUmlAssociationTransformationRule >> priority [
 { #category : #'private - transforming' }
 MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 	| column foreignKey referencingSide referencingTable referencedSide referencedTable n m |
-	column := self generateReferenceColumn: (aMocoWrappedElement innerElement).
+	column := self generateReferencingColumn: (aMocoWrappedElement innerElement).
 	
 	referencingSide := self findReferencingSideOf: (aMocoWrappedElement innerElement).
 	referencingTable := self findTableFor: (referencingSide element).
@@ -165,6 +197,27 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 		
 		aMocoWrappedElement meta outElements add: ocl.
 		engine outModel elements add: ocl
+	].
+
+	(referencedSide frozen) ifTrue: [
+		| ocl |
+		ocl := self generateImmutableColumnConstraintForTable: referencingTable andColumn: column.
+		ocl := MocoWrappedElement from: ocl.
+		
+		aMocoWrappedElement meta outElements add: ocl.
+		engine outModel elements add: ocl
+	].
+
+	(referencingSide frozen) ifTrue: [
+		| updOcl delOcl |
+		updOcl := self generateImmutableColumnConstraintForTable: referencingTable andColumn: column.
+		updOcl := MocoWrappedElement from: updOcl.
+		
+		delOcl := self generateDeleteConstraintForTable: referencingTable andColumn: column withTargetTable: referencedTable andColumn: (foreignKey columns first).
+		delOcl := MocoWrappedElement from: delOcl.
+		
+		aMocoWrappedElement meta outElements addAll: { updOcl. delOcl }.
+		engine outModel elements addAll: { updOcl. delOcl }
 	].
 	
 	aMocoWrappedElement meta markProcessedBy: #MocoUmlAssociationTransformationRule
