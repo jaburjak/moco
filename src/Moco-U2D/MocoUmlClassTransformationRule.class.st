@@ -17,12 +17,16 @@ MocoUmlClassTransformationRule >> execute [
 	classes := (engine inModel elements select: [ :e | e isWrappingType: MocoUmlClass ]) select: [ :e | e meta isNotProcessedBy: #MocoUmlClassTransformationRule ].
 	
 	classes do: [ :element |
-		| outElement |
-		outElement := MocoWrappedElement from: (self toTable: element innerElement).
+		| outElement outElements |
+		outElement := MocoWrappedElement from: (self toTable: element).
 		
 		engine outModel elements add: outElement.
 		
-		element meta outElements add: outElement.
+		outElements := OrderedCollection new.
+		outElements add: outElement; addAll: (element meta outElements). "make sure MocoRdbTable is first in outElements"
+		element meta outElements removeAll.
+		element meta outElements addAll: outElements.
+		
 		element meta markProcessedBy: #MocoUmlClassTransformationRule.
 			
 		engine outModel meta didChange: true.
@@ -87,7 +91,7 @@ MocoUmlClassTransformationRule >> resolveColumnType: aMocoUmlType [
 ]
 
 { #category : #'private - transforming' }
-MocoUmlClassTransformationRule >> toColumn: aMocoUmlAttribute ofTable: aMocoRdbTable [
+MocoUmlClassTransformationRule >> toColumn: aMocoUmlAttribute ofTable: aMocoRdbTable ofClass: aMocoWrappedElement [
 	| column |
 
 	column := MocoRdbColumn new.
@@ -99,22 +103,36 @@ MocoUmlClassTransformationRule >> toColumn: aMocoUmlAttribute ofTable: aMocoRdbT
 		ifTrue: [ column nullable: true ]
 		ifFalse: [ column nullable: false ].
 	
+	(aMocoUmlAttribute immutable) ifTrue: [
+		| ocl |
+		ocl := MocoOclRdbImmutableColumnCondition new.
+		ocl name: ('IM_' , (aMocoRdbTable name) , '_' , (column name) , '_UPD');
+			context: aMocoRdbTable;
+			column: column;
+			operation: #UPDATE.
+		
+		ocl := MocoWrappedElement from: ocl.
+		
+		aMocoWrappedElement meta outElements add: ocl.
+		engine outModel elements add: ocl
+	].
+	
 	^ column
 ]
 
 { #category : #'private - transforming' }
-MocoUmlClassTransformationRule >> toTable: aMocoUmlClass [
+MocoUmlClassTransformationRule >> toTable: aMocoWrappedElement [
 	| table id |
 	table := MocoRdbTable new.
 	
-	table name: (MocoNamingUtils toUpperSnakeCase: (aMocoUmlClass name)).
+	table name: (MocoNamingUtils toUpperSnakeCase: (aMocoWrappedElement innerElement name)).
 	
 	id := self generateIdentityColumn: (table name).
 	
 	table columns add: (id first).
 	table constraints add: (id last).
 	
-	table columns addAll: ((self resolveClassAttributes: aMocoUmlClass) collect: [ :each | self toColumn: each ofTable: table ]).
+	table columns addAll: ((self resolveClassAttributes: aMocoWrappedElement innerElement) collect: [ :each | self toColumn: each ofTable: table ofClass: aMocoWrappedElement ]).
 	
 	^ table
 ]
