@@ -1,3 +1,6 @@
+"
+Transforms the OCL invariant for exclusive phase associations from UML context to RDB.
+"
 Class {
 	#name : #MocoUmlOclExclusivePhaseConditionTransformationRule,
 	#superclass : #MocoTransformationRule,
