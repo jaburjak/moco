@@ -28,7 +28,7 @@ MocoOclRdbImmutableAssociationDeleteCondition >> printTo: aStream [
 	
 	super printTo: aStream.
 
-	varName := targetTable name first asString asLowercase.
+	varName := MocoNamingUtils toShortName: (targetTable name).
 
 	aStream
 		nextPutAll: '| self.';

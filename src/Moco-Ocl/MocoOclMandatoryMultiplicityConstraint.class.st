@@ -18,7 +18,7 @@ MocoOclMandatoryMultiplicityConstraint >> printTo: aStream [
 	
 	super printTo: aStream.
 	
-	varName := sourceTable name first asString asLowercase.
+	varName := MocoNamingUtils toShortName: (sourceTable name).
 	
 	aStream
 		nextPutAll: '| ';

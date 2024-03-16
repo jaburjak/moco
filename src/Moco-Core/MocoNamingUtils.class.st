@@ -36,6 +36,13 @@ MocoNamingUtils class >> toPascalCase: aString [
 ]
 
 { #category : #transforming }
+MocoNamingUtils class >> toShortName: aString [
+	aString ifEmpty: [ ^ 'x' ].
+	
+	^ aString first asString asLowercase
+]
+
+{ #category : #transforming }
 MocoNamingUtils class >> toUpperSnakeCase: aString [
 	| str |
 	
