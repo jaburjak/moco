@@ -173,31 +173,32 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 		referencingTable constraints add: uniqueKey
 	].
 
-	(referencingSide multiplicity lower isOne) ifTrue: [
-		| ocl |
-		ocl := self generateMandatoryMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey columns first).
-		ocl := MocoWrappedElement from: ocl.
-		
-		aMocoWrappedElement meta outElements add: ocl.
-		engine outModel elements add: ocl
-	].
-
 	((referencingSide multiplicity upper isBounded) and: [ referencingSide multiplicity upper isMultiple ])
 		ifTrue: [ m := referencingSide multiplicity upper value ]
 		ifFalse: [ m := nil ].
 	
-	((referencingSide multiplicity lower isBounded) and: [ referencingSide multiplicity lower isMultiple ] )
+	(((referencingSide multiplicity lower isBounded) and: [ referencingSide multiplicity lower isMultiple ]) or: [ (m isNotNil) and: [ referencingSide multiplicity lower isOne ] ] )
 		ifTrue: [ n := referencingSide multiplicity lower value ]
 		ifFalse: [ n := nil ].
 	
 	((n isNotNil) or: [ m isNotNil ]) ifTrue: [
-		| ocl |
-		ocl := self generateSpecialMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey columns first) withLower: n andUpper: m.
-		ocl := MocoWrappedElement from: ocl.
-		
-		aMocoWrappedElement meta outElements add: ocl.
-		engine outModel elements add: ocl
-	].
+			| ocl |
+			ocl := self generateSpecialMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey columns first) withLower: n andUpper: m.
+			ocl := MocoWrappedElement from: ocl.
+			
+			aMocoWrappedElement meta outElements add: ocl.
+			engine outModel elements add: ocl
+		]
+		ifFalse: [
+			(referencingSide multiplicity lower isOne) ifTrue: [
+				| ocl |
+				ocl := self generateMandatoryMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey columns first).
+				ocl := MocoWrappedElement from: ocl.
+				
+				aMocoWrappedElement meta outElements add: ocl.
+				engine outModel elements add: ocl
+			]
+		].
 
 	((referencedSide frozen) or: [ referencingSide frozen ]) ifTrue: [
 		| ocl |
