@@ -5,7 +5,8 @@ Class {
 	#name : #MocoOclRdbGeneralizationSetConstraint,
 	#superclass : #MocoOclInvariant,
 	#instVars : [
-		'column',
+		'keyColumn',
+		'discriminatorColumn',
 		'tables',
 		'values',
 		'configurations'
@@ -14,18 +15,18 @@ Class {
 }
 
 { #category : #accessing }
-MocoOclRdbGeneralizationSetConstraint >> column [
-	^ column
-]
-
-{ #category : #accessing }
-MocoOclRdbGeneralizationSetConstraint >> column: aMocoRdbColumn [
-	column := aMocoRdbColumn
-]
-
-{ #category : #accessing }
 MocoOclRdbGeneralizationSetConstraint >> configurations [
 	^ configurations
+]
+
+{ #category : #accessing }
+MocoOclRdbGeneralizationSetConstraint >> discriminatorColumn [
+	^ discriminatorColumn
+]
+
+{ #category : #accessing }
+MocoOclRdbGeneralizationSetConstraint >> discriminatorColumn: aMocoRdbColumn [
+	discriminatorColumn := aMocoRdbColumn
 ]
 
 { #category : #initialization }
@@ -35,6 +36,16 @@ MocoOclRdbGeneralizationSetConstraint >> initialize [
 	tables := OrderedCollection new.
 	values := OrderedCollection new.
 	configurations := OrderedCollection new
+]
+
+{ #category : #accessing }
+MocoOclRdbGeneralizationSetConstraint >> keyColumn [
+	^ keyColumn
+]
+
+{ #category : #accessing }
+MocoOclRdbGeneralizationSetConstraint >> keyColumn: aMocoRdbColumn [
+	keyColumn := aMocoRdbColumn
 ]
 
 { #category : #printing }
@@ -58,7 +69,7 @@ MocoOclRdbGeneralizationSetConstraint >> printVariant: aString to: aStream [
 				nextPutAll: '| def ';
 				nextPutAll: v;
 				nextPutAll: '_Instance: Boolean = self.';
-				nextPutAll: (column name);
+				nextPutAll: (discriminatorColumn name);
 				nextPutAll: ' = ''';
 				nextPutAll: v;
 				nextPutAll: '''';
@@ -66,7 +77,7 @@ MocoOclRdbGeneralizationSetConstraint >> printVariant: aString to: aStream [
 			
 			tables with: c do: [ :t :e |
 				| varName |
-				varName := t first name first asString asLowercase.
+				varName := MocoNamingUtils toShortName: (t first name).
 
 				aStream nextPutAll: '|   AND '.
 				e ifFalse: [ aStream nextPutAll: 'NOT(' ].
@@ -79,7 +90,7 @@ MocoOclRdbGeneralizationSetConstraint >> printVariant: aString to: aStream [
 					nextPutAll: '.';
 					nextPutAll: (t last name);
 					nextPutAll: ' = self.';
-					nextPutAll: (column name);
+					nextPutAll: (keyColumn name);
 					nextPutAll: ')'.
 				e ifFalse: [ aStream nextPutAll: ')' ].
 				aStream cr.
