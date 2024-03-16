@@ -96,7 +96,7 @@ MocoUmlAssociationTransformationRule >> generateImmutableColumnConstraintForTabl
 { #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> generateMandatoryMultiplicityConstraintForSourceTable: aMocoRdbTable andColumn: aMocoRdbColumn andTargetTable: aMocoRdbTable2 andColumn: aMocoRdbColumn2 [
 	| ocl |
-	ocl := MocoOclMandatoryMultiplicityConstraint new.
+	ocl := MocoOclRdbMandatoryMultiplicityConstraint new.
 	ocl name: ('MUL_' , (aMocoRdbTable name) , '_' , (aMocoRdbColumn name));
 		context: aMocoRdbTable2;
 		targetColumn: aMocoRdbColumn2;
@@ -131,7 +131,7 @@ MocoUmlAssociationTransformationRule >> generateReferencingColumn: aMocoUmlAssoc
 { #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> generateSpecialMultiplicityConstraintForSourceTable: aMocoRdbTable andColumn: aMocoRdbColumn andTargetTable: aMocoRdbTable2 andColumn: aMocoRdbColumn2 withLower: aNumber andUpper: aNumber2 [
 	| ocl |
-	ocl := MocoOclSpecialMultiplicityConstraint new.
+	ocl := MocoOclRdbSpecialMultiplicityConstraint new.
 	ocl name: ('MUL_' , (aMocoRdbTable name) , '_' , (aMocoRdbColumn name));
 		context: aMocoRdbTable2;
 		targetColumn: aMocoRdbColumn2;

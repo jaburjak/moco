@@ -2,7 +2,7 @@
 Represents a special multiplicity constraint in an RDB model.
 "
 Class {
-	#name : #MocoOclSpecialMultiplicityConstraint,
+	#name : #MocoOclRdbSpecialMultiplicityConstraint,
 	#superclass : #MocoOclInvariant,
 	#instVars : [
 		'lower',
@@ -15,17 +15,17 @@ Class {
 }
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> lower [
+MocoOclRdbSpecialMultiplicityConstraint >> lower [
 	^ lower
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> lower: aNumber [
+MocoOclRdbSpecialMultiplicityConstraint >> lower: aNumber [
 	lower := aNumber
 ]
 
 { #category : #printing }
-MocoOclSpecialMultiplicityConstraint >> printTo: aStream [
+MocoOclRdbSpecialMultiplicityConstraint >> printTo: aStream [
 	| varName |
 	
 	super printTo: aStream.
@@ -64,41 +64,41 @@ MocoOclSpecialMultiplicityConstraint >> printTo: aStream [
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> sourceColumn [
+MocoOclRdbSpecialMultiplicityConstraint >> sourceColumn [
 	^ sourceColumn
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> sourceColumn: aMocoRdbColumn [
+MocoOclRdbSpecialMultiplicityConstraint >> sourceColumn: aMocoRdbColumn [
 	sourceColumn := aMocoRdbColumn
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> sourceTable [
+MocoOclRdbSpecialMultiplicityConstraint >> sourceTable [
 	^ sourceTable
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> sourceTable: aMocoRdbTable [
+MocoOclRdbSpecialMultiplicityConstraint >> sourceTable: aMocoRdbTable [
 	sourceTable := aMocoRdbTable
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> targetColumn [
+MocoOclRdbSpecialMultiplicityConstraint >> targetColumn [
 	^ targetColumn
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> targetColumn: aMocoRdbColumn [
+MocoOclRdbSpecialMultiplicityConstraint >> targetColumn: aMocoRdbColumn [
 	targetColumn := aMocoRdbColumn
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> upper [
+MocoOclRdbSpecialMultiplicityConstraint >> upper [
 	^ upper
 ]
 
 { #category : #accessing }
-MocoOclSpecialMultiplicityConstraint >> upper: aNumber [
+MocoOclRdbSpecialMultiplicityConstraint >> upper: aNumber [
 	upper := aNumber
 ]

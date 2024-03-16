@@ -2,7 +2,7 @@
 Represents a mandatory association multiplicity constraint in an RDB model.
 "
 Class {
-	#name : #MocoOclMandatoryMultiplicityConstraint,
+	#name : #MocoOclRdbMandatoryMultiplicityConstraint,
 	#superclass : #MocoOclInvariant,
 	#instVars : [
 		'targetColumn',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #printing }
-MocoOclMandatoryMultiplicityConstraint >> printTo: aStream [
+MocoOclRdbMandatoryMultiplicityConstraint >> printTo: aStream [
 	| varName |
 	
 	super printTo: aStream.
@@ -37,31 +37,31 @@ MocoOclMandatoryMultiplicityConstraint >> printTo: aStream [
 ]
 
 { #category : #accessing }
-MocoOclMandatoryMultiplicityConstraint >> sourceColumn [
+MocoOclRdbMandatoryMultiplicityConstraint >> sourceColumn [
 	^ sourceColumn
 ]
 
 { #category : #accessing }
-MocoOclMandatoryMultiplicityConstraint >> sourceColumn: aMocoRdbColumn [
+MocoOclRdbMandatoryMultiplicityConstraint >> sourceColumn: aMocoRdbColumn [
 	sourceColumn := aMocoRdbColumn
 ]
 
 { #category : #accessing }
-MocoOclMandatoryMultiplicityConstraint >> sourceTable [
+MocoOclRdbMandatoryMultiplicityConstraint >> sourceTable [
 	^ sourceTable
 ]
 
 { #category : #accessing }
-MocoOclMandatoryMultiplicityConstraint >> sourceTable: aMocoRdbTable [
+MocoOclRdbMandatoryMultiplicityConstraint >> sourceTable: aMocoRdbTable [
 	sourceTable := aMocoRdbTable
 ]
 
 { #category : #accessing }
-MocoOclMandatoryMultiplicityConstraint >> targetColumn [
+MocoOclRdbMandatoryMultiplicityConstraint >> targetColumn [
 	^ targetColumn
 ]
 
 { #category : #accessing }
-MocoOclMandatoryMultiplicityConstraint >> targetColumn: aMocoRdbColumn [
+MocoOclRdbMandatoryMultiplicityConstraint >> targetColumn: aMocoRdbColumn [
 	targetColumn := aMocoRdbColumn
 ]
