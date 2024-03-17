@@ -37,7 +37,7 @@ MocoUmlGeneralizationSetTransformationRule >> generateConstraint: aMocoUmlGenera
 	
 	ocl := MocoOclRdbGeneralizationSetConstraint new.
 	
-	ocl name: name;
+	ocl name: (MocoNamingUtils toUpperSnakeCase: name);
 		context: aMocoRdbTable;
 		discriminatorColumn: aMocoRdbColumn;
 		keyColumn: ((aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).

@@ -65,21 +65,7 @@ MocoUmlClassTransformationRule >> priority [
 
 { #category : #'private - processing' }
 MocoUmlClassTransformationRule >> resolveClassAttributes: aMocoUmlClass [
-	| attributes |
-	attributes := OrderedCollection new.
-	
-	attributes addAll: (aMocoUmlClass attributes).
-	
-	"((engine inModel elements select: [ :each | each isWrappingType: MocoUmlGeneralization ])
-		select: [ :each | (each innerElement subtype) == aMocoUmlClass ])
-		do: [ :each |
-			(self resolveClassAttributes: (each innerElement supertype)) do: [ :a |
-				(attributes contains: [ :e | (e name) = (a name) ])
-					ifFalse: [ attributes add: a ]
-			]
-		]."
-
-	^ attributes
+	^ aMocoUmlClass attributes
 ]
 
 { #category : #'private - processing' }

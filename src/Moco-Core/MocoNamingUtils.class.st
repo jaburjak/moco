@@ -48,13 +48,14 @@ MocoNamingUtils class >> toUpperSnakeCase: aString [
 	
 	aString ifEmpty: [ ^ aString ].
 	
-	(aString asUppercase = aString) ifTrue: [ ^ aString ].
-	
 	str := OrderedCollection new.
-
-	aString do: [ :l | (l isLetter and: (l = (l asUppercase))) ifTrue: [ str add: '_' ]. str add: l asString asUppercase ].
-
-	(str first = '_') ifTrue: [ str := str allButFirst: 1 ].
+	
+	aString withIndexDo: [ :l :i |
+		(l isLetter and: (l = (l asUppercase)))
+			ifTrue: [ ((i > 1) and: [ (aString at: (i - 1)) ~= ((aString at: (i - 1)) asUppercase) ]) ifTrue: [ str add: '_' ] ].
+		
+		str add: l asString asUppercase
+	].
 
 	str := String streamContents: [ :stream | str do: [ :each | (each = ' ') ifTrue: [ stream nextPutAll: '_' ] ifFalse: [ stream nextPutAll: each ] ] ].
 	

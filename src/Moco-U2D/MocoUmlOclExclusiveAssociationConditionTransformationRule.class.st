@@ -2,13 +2,13 @@
 Transforms the OCL invariant for exclusive phase associations from UML context to RDB.
 "
 Class {
-	#name : #MocoUmlOclExclusivePhaseConditionTransformationRule,
+	#name : #MocoUmlOclExclusiveAssociationConditionTransformationRule,
 	#superclass : #MocoTransformationRule,
 	#category : #'Moco-U2D-Rule'
 }
 
 { #category : #transforming }
-MocoUmlOclExclusivePhaseConditionTransformationRule >> execute [
+MocoUmlOclExclusiveAssociationConditionTransformationRule >> execute [
 	| conditions |
 	conditions := engine inModel elements select: [ :each | (each isWrappingType: MocoOclExclusiveAssociationCondition) and: [ each meta isNotProcessedBy: #MocoUmlOclExclusivePhaseConditionTranformationRule ] ].
 	
@@ -20,7 +20,7 @@ MocoUmlOclExclusivePhaseConditionTransformationRule >> execute [
 ]
 
 { #category : #'private - processing' }
-MocoUmlOclExclusivePhaseConditionTransformationRule >> findTableFor: aMocoUmlAssociation [
+MocoUmlOclExclusiveAssociationConditionTransformationRule >> findTableFor: aMocoUmlAssociation [
 	| table column |
 	
 	table := (engine findOutElementsFor: (aMocoUmlAssociation target element)) first innerElement.
@@ -33,18 +33,18 @@ MocoUmlOclExclusivePhaseConditionTransformationRule >> findTableFor: aMocoUmlAss
 ]
 
 { #category : #accessing }
-MocoUmlOclExclusivePhaseConditionTransformationRule >> priority [
+MocoUmlOclExclusiveAssociationConditionTransformationRule >> priority [
 	^ 50
 ]
 
 { #category : #'private - transforming' }
-MocoUmlOclExclusivePhaseConditionTransformationRule >> transformCondition: aMocoWrappedElement [
+MocoUmlOclExclusiveAssociationConditionTransformationRule >> transformCondition: aMocoWrappedElement [
 	| ocl context out |
 	ocl := MocoOclRdbExclusiveAssociationCondition new.
 	
 	context := (engine findOutElementsFor: (aMocoWrappedElement innerElement context)) first innerElement.
 	
-	ocl name: (aMocoWrappedElement innerElement name);
+	ocl name: (MocoNamingUtils toUpperSnakeCase: (aMocoWrappedElement innerElement name));
 		context: context;
 		column: ((context constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).
 	
