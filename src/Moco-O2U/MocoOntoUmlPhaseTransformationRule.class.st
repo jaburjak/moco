@@ -50,7 +50,7 @@ MocoOntoUmlPhaseTransformationRule >> generatePhasePartitionName: aMocoWrappedEl
 			
 			count := count + 1.
 			
-			^ 'Phase' , (count asString)
+			^ 'Phase' , ((count = 1) ifTrue: [ '' ] ifFalse: [ count asString ])
 		]
 ]
 
@@ -149,7 +149,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement [
 	| context ocl outOcl |
 	context := self findOutElementFor: (aMocoWrappedElement innerElement members first supertype).
 
-	ocl := MocoOclExclusivePhaseCondition new.
+	ocl := MocoOclExclusiveAssociationCondition new.
 	ocl context: context;
 		name: ('EX_' , (self generatePhasePartitionName: aMocoWrappedElement) , '_Condition').
 	
@@ -178,7 +178,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement [
 			
 		outElement := MocoWrappedElement from: association.
 		
-		ocl phaseAssociations add: association.
+		ocl associations add: association.
 		
 		generalization := (engine inModel elements select: [ :e | (e innerElement) == each ]) first.
 		

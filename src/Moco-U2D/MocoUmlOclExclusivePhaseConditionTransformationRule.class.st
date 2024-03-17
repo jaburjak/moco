@@ -10,7 +10,7 @@ Class {
 { #category : #transforming }
 MocoUmlOclExclusivePhaseConditionTransformationRule >> execute [
 	| conditions |
-	conditions := engine inModel elements select: [ :each | (each isWrappingType: MocoOclExclusivePhaseCondition) and: [ each meta isNotProcessedBy: #MocoUmlOclExclusivePhaseConditionTranformationRule ] ].
+	conditions := engine inModel elements select: [ :each | (each isWrappingType: MocoOclExclusiveAssociationCondition) and: [ each meta isNotProcessedBy: #MocoUmlOclExclusivePhaseConditionTranformationRule ] ].
 	
 	conditions do: [ :each | self transformCondition: each ].
 	
@@ -40,20 +40,20 @@ MocoUmlOclExclusivePhaseConditionTransformationRule >> priority [
 { #category : #'private - transforming' }
 MocoUmlOclExclusivePhaseConditionTransformationRule >> transformCondition: aMocoWrappedElement [
 	| ocl context out |
-	ocl := MocoOclRdbExclusivePhaseCondition new.
+	ocl := MocoOclRdbExclusiveAssociationCondition new.
 	
 	context := (engine findOutElementsFor: (aMocoWrappedElement innerElement context)) first innerElement.
 	
 	ocl name: (aMocoWrappedElement innerElement name);
 		context: context;
-		generalColumn: ((context constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).
+		column: ((context constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).
 	
-	aMocoWrappedElement innerElement phaseAssociations do: [ :each |
+	aMocoWrappedElement innerElement associations do: [ :each |
 		| table |
 		table := self findTableFor: each.
 		
-		ocl phaseTables add: (table first).
-		ocl phaseColumns add: (table last)
+		ocl referencingTables add: (table first).
+		ocl referencingColumns add: (table last)
 	].
 	
 	out := MocoWrappedElement from: ocl.

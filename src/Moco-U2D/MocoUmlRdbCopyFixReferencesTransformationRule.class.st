@@ -12,7 +12,7 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
 	self fixGeneralizations;
 		fixGeneralizationSets;
 		fixAssociations;
-		fixExclusivePhaseConditions
+		fixExclusiveAssociationConditions
 ]
 
 { #category : #'private - transforming' }
@@ -39,9 +39,9 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixAssociations [
 ]
 
 { #category : #'private - processing' }
-MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusivePhaseConditions [
+MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditions [
 	| ocls |
-	ocls := engine outModel elements select: [ :each | (each isWrappingType: MocoOclExclusivePhaseCondition) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	ocls := engine outModel elements select: [ :each | (each isWrappingType: MocoOclExclusiveAssociationCondition) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
 	
 	ocls do: [ :each |
 		| original context associations |
@@ -49,13 +49,13 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusivePhaseConditions [
 		
 		context := (engine findOutElementsFor: (original innerElement context)) first innerElement.
 		
-		associations := original innerElement phaseAssociations collect: [ :a |
+		associations := original innerElement associations collect: [ :a |
 			(engine findOutElementsFor: a) first innerElement
 		].
 		
 		each innerElement context: context.
-		each innerElement phaseAssociations removeAll.
-		each innerElement phaseAssociations addAll: associations.
+		each innerElement associations removeAll.
+		each innerElement associations addAll: associations.
 		
 		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
 	].
