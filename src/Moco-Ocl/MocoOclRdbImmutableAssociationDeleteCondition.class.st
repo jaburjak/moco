@@ -3,7 +3,7 @@ Represents a DELETE OCL precondition for immutable associations.
 "
 Class {
 	#name : #MocoOclRdbImmutableAssociationDeleteCondition,
-	#superclass : #MocoOclPreCondition,
+	#superclass : #MocoOclPostCondition,
 	#instVars : [
 		'column',
 		'targetTable',
@@ -43,7 +43,7 @@ MocoOclRdbImmutableAssociationDeleteCondition >> printTo: aStream [
 		nextPutAll: (targetColumn name);
 		nextPutAll: ' = self.';
 		nextPutAll: (column name);
-		nextPutAll: '))';
+		nextPutAll: '@pre))';
 		cr;
 		nextPutAll: '+----------------'
 ]
