@@ -17,6 +17,9 @@ MocoUmlNonNativeRdbTypeTransformationRule >> checkIfDecompositionNeeded: aMocoUm
 
 { #category : #'private - processing' }
 MocoUmlNonNativeRdbTypeTransformationRule >> checkIfTypeIsNative: aMocoUmlType [
+	(engine inModel elements anySatisfy: [ :each | (each isWrappingType: MocoUmlClass) and: [ (each innerElement name) = (aMocoUmlType name) ] ])
+		ifTrue: [ ^ false ].
+	
 	^ (dataTypeMapper map: (aMocoUmlType name)) isNotNil
 ]
 
