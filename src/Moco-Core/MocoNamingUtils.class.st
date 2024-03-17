@@ -37,9 +37,19 @@ MocoNamingUtils class >> toPascalCase: aString [
 
 { #category : #transforming }
 MocoNamingUtils class >> toShortName: aString [
+	| short |
+	
 	aString ifEmpty: [ ^ 'x' ].
 	
-	^ aString first asString asLowercase
+	short := OrderedCollection new.
+	
+	short add: (aString first).
+	
+	aString withIndexDo: [ :l :i |
+		(((i > 1) and: [ l isLetter ]) and: [ (l isUppercase and: [ (aString at: (i - 1)) isLowercase ]) or: [  #(' ' _) includes: ((aString at: (i - 1)) asString) ] ]) ifTrue: [ short add: l ]
+	].
+	
+	^ '' join: (short collect: [ :each | each asString asLowercase ])
 ]
 
 { #category : #transforming }

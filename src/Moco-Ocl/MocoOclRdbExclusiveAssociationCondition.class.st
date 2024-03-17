@@ -38,7 +38,7 @@ MocoOclRdbExclusiveAssociationCondition >> initialize [
 { #category : #printing }
 MocoOclRdbExclusiveAssociationCondition >> printAssociation: aMocoRdbTable withColumn: aMocoRdbColumn to: aStream [
 	| varName |
-	varName := aMocoRdbTable name first asString asLowercase.
+	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
 	
 	aStream
 		nextPutAll: '| def ';
