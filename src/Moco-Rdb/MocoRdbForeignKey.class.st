@@ -6,19 +6,23 @@ Class {
 	#superclass : #MocoRdbConstraint,
 	#instVars : [
 		'columns',
-		'reference'
+		'referencedTable',
+		'referencedColumns'
 	],
 	#category : #'Moco-Rdb-Model'
 }
 
 { #category : #'instance creation' }
 MocoRdbForeignKey class >> newAtColumn: aMocoRdbColumn referencingTable: aMocoRdbTable andColumn: aMocoRdbColumn2 [
+	"Instantiates a new FOREIGN KEY constraint that at aMocoRdbColumn which references aMocoRdbTable.aMocoRdbColumn2."
+	
 	| inst |
 	inst := self new.
 	
 	inst name: ('FK_' , (aMocoRdbColumn name)).
 	inst columns add: aMocoRdbColumn.
-	inst reference add: { aMocoRdbTable. aMocoRdbColumn2 }.
+	inst referencedTable: aMocoRdbTable.
+	inst referencedColumns add: aMocoRdbColumn2.
 	
 	^ inst
 ]
@@ -33,7 +37,7 @@ MocoRdbForeignKey >> initialize [
 	super initialize.
 	
 	columns := OrderedCollection new.
-	reference := OrderedCollection new
+	referencedColumns := OrderedCollection new
 ]
 
 { #category : #printing }
@@ -44,11 +48,21 @@ MocoRdbForeignKey >> printTo: aStream [
 	
 	aStream
 		nextPutAll: '(';
-		nextPutAll: (', ' join: (columns with: reference collect: [ :c :r | (c name) , '=' , (r first name) , '.' , (r last name) ]));
+		nextPutAll: (', ' join: (columns with: referencedColumns collect: [ :c :r | (c name) , '=' , (referencedTable name) , '.' , (r name) ]));
 		nextPutAll: ')'
 ]
 
 { #category : #accessing }
-MocoRdbForeignKey >> reference [
-	^ reference
+MocoRdbForeignKey >> referencedColumns [
+	^ referencedColumns
+]
+
+{ #category : #accessing }
+MocoRdbForeignKey >> referencedTable [
+	^ referencedTable
+]
+
+{ #category : #accessing }
+MocoRdbForeignKey >> referencedTable: aMocoRdbTable [
+	referencedTable := aMocoRdbTable
 ]
