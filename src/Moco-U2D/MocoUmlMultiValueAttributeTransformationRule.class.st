@@ -92,7 +92,7 @@ MocoUmlMultiValueAttributeTransformationRule >> generateClassForAttribute: aMoco
 	
 	attribute := MocoUmlAttribute new.
 	
-	attribute name: (aMocoUmlAttribute name);
+	attribute name: 'value';
 		type: (aMocoUmlAttribute type);
 		immutable: (aMocoUmlAttribute immutable).
 		
