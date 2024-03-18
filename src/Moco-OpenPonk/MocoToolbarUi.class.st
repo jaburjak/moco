@@ -24,12 +24,12 @@ sqlModel elements collect: [ :each | each innerElement toSql ].'.
 
 { #category : #'as yet unclassified' }
 MocoToolbarUi class >> runTransformations: aModel [
-	| ontoModel umlModel dbModel "sqlModel" |
+	| ontoModel umlModel dbModel sqlModel |
 
 	ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: aModel.
 	umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
 	dbModel := MocoUmlToRdbFacade transform: umlModel.
-	"sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel last)."
+	sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel last).
 	
 	Transcript clear.
 	
@@ -40,8 +40,8 @@ MocoToolbarUi class >> runTransformations: aModel [
 	MocoModelPrinter printToTranscript: (dbModel first) withTitle: 'UML (preprocessed for database)'.
 	Transcript cr.
 	MocoModelPrinter printToTranscript: (dbModel last) withTitle: 'Database'.
-	"Transcript cr.
-	MocoModelPrinter printToTranscript: sqlModel withTitle: 'SQL'."
+	Transcript cr.
+	MocoModelPrinter printToTranscript: sqlModel withTitle: 'SQL'.
 	
 	(Transcript openLabel: 'Transformation Result') maximize.
 ]
