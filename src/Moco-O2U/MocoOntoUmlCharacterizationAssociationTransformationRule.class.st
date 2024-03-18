@@ -7,6 +7,11 @@ Class {
 	#category : #'Moco-O2U-Rule'
 }
 
+{ #category : #'private - accessing' }
+MocoOntoUmlCharacterizationAssociationTransformationRule class >> modelSelector [
+	^ MocoOntoUmlCharacterizationAssociation
+]
+
 { #category : #'private - processing' }
 MocoOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
 	((aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlQuality) or: [ aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlQuality ])
