@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #transforming }
+MocoSqlOracleEscaping class >> escapeLiteral: aString [
+	^ '''' , aString , ''''
+]
+
+{ #category : #transforming }
 MocoSqlOracleEscaping class >> escapeName: aString [
 	^ '"' , aString , '"'
 ]
