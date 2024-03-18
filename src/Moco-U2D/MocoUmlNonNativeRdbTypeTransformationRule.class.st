@@ -105,5 +105,10 @@ MocoUmlNonNativeRdbTypeTransformationRule >> priority [
 
 { #category : #'private - processing' }
 MocoUmlNonNativeRdbTypeTransformationRule >> resolveAssociationTarget: aMocoUmlType [
-	^ (engine outModel elements select: [ :each | (each isWrappingType: MocoUmlClass) and: [ (each innerElement name) = (aMocoUmlType name) ] ]) first innerElement
+	| candidates |
+	candidates := engine outModel elements select: [ :each | (each isWrappingType: MocoUmlClass) and: [ (each innerElement name) = (aMocoUmlType name) ] ].
+	
+	candidates ifEmpty: [ ^ self error: ('Unrecognized attribute data type: ' , (aMocoUmlType name)) ].
+	
+	^ candidates first innerElement
 ]
