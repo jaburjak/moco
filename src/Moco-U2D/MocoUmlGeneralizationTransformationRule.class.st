@@ -72,7 +72,7 @@ MocoUmlGeneralizationTransformationRule >> transformToReferencingTables: aMocoWr
 	
 	primaryKey := self findPrimaryKey: general.
 	
-	foreignKey := MocoRdbForeignKey newAtColumn: ((self findPrimaryKey: specific) columns first) referencingTable: general andColumn: (primaryKey columns first).
+	foreignKey := MocoRdbForeignKey newInTable: specific atColumn: ((self findPrimaryKey: specific) columns first) referencingTable: general andColumn: (primaryKey columns first).
 	foreignKey name: ('FK_' , (specific name) , '_' , (primaryKey columns first name)).
 	
 	specific constraints add: foreignKey.

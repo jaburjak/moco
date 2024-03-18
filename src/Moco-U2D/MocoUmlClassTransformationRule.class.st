@@ -34,18 +34,18 @@ MocoUmlClassTransformationRule >> execute [
 ]
 
 { #category : #'private - processing' }
-MocoUmlClassTransformationRule >> generateIdentityColumn: aString [
-	"Generates an ID column an a PRIMARY KEY for a table with the given name."
+MocoUmlClassTransformationRule >> generateIdentityColumn: aMocoRdbTable [
+	"Generates an ID column an a PRIMARY KEY for the given table."
 	
 	| col con |
 	col := MocoRdbColumn new.
 	
-	col name: (aString , '_ID');
+	col name: ((aMocoRdbTable name) , '_ID');
 		type: (MocoRdbTypeInteger new);
 		nullable: false.
 		
 	con := MocoRdbPrimaryKey new.
-	con name: ('PK_' , aString).
+	con name: ('PK_' , (aMocoRdbTable name)).
 	con columns add: col.
 	
 	^ { col. con }
@@ -113,7 +113,7 @@ MocoUmlClassTransformationRule >> toTable: aMocoWrappedElement [
 	
 	table name: (MocoNamingUtils toUpperSnakeCase: (aMocoWrappedElement innerElement name)).
 	
-	id := self generateIdentityColumn: (table name).
+	id := self generateIdentityColumn: table.
 	
 	table columns add: (id first).
 	table constraints add: (id last).

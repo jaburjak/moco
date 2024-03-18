@@ -160,7 +160,7 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 	referencedSide := self findReferencedSideOf: (aMocoWrappedElement innerElement).
 	referencedTable := self findTableFor: (referencedSide element).
 	
-	foreignKey := MocoRdbForeignKey newAtColumn: column referencingTable: referencedTable andColumn: ((self findPrimaryKey: referencedTable) columns first).
+	foreignKey := MocoRdbForeignKey newInTable: referencingTable atColumn: column referencingTable: referencedTable andColumn: ((self findPrimaryKey: referencedTable) columns first).
 	
 	referencingTable columns add: column.
 	referencingTable constraints add: foreignKey.
@@ -168,7 +168,7 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 	(self checkIfOneToOne: (aMocoWrappedElement innerElement)) ifTrue: [
 		| uniqueKey |
 		uniqueKey := MocoRdbUniqueKey new.
-		uniqueKey name: ('UQ_' , (column name)).
+		uniqueKey name: ('UQ_' , (referencingTable name) , '_' , (column name)).
 		uniqueKey columns add: column.
 		referencingTable constraints add: uniqueKey
 	].

@@ -15,7 +15,7 @@ MocoRdbUniqueKey >> columns [
 	^ columns
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 MocoRdbUniqueKey >> initialize [
 	super initialize.
 	
