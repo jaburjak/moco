@@ -183,7 +183,7 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 	
 	((n isNotNil) or: [ m isNotNil ]) ifTrue: [
 			| ocl |
-			ocl := self generateSpecialMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey columns first) withLower: n andUpper: m.
+			ocl := self generateSpecialMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey referencedColumns first) withLower: n andUpper: m.
 			ocl := MocoWrappedElement from: ocl.
 			
 			aMocoWrappedElement meta outElements add: ocl.
@@ -192,7 +192,7 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 		ifFalse: [
 			(referencingSide multiplicity lower isOne) ifTrue: [
 				| ocl |
-				ocl := self generateMandatoryMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey columns first).
+				ocl := self generateMandatoryMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey referencedColumns first).
 				ocl := MocoWrappedElement from: ocl.
 				
 				aMocoWrappedElement meta outElements add: ocl.
@@ -211,7 +211,7 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 
 	(referencingSide frozen) ifTrue: [
 		| ocl |
-		ocl := self generateDeleteConstraintForTable: referencingTable andColumn: column withTargetTable: referencedTable andColumn: (foreignKey columns first).
+		ocl := self generateDeleteConstraintForTable: referencingTable andColumn: column withTargetTable: referencedTable andColumn: (foreignKey referencedColumns first).
 		ocl := MocoWrappedElement from: ocl.
 		
 		aMocoWrappedElement meta outElements add: ocl.
