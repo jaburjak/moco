@@ -13,12 +13,42 @@ MocoRdbDataTypeVisitor class >> new [
 ]
 
 { #category : #visiting }
+MocoRdbDataTypeVisitor >> visitBlob: aMocoRdbTypeBlob [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+MocoRdbDataTypeVisitor >> visitBoolean: aMocoRdbTypeBoolean [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+MocoRdbDataTypeVisitor >> visitCharacter: aMocoRdbTypeCharacter [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 MocoRdbDataTypeVisitor >> visitDate: aMocoRdbTypeDate [
 	self subclassResponsibility
 ]
 
 { #category : #visiting }
+MocoRdbDataTypeVisitor >> visitDateTime: aMocoRdbTypeDateTime [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+MocoRdbDataTypeVisitor >> visitDouble: aMocoRdbTypeDouble [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
 MocoRdbDataTypeVisitor >> visitInteger: aMocoRdbTypeInteger [
+	self subclassResponsibility
+]
+
+{ #category : #visiting }
+MocoRdbDataTypeVisitor >> visitTimestamp: aMocoRdbTypeTimestamp [
 	self subclassResponsibility
 ]
 
