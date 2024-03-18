@@ -26,7 +26,7 @@ MocoUmlOclExclusiveAssociationConditionTransformationRule >> findTableFor: aMoco
 	table := (engine findOutElementsFor: (aMocoUmlAssociation target element)) first innerElement.
 	
 	column := (table constraints select: [ :each |
-		(each isKindOf: MocoRdbForeignKey) and: [ (each reference first first) == ((engine findOutElementsFor: (aMocoUmlAssociation source element)) first innerElement) ]
+		(each isKindOf: MocoRdbForeignKey) and: [ (each referencedTable) == ((engine findOutElementsFor: (aMocoUmlAssociation source element)) first innerElement) ]
 	]) first columns first.
 
 	^ { table. column }

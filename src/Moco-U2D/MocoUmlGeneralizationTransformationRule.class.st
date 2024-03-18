@@ -80,7 +80,7 @@ MocoUmlGeneralizationTransformationRule >> transformToReferencingTables: aMocoWr
 	targetOcl := self generateImmutabilityConstraint: specific onColumn: (foreignKey columns first).
 	targetOcl := MocoWrappedElement from: targetOcl.
 	
-	sourceOcl := self generateDeleteConstraintForTable: specific andColumn: (foreignKey columns first) withTargetTable: (foreignKey reference first first) andColumn: (foreignKey reference first last).
+	sourceOcl := self generateDeleteConstraintForTable: specific andColumn: (foreignKey columns first) withTargetTable: (foreignKey referencedTable) andColumn: (foreignKey referencedColumns first).
 	sourceOcl := MocoWrappedElement from: sourceOcl.
 	
 	aMocoWrappedElement meta outElements addAll: { (MocoWrappedElement from: foreignKey). targetOcl. sourceOcl }.
