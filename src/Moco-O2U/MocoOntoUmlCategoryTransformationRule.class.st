@@ -18,9 +18,9 @@ MocoOntoUmlCategoryTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlCategoryTransformationRule >> toUmlClass: aMocoOntoUmlMixin [
+MocoOntoUmlCategoryTransformationRule >> toUmlClass: aMocoOntoUmlCategory [
 	| class |
-	class := super toUmlClass: aMocoOntoUmlMixin.
+	class := super toUmlClass: aMocoOntoUmlCategory.
 	
 	class abstract: true.
 	
