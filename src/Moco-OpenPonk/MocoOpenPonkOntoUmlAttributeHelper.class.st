@@ -21,3 +21,18 @@ MocoOpenPonkOntoUmlAttributeHelper class >> getMocoAttributesFrom: anOpenPonkSor
 		attr.
 	].
 ]
+
+{ #category : #transforming }
+MocoOpenPonkOntoUmlAttributeHelper class >> toOpenPonkMultiplicity: aMocoUmlMultiplicity [
+	| lower upper |
+	
+	(aMocoUmlMultiplicity lower isUnbounded)
+		ifTrue: [ lower := OPUMLLiteralInteger new value: '*' ]
+		ifFalse: [ lower := OPUMLLiteralInteger new value: (aMocoUmlMultiplicity lower value) ].
+	
+	(aMocoUmlMultiplicity upper isUnbounded)
+		ifTrue: [ upper := OPUMLLiteralUnlimitedNatural new value: '*' ]
+		ifFalse: [ upper := OPUMLLiteralUnlimitedNatural new value: (aMocoUmlMultiplicity upper value) ].
+		
+	^ { lower. upper }
+]
