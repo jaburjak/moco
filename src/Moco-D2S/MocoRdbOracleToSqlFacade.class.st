@@ -15,7 +15,7 @@ MocoRdbOracleToSqlFacade class >> transform: aMocoWrappedModel [
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
 	ruleRepo rulesPackage: 'Moco-D2S';
 		rulesTag: 'Rule';
-		classPrefix: 'MocoRdbOracle'.
+		classPrefix: 'MocoRdb'.
 		
 	ruleRepo injectTo: engine.
 

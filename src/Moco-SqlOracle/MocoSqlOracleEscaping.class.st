@@ -7,7 +7,7 @@ Class {
 	#category : #'Moco-SqlOracle-Utils'
 }
 
-{ #category : #'as yet unclassified' }
-MocoSqlOracleEscaping class >> escapeTableName: aString [
+{ #category : #transforming }
+MocoSqlOracleEscaping class >> escapeName: aString [
 	^ '"' , aString , '"'
 ]
