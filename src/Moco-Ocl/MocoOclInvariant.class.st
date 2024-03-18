@@ -44,10 +44,25 @@ MocoOclInvariant >> name: aString [
 ]
 
 { #category : #printing }
+MocoOclInvariant >> printOclTo: aStream [
+	aStream
+		nextPutAll: 'context ' , context name , ' inv ' , name , ':';
+		cr
+]
+
+{ #category : #printing }
 MocoOclInvariant >> printTo: aStream [
+	| ocl |
+	ocl := String new writeStream.
+	self printOclTo: ocl.
+	
+	ocl := (ocl contents) copyReplaceAll: (Character cr asString) with: ((Character cr asString) , '| ').
+	
 	aStream
 		nextPutAll: '+--OCL-----------';
 		cr;
-		nextPutAll: '| context ' , context name , ' inv ' , name , ':';
-		cr
+		nextPutAll: '| ';
+		nextPutAll: ocl;
+		cr;
+		nextPutAll: '+----------------'
 ]

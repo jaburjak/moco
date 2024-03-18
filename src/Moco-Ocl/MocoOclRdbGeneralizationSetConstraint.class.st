@@ -49,16 +49,13 @@ MocoOclRdbGeneralizationSetConstraint >> keyColumn: aMocoRdbColumn [
 ]
 
 { #category : #printing }
-MocoOclRdbGeneralizationSetConstraint >> printTo: aStream [
-	super printTo: aStream.
+MocoOclRdbGeneralizationSetConstraint >> printOclTo: aStream [
+	super printOclTo: aStream.
 	
 	values do: [ :each | self printVariant: each to: aStream ].
 	
 	aStream
-		nextPutAll: '| ';
-		nextPutAll: (' OR ' join: (values collect: [ :each | each , '_Instance' ]));
-		cr;
-		nextPutAll: '+----------------'
+		nextPutAll: (' OR ' join: (values collect: [ :each | each , '_Instance' ]))
 ]
 
 { #category : #printing }
@@ -66,7 +63,7 @@ MocoOclRdbGeneralizationSetConstraint >> printVariant: aString to: aStream [
 	values with: configurations do: [ :v :c |
 		(v = aString) ifTrue: [
 			aStream
-				nextPutAll: '| def ';
+				nextPutAll: 'def ';
 				nextPutAll: v;
 				nextPutAll: '_Instance: Boolean = self.';
 				nextPutAll: (discriminatorColumn name);
@@ -79,7 +76,7 @@ MocoOclRdbGeneralizationSetConstraint >> printVariant: aString to: aStream [
 				| varName |
 				varName := MocoNamingUtils toShortName: (t first name).
 
-				aStream nextPutAll: '|   AND '.
+				aStream nextPutAll: '  AND '.
 				e ifFalse: [ aStream nextPutAll: 'NOT(' ].
 				aStream
 					nextPutAll: (t first name);

@@ -41,11 +41,11 @@ MocoOclRdbExclusiveAssociationCondition >> printAssociation: aMocoRdbTable withC
 	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
 	
 	aStream
-		nextPutAll: '| def ';
+		nextPutAll: 'def ';
 		nextPutAll: (self generateAssociationVariableName: aMocoRdbTable);
 		nextPutAll: ': Boolean =';
 		cr;
-		nextPutAll: '|   ';
+		nextPutAll: '  ';
 		nextPutAll: (aMocoRdbTable name);
 		nextPutAll: '.allInstances()->exists(';
 		nextPutAll: varName;
@@ -59,8 +59,8 @@ MocoOclRdbExclusiveAssociationCondition >> printAssociation: aMocoRdbTable withC
 ]
 
 { #category : #printing }
-MocoOclRdbExclusiveAssociationCondition >> printTo: aStream [
-	super printTo: aStream.
+MocoOclRdbExclusiveAssociationCondition >> printOclTo: aStream [
+	super printOclTo: aStream.
 	
 	referencingTables with: referencingColumns do: [ :t :c |
 		self printAssociation: t withColumn: c to: aStream.
@@ -68,10 +68,7 @@ MocoOclRdbExclusiveAssociationCondition >> printTo: aStream [
 	].
 
 	aStream
-		nextPutAll: '| ';
-		nextPutAll: (' XOR ' join: (referencingTables collect: [ :each | self generateAssociationVariableName: each ]));
-		cr;
-		nextPutAll: '+----------------'
+		nextPutAll: (' XOR ' join: (referencingTables collect: [ :each | self generateAssociationVariableName: each ]))
 ]
 
 { #category : #accessing }

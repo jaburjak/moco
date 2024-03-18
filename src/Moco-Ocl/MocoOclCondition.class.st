@@ -60,11 +60,9 @@ MocoOclCondition >> operation: aByteSymbol [
 ]
 
 { #category : #printing }
-MocoOclCondition >> printTo: aStream [
+MocoOclCondition >> printOclTo: aStream [
 	aStream
-		nextPutAll: '+--OCL-----------';
-		cr;
-		nextPutAll: '| context ';
+		nextPutAll: 'context ';
 		nextPutAll: context name;
 		nextPutAll: '::';
 		nextPutAll: (operation asString asUppercase);
@@ -74,4 +72,21 @@ MocoOclCondition >> printTo: aStream [
 		nextPutAll: name;
 		nextPutAll: ':';
 		cr
+]
+
+{ #category : #printing }
+MocoOclCondition >> printTo: aStream [
+	| ocl |
+	ocl := String new writeStream.
+	self printOclTo: ocl.
+	
+	ocl := (ocl contents) copyReplaceAll: (Character cr asString) with: ((Character cr asString) , '| ').
+	
+	aStream
+		nextPutAll: '+--OCL-----------';
+		cr;
+		nextPutAll: '| ';
+		nextPutAll: ocl;
+		cr;
+		nextPutAll: '+----------------'
 ]

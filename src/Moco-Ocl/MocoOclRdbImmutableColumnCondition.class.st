@@ -21,15 +21,13 @@ MocoOclRdbImmutableColumnCondition >> column: aMocoRdbColumn [
 ]
 
 { #category : #printing }
-MocoOclRdbImmutableColumnCondition >> printTo: aStream [
-	super printTo: aStream.
+MocoOclRdbImmutableColumnCondition >> printOclTo: aStream [
+	super printOclTo: aStream.
 
 	aStream
-		nextPutAll: '| self.';
+		nextPutAll: 'self.';
 		nextPutAll: (column name);
 		nextPutAll: ' = self.';
 		nextPutAll: (column name);
-		nextPutAll: '@pre';
-		cr;
-		nextPutAll: '+----------------'
+		nextPutAll: '@pre'
 ]

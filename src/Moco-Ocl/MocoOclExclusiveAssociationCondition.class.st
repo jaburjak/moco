@@ -23,11 +23,9 @@ MocoOclExclusiveAssociationCondition >> initialize [
 ]
 
 { #category : #printing }
-MocoOclExclusiveAssociationCondition >> printTo: aStream [
-	super printTo: aStream.
+MocoOclExclusiveAssociationCondition >> printOclTo: aStream [
+	super printOclTo: aStream.
 	
 	aStream
-		nextPutAll: '| ', (' XOR ' join: (associations collect: [ :each | 'self.' , (each name) , ' <> OclVoid' ]));
-		cr;
-		nextPutAll: '+----------------'
+		nextPutAll: (' XOR ' join: (associations collect: [ :each | 'self.' , (each name) , ' <> OclVoid' ]))
 ]

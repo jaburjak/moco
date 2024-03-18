@@ -25,17 +25,17 @@ MocoOclRdbSpecialMultiplicityConstraint >> lower: aNumber [
 ]
 
 { #category : #printing }
-MocoOclRdbSpecialMultiplicityConstraint >> printTo: aStream [
+MocoOclRdbSpecialMultiplicityConstraint >> printOclTo: aStream [
 	| varName |
 	
-	super printTo: aStream.
+	super printOclTo: aStream.
 	
 	varName := MocoNamingUtils toShortName: (sourceTable name).
 	
 	aStream
-		nextPutAll: '| def count: Integer =';
+		nextPutAll: 'def count: Integer =';
 		cr;
-		nextPutAll: '|   ';
+		nextPutAll: '  ';
 		nextPutAll: (sourceTable name);
 		nextPutAll: '.allInstances()->count(';
 		nextPutAll: varName;
@@ -46,8 +46,7 @@ MocoOclRdbSpecialMultiplicityConstraint >> printTo: aStream [
 		nextPutAll: ' = self.';
 		nextPutAll: (targetColumn name);
 		nextPutAll: ')';
-		cr;
-		nextPutAll: '| '.
+		cr.
 	
 	lower ifNotNil: [
 		aStream nextPutAll: (lower asString); nextPutAll: ' <= count'.
@@ -57,10 +56,7 @@ MocoOclRdbSpecialMultiplicityConstraint >> printTo: aStream [
 
 	upper ifNotNil: [
 		aStream nextPutAll: 'count <= '; nextPutAll: (upper asString)
-	].
-	
-	aStream cr;
-		nextPutAll: '+----------------'
+	]
 ]
 
 { #category : #accessing }

@@ -13,15 +13,14 @@ Class {
 }
 
 { #category : #printing }
-MocoOclRdbMandatoryMultiplicityConstraint >> printTo: aStream [
+MocoOclRdbMandatoryMultiplicityConstraint >> printOclTo: aStream [
 	| varName |
 	
-	super printTo: aStream.
+	super printOclTo: aStream.
 	
 	varName := MocoNamingUtils toShortName: (sourceTable name).
 	
 	aStream
-		nextPutAll: '| ';
 		nextPutAll: (sourceTable name);
 		nextPutAll: '.allInstances()->exists(';
 		nextPutAll: varName;
@@ -31,9 +30,7 @@ MocoOclRdbMandatoryMultiplicityConstraint >> printTo: aStream [
 		nextPutAll: (sourceColumn name);
 		nextPutAll: ' = self.';
 		nextPutAll: (targetColumn name);
-		nextPutAll: ')';
-		cr;
-		nextPutAll: '+----------------'
+		nextPutAll: ')'
 ]
 
 { #category : #accessing }

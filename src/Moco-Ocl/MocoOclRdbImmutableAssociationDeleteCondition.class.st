@@ -23,15 +23,15 @@ MocoOclRdbImmutableAssociationDeleteCondition >> column: aMocoRdbColumn [
 ]
 
 { #category : #printing }
-MocoOclRdbImmutableAssociationDeleteCondition >> printTo: aStream [
+MocoOclRdbImmutableAssociationDeleteCondition >> printOclTo: aStream [
 	| varName |
 	
-	super printTo: aStream.
+	super printOclTo: aStream.
 
 	varName := MocoNamingUtils toShortName: (targetTable name).
 
 	aStream
-		nextPutAll: '| self.';
+		nextPutAll: 'self.';
 		nextPutAll: (column name);
 		nextPutAll: ' = OclVoid OR NOT(';
 		nextPutAll: (targetTable name);
@@ -43,9 +43,7 @@ MocoOclRdbImmutableAssociationDeleteCondition >> printTo: aStream [
 		nextPutAll: (targetColumn name);
 		nextPutAll: ' = self.';
 		nextPutAll: (column name);
-		nextPutAll: '@pre))';
-		cr;
-		nextPutAll: '+----------------'
+		nextPutAll: '@pre))'
 ]
 
 { #category : #accessing }
