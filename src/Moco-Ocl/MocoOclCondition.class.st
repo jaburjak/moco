@@ -68,7 +68,7 @@ MocoOclCondition >> printTo: aStream [
 		nextPutAll: context name;
 		nextPutAll: '::';
 		nextPutAll: (operation asString asUppercase);
-		nextPutAll: ' ';
+		nextPutAll: '() ';
 		nextPutAll: (self class type);
 		nextPutAll: ' ';
 		nextPutAll: name;
