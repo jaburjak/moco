@@ -6,3 +6,8 @@ Class {
 	#superclass : #MocoOntoUmlClass,
 	#category : #'Moco-OntoUml-Model'
 }
+
+{ #category : #accessing }
+MocoOntoUmlRole >> providesIdentity [
+	^ false
+]

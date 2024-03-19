@@ -69,3 +69,8 @@ MocoOntoUmlClass >> printTo: aStream [
 	aStream
 		nextPutAll: '+----------------'.
 ]
+
+{ #category : #accessing }
+MocoOntoUmlClass >> providesIdentity [
+	^ true
+]

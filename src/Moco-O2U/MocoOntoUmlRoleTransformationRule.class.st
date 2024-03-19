@@ -4,6 +4,9 @@ Transforms OntoUML Roles into UML classes.
 Class {
 	#name : #MocoOntoUmlRoleTransformationRule,
 	#superclass : #MocoOntoUmlClassTransformationRule,
+	#instVars : [
+		'modelElements'
+	],
 	#category : #'Moco-O2U-Rule'
 }
 
@@ -24,6 +27,15 @@ MocoOntoUmlRoleTransformationRule >> findOutElementFor: anObject [
 	^ (engine findOutElementsFor: anObject) first innerElement
 ]
 
+{ #category : #'private - accessing' }
+MocoOntoUmlRoleTransformationRule >> modelElements [
+	modelElements ifNil: [
+		modelElements := engine inModel elements collect: [ :each | each innerElement ]
+	].
+
+	^ modelElements
+]
+
 { #category : #accessing }
 MocoOntoUmlRoleTransformationRule >> priority [
 	^ 99
@@ -32,8 +44,8 @@ MocoOntoUmlRoleTransformationRule >> priority [
 { #category : #'private - transforming' }
 MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations [
 	| gens |
-	gens := (engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlRoleTransformationRule ].
-	gens := gens select: [ :each | each innerElement subtype isKindOf: MocoOntoUmlRole ].
+	gens := (engine inModel elements select: [ :e | (e isWrappingType: MocoOntoUmlGeneralization) and: [ e meta isNotProcessedBy: #MocoOntoUmlRoleTransformationRule ] ]).
+	gens := gens select: [ :each | (each innerElement subtype isKindOf: MocoOntoUmlRole) and: [ MocoOntoUmlIdentityUtils checkIfHasIdentity: (each innerElement supertype) inModel: (self modelElements) ] ].
 	
 	gens do: [ :each |
 		| association source target outElement |

@@ -4,6 +4,9 @@ Transforms OntoUML Phases into UML classes.
 Class {
 	#name : #MocoOntoUmlPhaseTransformationRule,
 	#superclass : #MocoOntoUmlClassTransformationRule,
+	#instVars : [
+		'modelElements'
+	],
 	#category : #'Moco-O2U-Rule'
 }
 
@@ -76,6 +79,15 @@ MocoOntoUmlPhaseTransformationRule >> generatePhasePartitionName: aMocoWrappedEl
 		]
 ]
 
+{ #category : #'private - accessing' }
+MocoOntoUmlPhaseTransformationRule >> modelElements [
+	modelElements ifNil: [
+		modelElements := engine inModel elements collect: [ :each | each innerElement ]
+	].
+
+	^ modelElements
+]
+
 { #category : #accessing }
 MocoOntoUmlPhaseTransformationRule >> priority [
 	^ 99
@@ -85,7 +97,7 @@ MocoOntoUmlPhaseTransformationRule >> priority [
 MocoOntoUmlPhaseTransformationRule >> transformPhases [
 	| sets |
 	sets := engine inModel elements select: [ :each | (each isWrappingType: MocoOntoUmlGeneralizationSet) and: [ each meta isNotProcessedBy: #MocoOntoUmlPhaseTransformationRule ] ].
-	sets := sets select: [ :each | each innerElement members contains: [ :m | m subtype isKindOf: MocoOntoUmlPhase ] ].
+	sets := sets select: [ :each | (each innerElement members contains: [ :m | m subtype isKindOf: MocoOntoUmlPhase ]) and: [ MocoOntoUmlIdentityUtils checkIfHasIdentity: (each innerElement members first supertype) inModel: (self modelElements) ] ].
 	
 	sets do: [ :each |
 		| method |
