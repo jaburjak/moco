@@ -21,9 +21,31 @@ MocoOntoUmlPhaseTransformationRule >> askMethodFor: aMocoOntoUmlGeneralizationSe
 	
 	builder question: question;
 		addChoice: 'Transform using exclusive phase associations' withId: #epa;
-		addChoice: 'Transforms by an abstract phase' withId: #ap.
-		
+		addChoice: 'Transform by an abstract phase' withId: #ap.
+	
+	(self checkIfOptimizable: aMocoOntoUmlGeneralizationSet)
+		ifTrue: [ builder addChoice: 'Transform to a phase attribute' withId: #attr ].
+	
 	^ engine askChoice: builder
+]
+
+{ #category : #'private - processing' }
+MocoOntoUmlPhaseTransformationRule >> checkIfOptimizable: aMocoOntoUmlGeneralizationSet [
+	"Checks if none of the subtypes in the generalization sets contain any attributes, are part of any associations and are not supertypes of any other classes."
+	
+	aMocoOntoUmlGeneralizationSet members do: [ :each |
+		each subtype attributes ifNotEmpty: [ ^ false ].
+		
+		((engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlAssociation ])
+			anySatisfy: [ :e | ((e innerElement source element) == (each subtype)) or: [ (e innerElement target element) == (each subtype) ]])
+			ifTrue: [ ^ false ].
+		
+		((engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ])
+			anySatisfy: [ :e | (e innerElement supertype == (each subtype)) ])
+				ifTrue: [ ^ false ]
+	].
+	
+	^ true
 ]
 
 { #category : #transforming }
@@ -69,12 +91,18 @@ MocoOntoUmlPhaseTransformationRule >> transformPhases [
 		| method |
 		method := self askMethodFor: (each innerElement).
 		
-		(method = #epa)
+		(method = #attr)
 			ifTrue: [
-				self transformUsingEpa: each
+				self transformUsingAttribute: each
 			]
 			ifFalse: [
-				self transformUsingAp: each
+				(method = #epa)
+					ifTrue: [
+						self transformUsingEpa: each
+					]
+					ifFalse: [
+						self transformUsingAp: each
+					]
 			].
 		
 		each meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule.
@@ -142,6 +170,47 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAp: aMocoWrappedElement [
 	
 	aMocoWrappedElement meta outElements add: abstractOut.
 	aMocoWrappedElement meta outElements add: associationOut.
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoWrappedElement [
+	| bearer attribute ocl out |
+	bearer := self findOutElementFor: (aMocoWrappedElement innerElement members first supertype).
+	
+	attribute := MocoUmlAttribute new.
+	attribute name: (self generatePhasePartitionName: aMocoWrappedElement);
+		type: (MocoOntoUmlType newFromName: 'String').
+	
+	(attribute multiplicity) lower: (MocoUmlMultiplicityBound value: 1);
+		upper: (MocoUmlMultiplicityBound value: 1).
+	
+	bearer attributes add: attribute.
+	
+	ocl := MocoOclEnumerationConstraint new.
+	ocl context: bearer;
+		name: ('EN_' , attribute name , '_Condition' );
+		attribute: attribute.
+	ocl values addAll: (aMocoWrappedElement innerElement members collect: [ :each | each subtype name ]).
+	
+	out := OrderedCollection with: (MocoWrappedElement from: attribute) with: (MocoWrappedElement from: ocl).
+	
+	(engine inModel elements select: [ :each | (each isWrappingType: MocoOntoUmlGeneralization) and: [ aMocoWrappedElement innerElement members anySatisfy: [ :e | e == (each innerElement) ] ] ])
+		do: [ :each |
+			each meta outElements addAll: out.
+			each meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule
+		].
+	
+	aMocoWrappedElement innerElement members do: [ :each |
+		| phase |
+		phase := engine findOutElementsFor: (each subtype).
+		
+		phase do: [ :p |
+			engine outModel elements removeAllSuchThat: [ :e | e == p ]
+		]
+	].
+	
+	aMocoWrappedElement meta outElements addAll: out.
+	engine outModel elements add: (out second)
 ]
 
 { #category : #'private - transforming' }
