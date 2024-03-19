@@ -39,13 +39,22 @@ MocoToolbarUi class >> toolbarMenu: aBuilder [
 	appliedProfiles := aBuilder model diagramController model profileApplications collect: #appliedProfile.
 	(appliedProfiles noneSatisfy: [ :each | each name = 'OntoUML' ]) ifTrue: [ ^ self ].
 	
-	(aBuilder item: 'Open Moco playground')
+	(aBuilder item: #opmoco)
+		label: 'Moco';
 		icon: MocoIcons mocoIcon;
-		action: [ 
-			self openMocoPlayground: (aBuilder model diagramController model) ].
+		action: [ ].
+	
+	(aBuilder item: #opmocoplayground)
+		parent: #opmoco;
+		label: 'Open Playground';
+		action: [
+			self openMocoPlayground: (aBuilder model diagramController model)
+		].
 		
-	(aBuilder item: 'Run Moco transformations')
-		icon: MocoIcons mocoIcon;
-		action: [ 
-			self runTransformations: aBuilder ].
+	(aBuilder item: #opmocotransformsql)
+		parent: #opmoco;
+		label: 'Transform to SQL';
+		action: [
+			self runTransformations: aBuilder
+		]
 ]

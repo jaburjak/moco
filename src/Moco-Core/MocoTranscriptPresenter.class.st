@@ -56,7 +56,7 @@ MocoTranscriptPresenter >> initializePresenters [
 MocoTranscriptPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	
-	aWindowPresenter title: 'Transformation Result';
+	aWindowPresenter title: 'Transformation Transcript';
 		aboutText: 'Contains the transcript of the performed transformations.';
 		windowIcon: (MocoIcons mocoIcon)
 ]
