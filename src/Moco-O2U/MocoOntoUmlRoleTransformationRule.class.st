@@ -19,7 +19,7 @@ MocoOntoUmlRoleTransformationRule class >> modelSelector [
 MocoOntoUmlRoleTransformationRule >> execute [
 	super execute.
 	
-	self transformRoleGeneralizations.
+	self transformRoleGeneralizations
 ]
 
 { #category : #'private - processing' }
