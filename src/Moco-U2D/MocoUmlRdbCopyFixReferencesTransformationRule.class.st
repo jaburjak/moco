@@ -12,7 +12,7 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
 	self fixGeneralizations;
 		fixGeneralizationSets;
 		fixAssociations;
-		fixExclusiveAssociationConditions
+		fixOcl
 ]
 
 { #category : #'private - transforming' }
@@ -42,30 +42,21 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixAssociations [
 	]
 ]
 
-{ #category : #'private - processing' }
-MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditions [
+{ #category : #'private - transforming' }
+MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditions: aCollection [
 	| ocls |
-	ocls := engine outModel elements select: [ :each | (each isWrappingType: MocoOclExclusiveAssociationCondition) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	ocls := aCollection select: [ :each | each isWrappingType: MocoOclExclusiveAssociationCondition ].
 	
 	ocls do: [ :each |
-		| original context associations |
+		| original associations |
 		original := engine findInElementFor: each.
-		
-		context := (engine findOutElementsFor: (original innerElement context)) first innerElement.
 		
 		associations := original innerElement associations collect: [ :a |
 			(engine findOutElementsFor: a) first innerElement
 		].
 		
-		each innerElement context: context.
 		each innerElement associations removeAll.
-		each innerElement associations addAll: associations.
-		
-		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
-	].
-
-	ocls ifNotEmpty: [
-		engine outModel meta didChange: true
+		each innerElement associations addAll: associations
 	]
 ]
 
@@ -112,6 +103,29 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixGeneralizations [
 	].
 
 	generalizations ifNotEmpty: [
+		engine outModel meta didChange: true
+	]
+]
+
+{ #category : #'private - transforming' }
+MocoUmlRdbCopyFixReferencesTransformationRule >> fixOcl [
+	| ocls |
+	ocls := engine outModel elements select: [ :each | ((each isWrappingType: MocoOclCondition) or: [ each isWrappingType: MocoOclInvariant ]) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	
+	ocls do: [ :each |
+		| original context |
+		original := engine findInElementFor: each.
+		
+		context := (engine findOutElementsFor: (original innerElement context)) first innerElement.
+		
+		each innerElement context: context.
+		
+		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
+	].
+
+	self fixExclusiveAssociationConditions: ocls.
+
+	ocls ifNotEmpty: [
 		engine outModel meta didChange: true
 	]
 ]
