@@ -51,6 +51,16 @@ MocoChoicePresenter >> initializePresenters [
 	questionText beNotEditable.
 ]
 
+{ #category : #initialization }
+MocoChoicePresenter >> initializeWindow: aWindowPresenter [
+	super initializeWindow: aWindowPresenter.
+	
+	aWindowPresenter title: 'Choose Transformation Option';
+		aboutText: 'Provides choice when multiple transformation paths are available.';
+		windowIcon: (MocoIcons mocoIcon)
+	
+]
+
 { #category : #processing }
 MocoChoicePresenter >> openAndWait [
 	self open.
@@ -65,9 +75,4 @@ MocoChoicePresenter >> openAndWait [
 { #category : #accessing }
 MocoChoicePresenter >> question: aString [
 	questionText text: aString
-]
-
-{ #category : #accessing }
-MocoChoicePresenter >> title [
-	^ 'Choose Transformation Option'
 ]
