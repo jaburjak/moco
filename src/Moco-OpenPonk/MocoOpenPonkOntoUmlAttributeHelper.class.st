@@ -6,7 +6,10 @@ Class {
 
 { #category : #'as yet unclassified' }
 MocoOpenPonkOntoUmlAttributeHelper class >> getMocoAttributesFrom: anOpenPonkSortal [
-	^ anOpenPonkSortal ownedAttributes collect: [ :each |
+	| attributes |
+	attributes := anOpenPonkSortal ownedAttributes select: [ :each | each association isNil ].
+	
+	^ attributes collect: [ :each |
 		| attr |
 		attr := MocoOntoUmlAttribute new.
 		
