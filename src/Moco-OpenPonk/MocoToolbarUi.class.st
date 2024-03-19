@@ -24,27 +24,12 @@ sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel second).
 ]
 
 { #category : #'as yet unclassified' }
-MocoToolbarUi class >> runTransformations: aModel [
-	| ontoModel umlModel dbModel sqlModel |
-
-	ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: aModel.
-	umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
-	dbModel := MocoUmlToRdbFacade transform: umlModel.
-	sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel last).
+MocoToolbarUi class >> runTransformations: aBuilder [
+	| command |
+	command := MocoOpenPonkRunTransformationsCommand new.
+	command workbench: (aBuilder model workbench).
 	
-	Transcript clear.
-	
-	MocoModelPrinter printToTranscript: ontoModel withTitle: 'OntoUML'.
-	Transcript cr.
-	MocoModelPrinter printToTranscript: umlModel withTitle: 'UML'.
-	Transcript cr.
-	MocoModelPrinter printToTranscript: (dbModel first) withTitle: 'UML (preprocessed for database)'.
-	Transcript cr.
-	MocoModelPrinter printToTranscript: (dbModel last) withTitle: 'Database'.
-	Transcript cr.
-	MocoModelPrinter printToTranscript: sqlModel withTitle: 'SQL'.
-	
-	(Transcript openLabel: 'Transformation Result') maximize.
+	command execute
 ]
 
 { #category : #toolbar }
