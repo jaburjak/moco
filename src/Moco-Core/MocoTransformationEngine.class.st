@@ -7,8 +7,7 @@ Class {
 	#instVars : [
 		'rules',
 		'inModel',
-		'outModel',
-		'spApplication'
+		'outModel'
 	],
 	#category : #'Moco-Core-Engine'
 }
@@ -95,11 +94,7 @@ MocoTransformationEngine >> rules [
 
 { #category : #accessing }
 MocoTransformationEngine >> spApplication [
-	spApplication ifNil: [
-		spApplication := MocoSpApplication new.
-	].
-
-	^ spApplication
+	^ MocoSpApplication instance
 ]
 
 { #category : #transforming }
