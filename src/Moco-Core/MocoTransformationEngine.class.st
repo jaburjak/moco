@@ -17,9 +17,16 @@ MocoTransformationEngine >> applyRule: aRule [
 	"Executes the given transformation rule repeatedly until the output model no longer changes."
 
 	[
+		| prev curr |
+		prev := outModel meta didChange.
 		outModel meta didChange: false.
+		
 		aRule execute.
-		outModel meta didChange.
+		
+		curr := outModel meta didChange.
+		outModel meta didChange: (prev or: curr).
+		
+		curr
 	] whileTrue.
 ]
 
@@ -52,7 +59,7 @@ MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
 
 { #category : #accessing }
 MocoTransformationEngine >> findInElementFor: aMocoWrappedElement [
-	^ (inModel elements select: [ :each | each meta outElements anySatisfy: [ :e | e == aMocoWrappedElement ] ]) first
+	^ inModel elements detect: [ :each | each meta outElements anySatisfy: [ :e | e == aMocoWrappedElement ] ] ifNone: [ nil ]
 ]
 
 { #category : #'as yet unclassified' }

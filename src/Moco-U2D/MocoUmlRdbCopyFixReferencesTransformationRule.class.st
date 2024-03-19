@@ -18,18 +18,22 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
 { #category : #'private - transforming' }
 MocoUmlRdbCopyFixReferencesTransformationRule >> fixAssociations [
 	| associations |
-	associations := engine outModel elements select: [ :each | (each isWrappingType: MocoUmlAssociation) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	associations := engine outModel elements select: [ :each | (each isWrappingType: MocoUmlAssociation) and: [ each meta isNotProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule ] ].
 	
 	associations do: [ :each |
-		| original source target |
+		| original |
 		original := engine findInElementFor: each.
 		
-		source := (engine findOutElementsFor: (original innerElement source element)) first innerElement.
-		target := (engine findOutElementsFor: (original innerElement target element)) first innerElement.
-		
-		each innerElement source element: source.
-		each innerElement target element: target.
-		
+		original ifNotNil: [ "ignore associations generated in the current transformation phase"
+			| source target |
+			
+			source := (engine findOutElementsFor: (original innerElement source element)) first innerElement.
+			target := (engine findOutElementsFor: (original innerElement target element)) first innerElement.
+			
+			each innerElement source element: source.
+			each innerElement target element: target
+		].
+			
 		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
 	].
 
