@@ -55,12 +55,12 @@ MocoToolbarUi class >> toolbarMenu: aBuilder [
 	(appliedProfiles noneSatisfy: [ :each | each name = 'OntoUML' ]) ifTrue: [ ^ self ].
 	
 	(aBuilder item: 'Open Moco playground')
-		icon: OPCoreIcons openponkIcon;
+		icon: MocoIcons mocoIcon;
 		action: [ 
 			self openMocoPlayground: (aBuilder model diagramController model) ].
 		
 	(aBuilder item: 'Run Moco transformations')
-		icon: OPCoreIcons openponkIcon;
+		icon: MocoIcons mocoIcon;
 		action: [ 
-			self runTransformations: (aBuilder model diagramController model) ].
+			self runTransformations: aBuilder ].
 ]
