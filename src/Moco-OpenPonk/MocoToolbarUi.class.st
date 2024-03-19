@@ -11,15 +11,16 @@ Class {
 MocoToolbarUi class >> openMocoPlayground: aModel [
 	MocoOpenPonkModelStorage ontoUmlModel: aModel.
 	
-	StPlayground openContents: '| openPonkModel ontoModel umlModel dbModel sqlModel |
+	(StPlayground openContents: '| openPonkModel ontoModel umlModel dbModel sqlModel |
 openPonkModel := MocoOpenPonkModelStorage ontoUmlModel.
 
 ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: openPonkModel.
 umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
-dbModel := MocoUmlToRdbOracleFacade transform: umlModel.
-sqlModel := MocoRdbOracleToSqlFacade transform: dbModel.
+dbModel := MocoUmlToRdbFacade transform: umlModel.
+sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel second).
 
-sqlModel elements collect: [ :each | each innerElement toSql ].'.
+')
+		centered
 ]
 
 { #category : #'as yet unclassified' }
