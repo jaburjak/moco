@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'rules',
 		'inModel',
-		'outModel'
+		'outModel',
+		'job'
 	],
 	#category : #'Moco-Core-Engine'
 }
@@ -21,9 +22,14 @@ MocoTransformationEngine >> applyRule: aRule [
 		prev := outModel meta didChange.
 		outModel meta didChange: false.
 		
+		self updateProgress: aRule.
+		
 		aRule execute.
 		
 		curr := outModel meta didChange.
+		
+		curr ifTrue: [ self incrementJobMax: 1 ].
+		
 		outModel meta didChange: (prev or: curr).
 		
 		curr
@@ -77,11 +83,21 @@ MocoTransformationEngine >> inModel: aWrappedModel [
 	inModel := aWrappedModel
 ]
 
+{ #category : #'private - processing' }
+MocoTransformationEngine >> incrementJobMax: aNumber [
+	job ifNotNil: [
+		| val |
+		val := job currentValue.
+		job max: ((job max) + aNumber);
+			currentValue: val
+	]
+]
+
 { #category : #initialization }
 MocoTransformationEngine >> initialize [
 	super initialize.
 	
-	rules := SortedCollection sortBlock: [ :a :b | (a priority) > (b priority) ].
+	rules := SortedCollection sortBlock: [ :a :b | (a priority) > (b priority) ]
 ]
 
 { #category : #accessing }
@@ -108,9 +124,28 @@ MocoTransformationEngine >> spApplication [
 MocoTransformationEngine >> transform [
 	"Transforms the model using transformation rules."
 
-	[
-		outModel meta didChange: false.
-		self applyRules.
-		outModel meta didChange.
-	] whileTrue
+	[ :j |
+		job := j.
+		job title: 'Transformation in progress...';
+			max: rules size.
+		
+		[
+			outModel meta didChange: false.
+			
+			self applyRules.
+			
+			outModel meta didChange ifTrue: [ self incrementJobMax: (rules size) ].
+			
+			outModel meta didChange
+		] whileTrue
+	] asJob run
+]
+
+{ #category : #'private - processing' }
+MocoTransformationEngine >> updateProgress: aMocoTransformationRule [
+	job ifNotNil: [
+		job
+			increment;
+			title: 'Transforming:' , (Character cr asString) , (aMocoTransformationRule class asString).
+	]
 ]

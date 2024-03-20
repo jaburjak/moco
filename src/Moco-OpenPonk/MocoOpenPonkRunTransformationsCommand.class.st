@@ -37,14 +37,14 @@ MocoOpenPonkRunTransformationsCommand >> execute [
 	self addModel: (dbModel last) withLabel: 'Database' toTranscript: transcript.
 	self addModel: sqlModel withLabel: 'Oracle SQL' toTranscript: transcript.
 	
-	transcript open maximize.
-	transcript tabs layout children last click.
-	transcript body takeKeyboardFocus.
-	
 	models := OrderedCollection new.
 	models add: (self packageModel: umlModel as: 'UML Model' usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
 		add: (self packageModel: (dbModel first) as: 'UML Model for RDB' usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
 		add: (self packageModel: (dbModel last) as: 'RDB Model' usingRulesWithTag: 'Rule-Rdb' andClassPrefix: 'MocoOpenPonkRdb').
+	
+	transcript open maximize.
+	transcript tabs layout children last click.
+	transcript body takeKeyboardFocus.
 	
 	self openOpenPonk: models
 ]
