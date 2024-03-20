@@ -106,16 +106,13 @@ MocoOntoUmlRelatorOptimizationTransformationRule >> optimizeRelator: aMocoWrappe
 		].
 	
 	association := MocoUmlAssociation new.
-	association name: (MocoNamingUtils toFirstLowerCase: (aMocoWrappedElement innerElement name)).
+	association name: (MocoNamingUtils toFirstLowerCase: (aMocoWrappedElement innerElement name));
+		derived: (associations first innerElement derived and: (associations second innerElement derived)).
 	
-	sourceSide := MocoUmlAssociationSide new.
-	sourceSide element: (sourceClassSide element);
-		frozen: (sourceClassSide frozen).
+	sourceSide := sourceClassSide copy.
 	sourceSide multiplicity: (self multiplyMultiplicities: (OrderedCollection with: (sourceClassSide multiplicity) with: (targetRelatorSide multiplicity))).
 	
-	targetSide := MocoUmlAssociationSide new.
-	targetSide element: (targetClassSide element);
-		frozen: (targetClassSide frozen).
+	targetSide := targetClassSide copy.
 	targetSide multiplicity: (self multiplyMultiplicities: (OrderedCollection with: (sourceRelatorSide multiplicity) with: (targetClassSide multiplicity))).
 	
 	association source: sourceSide;
