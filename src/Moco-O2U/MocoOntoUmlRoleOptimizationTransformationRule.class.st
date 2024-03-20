@@ -94,13 +94,13 @@ MocoOntoUmlRoleOptimizationTransformationRule >> optimizeRole: aMocoWrappedEleme
 	
 	associations := engine outModel elements select: [ :each | each isWrappingType: MocoUmlAssociation ].
 	
-	(associations select: [ :each | ((each innerElement source element) == roleClass) and: [ (each innerElement target element) ~= identityBearer ] ]) do: [ :each |
+	(associations select: [ :each | ((each innerElement source element) == roleClass) and: [ ((each innerElement target element) == identityBearer) not ] ]) do: [ :each |
 		each innerElement source element: identityBearer.
 		each innerElement target multiplicity lower: (MocoUmlMultiplicityBound value: 0).
 		each innerElement source name: (MocoNamingUtils toFirstLowerCase: (aMocoWrappedElement innerElement name))
 	].
 	
-	(associations select: [ :each | ((each innerElement target element) == roleClass) and: [ (each innerElement source element) ~= identityBearer ] ]) do: [ :each |
+	(associations select: [ :each | ((each innerElement target element) == roleClass) and: [ ((each innerElement source element) == identityBearer) not ] ]) do: [ :each |
 		each innerElement target element: identityBearer.
 		each innerElement source multiplicity lower: (MocoUmlMultiplicityBound value: 0)
 	].
