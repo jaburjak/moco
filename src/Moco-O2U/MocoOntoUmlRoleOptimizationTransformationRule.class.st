@@ -25,6 +25,10 @@ MocoOntoUmlRoleOptimizationTransformationRule >> checkIfOptimizable: aMocoOntoUm
 	(associations reject: [ :each | (each isWrappingType: MocoOntoUmlMediationAssociation) or: [ each isWrappingType: MocoOntoUmlMaterialAssociation ] ])
 		ifNotEmpty: [ ^ false ].
 	
+	(associations anySatisfy: [ :each | (each innerElement source shareability type isNotNil) or: [ each innerElement target shareability type isNotNil ] ]) ifTrue: [ ^ false ].
+	
+	(associations anySatisfy: [ :each | (each innerElement source element) == (each innerElement target element) ]) ifTrue: [ ^ false ].
+	
 	(((associations select: [ :each | each isWrappingType: MocoOntoUmlMediationAssociation ]) size) > 1) ifTrue: [ ^ false ].
 	(((associations select: [ :each | each isWrappingType: MocoOntoUmlMaterialAssociation ]) size) > 1) ifTrue: [ ^ false ].
 	
