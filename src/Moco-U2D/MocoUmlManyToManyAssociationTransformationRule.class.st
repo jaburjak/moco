@@ -24,7 +24,19 @@ MocoUmlManyToManyAssociationTransformationRule >> decompose: aMocoWrappedElement
 	sourceAssociation := self generateSourceAssociation: (aMocoWrappedElement innerElement) withIntermediating: class.
 	targetAssociation := self generateTargetAssociation: (aMocoWrappedElement innerElement) withIntermediating: class.
 	
+	(aMocoWrappedElement innerElement source frozen) ifTrue: [
+		sourceAssociation target frozen: true.
+		targetAssociation source frozen: true
+	].
+	
+	(aMocoWrappedElement innerElement target frozen) ifTrue: [
+		sourceAssociation source frozen: true.
+		targetAssociation target frozen: true
+	].
+	
 	cOut := MocoWrappedElement from: class.
+	cOut meta at: #generatedBy put: #MocoUmlManyToManyAssociationTransformationRule.
+	
 	sOut := MocoWrappedElement from: sourceAssociation.
 	tOut := MocoWrappedElement from: targetAssociation.
 	

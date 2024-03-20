@@ -38,7 +38,7 @@ MocoUmlToRdbFacade class >> transform: aMocoWrappedModel [
 	
 	engine := MocoTransformationEngine new.
 	
-	engine inModel: (MocoWrappedModelFactory fromModel: preModel);
+	engine inModel: (MocoWrappedModelFactory fromModel: preModel retainMetaProperties: #(generatedBy));
 		outModel: outModel.
 		
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
