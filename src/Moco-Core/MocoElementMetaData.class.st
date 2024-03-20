@@ -6,10 +6,21 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'outElements',
-		'processedBy'
+		'processedBy',
+		'properties'
 	],
 	#category : #'Moco-Core-Model'
 }
+
+{ #category : #accessing }
+MocoElementMetaData >> at: aSymbol [
+	^ properties at: aSymbol ifAbsent: [ nil ]
+]
+
+{ #category : #accessing }
+MocoElementMetaData >> at: aSymbol put: anObject [
+	properties at: aSymbol put: anObject
+]
 
 { #category : #initialization }
 MocoElementMetaData >> initialize [
@@ -17,6 +28,7 @@ MocoElementMetaData >> initialize [
 	
 	outElements := OrderedCollection new.
 	processedBy := OrderedCollection new.
+	properties := Dictionary new
 ]
 
 { #category : #testing }
