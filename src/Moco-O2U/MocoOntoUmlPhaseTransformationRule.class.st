@@ -36,6 +36,9 @@ MocoOntoUmlPhaseTransformationRule >> askMethodFor: aMocoOntoUmlGeneralizationSe
 MocoOntoUmlPhaseTransformationRule >> checkIfOptimizable: aMocoOntoUmlGeneralizationSet [
 	"Checks if none of the subtypes in the generalization sets contain any attributes, are part of any associations and are not supertypes of any other classes."
 	
+	aMocoOntoUmlGeneralizationSet ifNotDisjoint: [ ^ false ].
+	aMocoOntoUmlGeneralizationSet ifNotCovering: [ ^ false ].
+	
 	aMocoOntoUmlGeneralizationSet members do: [ :each |
 		each subtype attributes ifNotEmpty: [ ^ false ].
 		
