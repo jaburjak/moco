@@ -10,24 +10,19 @@ Class {
 { #category : #transforming }
 MocoUmlOclEnumerationConstraintTransformationRule >> execute [
 	| conditions |
-	conditions := engine inModel elements select: [ :each | (each isWrappingType: MocoOclEnumerationConstraint) and: [ each meta isNotProcessedBy: #MocoUmlOclEnumerationConstraintTransformationRule ] ].
+	conditions := engine input
+		selectElementsOfKind: MocoOclEnumerationConstraint
+		notGuarded: #MocoUmlOclEnumerationConstraintTransformationRule.
 	
 	conditions do: [ :each |
-		| ocl out |
+		| ocl |
 		ocl := MocoOclRdbEnumerationConstraint new.
-		ocl context: ((engine findOutElementsFor: (each innerElement context)) detect: [ :e | e isWrappingType: MocoRdbTable ]) innerElement.
-		ocl column: (ocl context columns detect: [ :e | (e name) = (MocoNamingUtils toUpperSnakeCase: (each innerElement attribute name)) ]).
-		ocl values addAll: (each innerElement values).
+		ocl context: (engine detectOutputElement: (each context) ofKind: MocoRdbTable).
+		ocl column: (ocl context columns detect: [ :e | (e name) = (MocoNamingUtils toUpperSnakeCase: (each attribute name)) ]).
+		ocl values addAll: (each values).
 		
-		out := MocoWrappedElement from: ocl.
-		
-		each meta outElements add: out.
-		each meta markProcessedBy: #MocoUmlOclEnumerationConstraintTransformationRule.
-		engine outModel elements add: out
-	].
-	
-	conditions ifNotEmpty: [
-		engine outModel meta didChange: true
+		engine addOutputElement: ocl withSource: each.
+		engine input guard: each with: #MocoUmlOclEnumerationConstraintTransformationRule
 	]
 ]
 

@@ -10,25 +10,18 @@ Class {
 { #category : #transforming }
 MocoOpenPonkUmlGeneralizationTransformationRule >> execute [
 	| generalizations |
-	generalizations := engine inModel elements select: [ :each | (each isWrappingType: MocoUmlGeneralization) and: [ each meta isNotProcessedBy: #MocoOpenPonkUmlGeneralizationTransformationRule ] ].
+	generalizations := engine input
+		selectElementsOfKind: MocoUmlGeneralization
+		notGuarded: #MocoOpenPonkUmlGeneralizationTransformationRule.
 	
-	generalizations do: [ :each |
-		| generalization |
-		generalization := self toOpenPonkGeneralization: (each innerElement).
-		generalization := MocoWrappedElement from: generalization.
-		
-		each meta outElements add: generalization.
-		engine outModel elements add: generalization.
-		
-		each meta markProcessedBy: #MocoOpenPonkUmlGeneralizationTransformationRule
-	].
-
-	generalizations ifNotEmpty: [ engine outModel meta didChange: true ]
+	generalizations do: [ :each | self transformGeneralization: each ]
 ]
 
 { #category : #'private - processing' }
 MocoOpenPonkUmlGeneralizationTransformationRule >> findOutClassFor: aMocoUmlClass [
-	^ ((engine findOutElementsFor: aMocoUmlClass) select: [ :each | each isWrappingType: OPUMLClass ]) first innerElement
+	"Returns the OpenPonk class that was generated from the given Moco element."
+	
+	^ engine detectOutputElement: aMocoUmlClass ofKind: OPUMLClass
 ]
 
 { #category : #accessing }
@@ -38,6 +31,8 @@ MocoOpenPonkUmlGeneralizationTransformationRule >> priority [
 
 { #category : #'private - transforming' }
 MocoOpenPonkUmlGeneralizationTransformationRule >> toOpenPonkGeneralization: aMocoUmlGeneralization [
+	"Creates an OpenPonk generalization element from the the given Moco element."
+	
 	| op |
 	op := OPUMLGeneralization new.
 	
@@ -45,4 +40,15 @@ MocoOpenPonkUmlGeneralizationTransformationRule >> toOpenPonkGeneralization: aMo
 		specific: (self findOutClassFor: (aMocoUmlGeneralization subtype)).
 		
 	^ op
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkUmlGeneralizationTransformationRule >> transformGeneralization: aMocoUmlGeneralization [
+	"Transforms the given Moco generalization to the OpenPonk model."
+	
+	| generalization |
+	generalization := self toOpenPonkGeneralization: aMocoUmlGeneralization.
+	
+	engine addOutputElement: generalization withSource: aMocoUmlGeneralization.
+	engine input guard: aMocoUmlGeneralization with: #MocoOpenPonkUmlGeneralizationTransformationRule
 ]

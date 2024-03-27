@@ -13,24 +13,40 @@ Class {
 	#category : #'Moco-Core-Engine'
 }
 
+{ #category : #accessing }
+MocoTransformationEngine >> addOutputElement: anObject [
+	"Adds a new element to the output model."
+	
+	outModel addElement: anObject
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> addOutputElement: anObject withSource: anObject2 [
+	"Adds a new element to the output model and links it to the input element in withSource:."
+	
+	outModel addElement: anObject.
+	
+	inModel at: anObject2 putOutputElement: anObject
+]
+
 { #category : #'private - transforming' }
 MocoTransformationEngine >> applyRule: aRule [
 	"Executes the given transformation rule repeatedly until the output model no longer changes."
 
 	[
 		| prev curr |
-		prev := outModel meta didChange.
-		outModel meta didChange: false.
+		prev := outModel isModified.
+		outModel resetModified.
 		
 		self updateProgress: aRule.
 		
 		aRule execute.
 		
-		curr := outModel meta didChange.
+		curr := outModel isModified.
 		
 		curr ifTrue: [ self incrementJobMax: 1 ].
 		
-		outModel meta didChange: (prev or: curr).
+		(prev or: curr) ifTrue: [ outModel setModified ].
 		
 		curr
 	] whileTrue.
@@ -64,23 +80,80 @@ MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
 ]
 
 { #category : #accessing }
-MocoTransformationEngine >> findInElementFor: aMocoWrappedElement [
-	^ inModel elements detect: [ :each | each meta outElements anySatisfy: [ :e | e == aMocoWrappedElement ] ] ifNone: [ nil ]
-]
-
-{ #category : #'as yet unclassified' }
-MocoTransformationEngine >> findOutElementsFor: anElement [
-	^ ((inModel elements select: [ :each | each innerElement == anElement ]) flatCollect: [ :each | each meta outElements ]).
-]
-
-{ #category : #accessing }
-MocoTransformationEngine >> inModel [
-	^ inModel
+MocoTransformationEngine >> detectInputElement: anObject [
+	"Returns the first input element of the given object."
+	
+	| elements |
+	elements := self selectInputElements: anObject.
+	
+	elements ifEmpty: [ ^ nil ].
+	
+	^ elements first
 ]
 
 { #category : #accessing }
-MocoTransformationEngine >> inModel: aWrappedModel [
-	inModel := aWrappedModel
+MocoTransformationEngine >> detectInputElement: anObject ofKind: aClass [
+	"Returns the first input element of the given object that is of the given kind."
+	
+	| elements |
+	elements := self selectInputElements: anObject ofKind: aClass.
+	
+	elements ifEmpty: [ ^ nil ].
+	
+	^ elements first
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> detectInputElement: anObject ofKind: aClass notGuarded: aSymbol [
+	"Returns the first input element of the given object that is of the given kind and is not guarded by the given symbol."
+	
+	| elements |
+	elements := self selectInputElements: anObject ofKind: aClass notGuarded: aSymbol.
+	
+	elements ifEmpty: [ ^ nil ].
+	
+	^ elements first
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> detectOutputElement: anObject [
+	"Returns the first output element of the given object."
+	
+	| elements |
+	elements := self selectOutputElements: anObject.
+	
+	elements ifEmpty: [ ^ nil ].
+	
+	^ elements first
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> detectOutputElement: anObject ofKind: aClass [
+	"Returns the first output element of the given object that is of the given kind."
+	
+	| elements |
+	elements := self selectOutputElements: anObject ofKind: aClass.
+	
+	elements ifEmpty: [ ^ nil ].
+	
+	^ elements first
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> detectOutputElement: anObject ofKind: aClass notGuarded: aSymbol [
+	"Returns the first output element of the given object that is of the given kind and is not guarded by the given symbol."
+	
+	| elements |
+	elements := self selectOutputElements: anObject ofKind: aClass notGuarded: aSymbol.
+	
+	elements ifEmpty: [ ^ nil ].
+	
+	^ elements first
+]
+
+{ #category : #'private - accessing' }
+MocoTransformationEngine >> inModel: aMocoModel [
+	inModel := aMocoModel
 ]
 
 { #category : #'private - processing' }
@@ -97,25 +170,91 @@ MocoTransformationEngine >> incrementJobMax: aNumber [
 MocoTransformationEngine >> initialize [
 	super initialize.
 	
-	rules := SortedCollection sortBlock: [ :a :b | (a priority) > (b priority) ]
+	rules := SortedCollection sortBlock: [ :a :b | (a priority) > (b priority) ].
+	inModel := MocoModel new.
+	outModel := MocoModel new
 ]
 
 { #category : #accessing }
-MocoTransformationEngine >> outModel [
+MocoTransformationEngine >> input [
+	"Returns the input model."
+	
+	^ inModel
+]
+
+{ #category : #'private - accessing' }
+MocoTransformationEngine >> outModel: aMocoModel [
+	outModel := aMocoModel
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> output [
+	"Returns the output model."
+	
 	^ outModel
 ]
 
 { #category : #accessing }
-MocoTransformationEngine >> outModel: aWrappedModel [
-	outModel := aWrappedModel
+MocoTransformationEngine >> removeOutputElement: anObject [
+	"Removes the given element from the output model."
+	
+	| removed |
+	removed := outModel removeElement: anObject.
+	
+	removed do: [ :each | inModel purgeElement: each ]
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MocoTransformationEngine >> rules [
 	^ rules
 ]
 
 { #category : #accessing }
+MocoTransformationEngine >> selectInputElements: anObject [
+	"Returns source elements of the given object."
+	
+	^ MocoModel collectElements: (inModel selectElementsWithOutput: anObject)
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> selectInputElements: anObject ofKind: aClass [
+	"Returns source elements of the given object that are of the given kind."
+	
+	^ MocoModel collectElements: ((inModel selectElementsWithOutput: anObject) select: [ :each | each isWrappingType: aClass ])
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> selectInputElements: anObject ofKind: aClass notGuarded: aSymbol [
+	"Returns source elements of the given object that are of the given kind and are not guarded by the given symbol."
+	
+	^ MocoModel collectElements: ((inModel selectElementsWithOutput: anObject)
+		select: [ :each | (each isWrappingType: aClass) and: [ each meta checkNotGuard: aSymbol ] ])
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> selectOutputElements: anObject [
+	"Returns all elements that have been created with anObject as their source."
+	
+	^ MocoModel collectElements: ((inModel selectElements: anObject) flatCollect: [ :each | each meta outElements ])
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> selectOutputElements: anObject ofKind: aClass [
+	"Returns output elements of the given object that are of the given kind."
+	
+	^ MocoModel collectElements: (((inModel selectElements: anObject) flatCollect: [ :each | each meta outElements ])
+		select: [ :each | each isWrappingType: aClass ])
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> selectOutputElements: anObject ofKind: aClass notGuarded: aSymbol [
+	"Returns output elements of the given object that are of the given kind and are not guarded by the given symbol."
+	
+	^ MocoModel collectElements: (((inModel selectElements: anObject) flatCollect: [ :each | each meta outElements ])
+		select: [ :each | (each isWrappingType: aClass) and: [ each checkNotGuard: aSymbol ] ])
+]
+
+{ #category : #'private - accessing' }
 MocoTransformationEngine >> spApplication [
 	^ MocoSpApplication instance
 ]
@@ -123,20 +262,20 @@ MocoTransformationEngine >> spApplication [
 { #category : #transforming }
 MocoTransformationEngine >> transform [
 	"Transforms the model using transformation rules."
-
+	
 	[ :j |
 		job := j.
 		job title: 'Transformation in progress...';
 			max: rules size.
 		
 		[
-			outModel meta didChange: false.
+			outModel resetModified.
 			
 			self applyRules.
 			
-			outModel meta didChange ifTrue: [ self incrementJobMax: (rules size) ].
+			outModel isModified ifTrue: [ self incrementJobMax: (rules size) ].
 			
-			outModel meta didChange
+			outModel isModified
 		] whileTrue
 	] asJob run
 ]

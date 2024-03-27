@@ -7,64 +7,70 @@ Class {
 	#category : #'Moco-U2D-Rule-Preprocess'
 }
 
-{ #category : #'private - processing' }
+{ #category : #'private - testing' }
 MocoUmlManyToManyAssociationTransformationRule >> checkIfManyToMany: aMocoUmlAssociation [
+	"Returns true if the given association is of many-to-many kind."
+	
 	^ ((self checkIfSideIsMultiple: (aMocoUmlAssociation source)) and: [ self checkIfSideIsMultiple: (aMocoUmlAssociation target) ])
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - testing' }
 MocoUmlManyToManyAssociationTransformationRule >> checkIfSideIsMultiple: aMocoUmlAssociationSide [
+	"Returns true if the given association side has maximal multiplicity greater than one."
+	
 	^ ((aMocoUmlAssociationSide multiplicity upper isUnbounded) or: [ aMocoUmlAssociationSide multiplicity upper value > 1 ])
 ]
 
 { #category : #'private - transforming' }
-MocoUmlManyToManyAssociationTransformationRule >> decompose: aMocoWrappedElement [
-	| class cOut sourceAssociation sOut targetAssociation tOut |
-	class := self generateIntermediatingClass: (aMocoWrappedElement innerElement).
-	sourceAssociation := self generateSourceAssociation: (aMocoWrappedElement innerElement) withIntermediating: class.
-	targetAssociation := self generateTargetAssociation: (aMocoWrappedElement innerElement) withIntermediating: class.
+MocoUmlManyToManyAssociationTransformationRule >> decompose: aMocoUmlAssociation [
+	"Decomposes the given many-to-many association to two many-to-one associations with an intermediating class."
 	
-	(aMocoWrappedElement innerElement source frozen) ifTrue: [
+	| class sourceAssociation targetAssociation |
+	class := self generateIntermediatingClass: aMocoUmlAssociation.
+	sourceAssociation := self generateSourceAssociation: aMocoUmlAssociation withIntermediating: class.
+	targetAssociation := self generateTargetAssociation: aMocoUmlAssociation withIntermediating: class.
+	
+	(aMocoUmlAssociation source frozen) ifTrue: [
 		sourceAssociation target frozen: true.
 		targetAssociation source frozen: true
 	].
 	
-	(aMocoWrappedElement innerElement target frozen) ifTrue: [
+	(aMocoUmlAssociation target frozen) ifTrue: [
 		sourceAssociation source frozen: true.
 		targetAssociation target frozen: true
 	].
 	
-	cOut := MocoWrappedElement from: class.
-	cOut meta at: #generatedBy put: #MocoUmlManyToManyAssociationTransformationRule.
+	engine addOutputElement: class;
+		addOutputElement: sourceAssociation;
+		addOutputElement: targetAssociation.
 	
-	sOut := MocoWrappedElement from: sourceAssociation.
-	tOut := MocoWrappedElement from: targetAssociation.
+	(engine output) at: aMocoUmlAssociation putOutputElement: class;
+		at: aMocoUmlAssociation putOutputElement: sourceAssociation;
+		at: aMocoUmlAssociation putOutputElement: targetAssociation.
 	
-	aMocoWrappedElement meta outElements addAll: { cOut. sOut. tOut }.
+	engine output metaOf: class at: #generatedBy put: #MocoUmlManyToManyAssociationTransformationRule.
 	
-	engine outModel elements addAll: { cOut. sOut. tOut }
+	engine removeOutputElement: aMocoUmlAssociation
 ]
 
 { #category : #transforming }
 MocoUmlManyToManyAssociationTransformationRule >> execute [
 	| associations |
-	associations := engine outModel elements select: [ :each |
-		(each isWrappingType: MocoUmlAssociation) and: [ (each meta isProcessedBy: #MocoUmlManyToManyAssociationTransformationRule) not ]
-	].
+	associations := engine output
+		selectElementsOfKind: MocoUmlAssociation
+		notGuarded: #MocoUmlManyToManyAssociationTransformationRule.
 
-	associations do: [ :each | each meta markProcessedBy: #MocoUmlManyToManyAssociationTransformationRule ].
+	associations do: [ :each | engine output guard: each with: #MocoUmlManyToManyAssociationTransformationRule ].
 	
-	associations := associations select: [ :each | self checkIfManyToMany: (each innerElement) ].
+	associations := associations select: [ :each | self checkIfManyToMany: each ].
 	
-	associations do: [ :each | self decompose: each ].
-	
-	engine outModel elements removeAllSuchThat: [ :each | associations anySatisfy: [ :a | a == each ] ].
-
-	associations ifNotEmpty: [ engine outModel meta didChange: true ]
+	associations do: [ :each | self decompose: each ]
 ]
 
 { #category : #'private - processing' }
 MocoUmlManyToManyAssociationTransformationRule >> generateIntermediatingClass: aMocoUmlAssociation [
+	"Generates the intermediating class for decomposing the given many-to-many association."
+	
 	| class infix source target |
 	class := MocoUmlClass new.
 	
@@ -84,6 +90,8 @@ MocoUmlManyToManyAssociationTransformationRule >> generateIntermediatingClass: a
 
 { #category : #'private - processing' }
 MocoUmlManyToManyAssociationTransformationRule >> generateSourceAssociation: aMocoUmlAssociation withIntermediating: aMocoUmlClass [
+	"Generates the many-to-one association from the source to the given intermediating class."
+	
 	| association source target |
 	association := MocoUmlAssociation new.
 	
@@ -106,6 +114,8 @@ MocoUmlManyToManyAssociationTransformationRule >> generateSourceAssociation: aMo
 
 { #category : #'private - processing' }
 MocoUmlManyToManyAssociationTransformationRule >> generateTargetAssociation: aMocoUmlAssociation withIntermediating: aMocoUmlClass [
+	"Generates the many-to-one association from the target to the given intermediating class."
+	
 	| association source target |
 	association := MocoUmlAssociation new.
 	

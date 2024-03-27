@@ -10,20 +10,11 @@ Class {
 { #category : #transforming }
 MocoOpenPonkRdbTableTransformationRule >> execute [
 	| tables |
-	tables := engine inModel elements select: [ :each | (each isWrappingType: MocoRdbTable) and: [ each meta isNotProcessedBy: #MocoOpenPonkRdbTableTransformationRule ] ].
+	tables := engine input
+		selectElementsOfKind: MocoRdbTable
+		notGuarded: #MocoOpenPonkRdbTableTransformationRule.
 	
-	tables do: [ :each |
-		| table |
-		table := self toOpenPonkElement: (each innerElement).
-		table := MocoWrappedElement from: table.
-		
-		each meta outElements add: table.
-		engine outModel elements add: table.
-		
-		each meta markProcessedBy: #MocoOpenPonkRdbTableTransformationRule
-	].
-
-	tables ifNotEmpty: [ engine outModel meta didChange: true ]
+	tables do: [ :each | self transformTable: each ]
 ]
 
 { #category : #accessing }
@@ -33,37 +24,32 @@ MocoOpenPonkRdbTableTransformationRule >> priority [
 
 { #category : #'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> toOpenPonkElement: aMocoRdbTable [
+	"Creates an OpenPonk class from the given Moco database table."
+	
 	| op |
 	op := OPUMLClass new.
 	
 	op name: (aMocoRdbTable name).
 	
-	aMocoRdbTable columns do: [ :each |
-		| prop |
-		prop := self transformColumn: each.
-	
-		op ownedAttributes add: prop
-	].
-
-	aMocoRdbTable constraints do: [ :each |
-		| prop |
-		prop := self transformConstraint: each.
-	
-		op ownedAttributes add: prop
-	].
+	aMocoRdbTable columns do: [ :each | op ownedAttributes add: (self transformColumn: each) ].
+	aMocoRdbTable constraints do: [ :each | op ownedAttributes add: (self transformConstraint: each) ].
 	
 	^ op
 ]
 
 { #category : #'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> transformColumn: aMocoRdbColumn [
+	"Creates an OpenPonk class attribute from the given database column."
+	
 	| prop |
 	prop := OPUMLProperty new.
 	
 	prop name: (aMocoRdbColumn name).
 	
-	prop type: (OPUMLPrimitiveType new).
-	prop type name: (aMocoRdbColumn type typeDefinition).
+	aMocoRdbColumn type ifNotNil: [
+		prop type: (OPUMLPrimitiveType new).
+		prop type name: (aMocoRdbColumn type typeDefinition)
+	].
 	
 	aMocoRdbColumn nullable
 		ifTrue: [ prop type name: ((prop type name) , ' NULLABLE') ].
@@ -75,6 +61,8 @@ MocoOpenPonkRdbTableTransformationRule >> transformColumn: aMocoRdbColumn [
 
 { #category : #'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> transformConstraint: aMocoRdbConstraint [
+	"Creates an OpenPonk class attribute from the given database constraint that visually looks like the original constraint definition."
+	
 	| prop name |
 	prop := OPUMLProperty new.
 	
@@ -85,4 +73,15 @@ MocoOpenPonkRdbTableTransformationRule >> transformConstraint: aMocoRdbConstrain
 	                                    "after all other properties when rendering the diagram."
 		
 	^ prop
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkRdbTableTransformationRule >> transformTable: aMocoRdbTable [
+	"Transforms a database table to a class element."
+	
+	| class |
+	class := self toOpenPonkElement: aMocoRdbTable.
+	
+	engine addOutputElement: class withSource: aMocoRdbTable.
+	engine input guard: aMocoRdbTable with: #MocoOpenPonkRdbTableTransformationRule
 ]

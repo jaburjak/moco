@@ -7,8 +7,22 @@ Class {
 	#instVars : [
 		'typeDeclaration'
 	],
+	#classVars : [
+		'Instance'
+	],
 	#category : #'Moco-SqlOracle-Utils'
 }
+
+{ #category : #'instance creation' }
+MocoSqlOracleDataTypeResolver class >> instance [
+	"Returns a singleton instance of this class."
+	
+	Instance ifNotNil: [ ^ Instance ].
+	
+	Instance := self new.
+	
+	^ Instance
+]
 
 { #category : #accessing }
 MocoSqlOracleDataTypeResolver >> typeDeclaration [

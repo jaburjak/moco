@@ -7,8 +7,22 @@ Class {
 	#instVars : [
 		'mapping'
 	],
+	#classVars : [
+		'Instance'
+	],
 	#category : #'Moco-U2D-Utils'
 }
+
+{ #category : #'instance creation' }
+MocoUmlToRdbDataTypeMapper class >> instance [
+	"Returns the singleton instance of this class."
+	
+	Instance ifNotNil: [ ^ Instance ].
+	
+	Instance := self new.
+	
+	^ Instance
+]
 
 { #category : #initialization }
 MocoUmlToRdbDataTypeMapper >> initialize [

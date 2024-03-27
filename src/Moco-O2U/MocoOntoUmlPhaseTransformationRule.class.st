@@ -14,6 +14,8 @@ MocoOntoUmlPhaseTransformationRule class >> modelSelector [
 
 { #category : #'private - processing' }
 MocoOntoUmlPhaseTransformationRule >> askMethodFor: aMocoOntoUmlGeneralizationSet [
+	"Determines what transformation method should be used for the given phase partition."
+	
 	| question builder |
 	question := 'A phase partition was found. Please select how to transform "' , aMocoOntoUmlGeneralizationSet members first supertype name , '" and its phases ' , (', ' join: (aMocoOntoUmlGeneralizationSet members collect: [ :e | '"' , e subtype name , '"' ])) , '.' .
 	
@@ -29,7 +31,7 @@ MocoOntoUmlPhaseTransformationRule >> askMethodFor: aMocoOntoUmlGeneralizationSe
 	^ engine askChoice: builder
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - testing' }
 MocoOntoUmlPhaseTransformationRule >> checkIfOptimizable: aMocoOntoUmlGeneralizationSet [
 	"Checks if none of the subtypes in the generalization sets contain any attributes, are part of any associations and are not supertypes of any other classes."
 	
@@ -39,16 +41,24 @@ MocoOntoUmlPhaseTransformationRule >> checkIfOptimizable: aMocoOntoUmlGeneraliza
 	aMocoOntoUmlGeneralizationSet members do: [ :each |
 		each subtype attributes ifNotEmpty: [ ^ false ].
 		
-		((engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlAssociation ])
-			anySatisfy: [ :e | ((e innerElement source element) == (each subtype)) or: [ (e innerElement target element) == (each subtype) ]])
-			ifTrue: [ ^ false ].
+		((engine input selectElementsOfKind: MocoOntoUmlAssociation)
+			anySatisfy: [ :e | e anySideIncludes: (each subtype) ])
+				ifTrue: [ ^ false ].
 		
-		((engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ])
-			anySatisfy: [ :e | (e innerElement supertype == (each subtype)) ])
+		((engine input selectElementsOfKind: MocoOntoUmlGeneralization)
+			anySatisfy: [ :e | ((e == each) not) and: [ ((e supertype) == (each subtype)) or: [ (e subtype) == (each subtype) ] ] ])
 				ifTrue: [ ^ false ]
 	].
 	
 	^ true
+]
+
+{ #category : #'private - testing' }
+MocoOntoUmlPhaseTransformationRule >> checkIfPhaseGeneralizationSet: aMocoOntoUmlGeneralizationSet [
+	"Returns true if the given generalization set is a phase partition."
+	
+	^ (aMocoOntoUmlGeneralizationSet members anySatisfy: [ :each | each subtype isKindOf: MocoOntoUmlPhase ])
+		and: [ MocoOntoUmlIdentityUtils checkIfHasIdentity: (aMocoOntoUmlGeneralizationSet members first supertype) inModel: (engine input elements) ]
 ]
 
 { #category : #transforming }
@@ -59,33 +69,22 @@ MocoOntoUmlPhaseTransformationRule >> execute [
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlPhaseTransformationRule >> findOutElementFor: anObject [
-	^ (engine findOutElementsFor: anObject) first innerElement
-]
-
-{ #category : #'private - processing' }
-MocoOntoUmlPhaseTransformationRule >> generatePhasePartitionName: aMocoWrappedElement [
-	aMocoWrappedElement innerElement name
-		ifNotEmpty: [ ^ aMocoWrappedElement innerElement name ]
+MocoOntoUmlPhaseTransformationRule >> generatePhasePartitionName: aMocoOntoUmlGeneralizationSet [
+	"Returns a unique phase partition name."
+	
+	aMocoOntoUmlGeneralizationSet name
+		ifNotEmpty: [ ^ aMocoOntoUmlGeneralizationSet name ]
 		ifEmpty: [
 			| supertype count |
-			supertype := aMocoWrappedElement innerElement members first supertype.
+			supertype := aMocoOntoUmlGeneralizationSet members first supertype.
 			
-			count := (engine inModel elements select: [ :each | (each isWrappingType: MocoOntoUmlGeneralizationSet) and: [ ((each innerElement members first supertype) == supertype) and: [ each meta isProcessedBy: #MocoOntoUmlPhaseTransformationRule ] ] ]) size.
+			count := ((engine input selectElementsOfKind: MocoOntoUmlGeneralizationSet)
+				select: [ :each | ((each members first supertype) == supertype) and: [ engine input check: each isGuarded: #MocoOntoUmlPhaseTransformationRule ] ]) size.
 			
 			count := count + 1.
 			
 			^ 'Phase' , ((count = 1) ifTrue: [ '' ] ifFalse: [ count asString ])
 		]
-]
-
-{ #category : #'private - accessing' }
-MocoOntoUmlPhaseTransformationRule >> modelElements [
-	modelElements ifNil: [
-		modelElements := engine inModel elements collect: [ :each | each innerElement ]
-	].
-
-	^ modelElements
 ]
 
 { #category : #accessing }
@@ -94,103 +93,97 @@ MocoOntoUmlPhaseTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlPhaseTransformationRule >> transformPhases [
-	| sets |
-	sets := engine inModel elements select: [ :each | (each isWrappingType: MocoOntoUmlGeneralizationSet) and: [ each meta isNotProcessedBy: #MocoOntoUmlPhaseTransformationRule ] ].
-	sets := sets select: [ :each | (each innerElement members contains: [ :m | m subtype isKindOf: MocoOntoUmlPhase ]) and: [ MocoOntoUmlIdentityUtils checkIfHasIdentity: (each innerElement members first supertype) inModel: (self modelElements) ] ].
+MocoOntoUmlPhaseTransformationRule >> transformPhasePartition: aMocoOntoUmlGeneralizationSet [
+	"Transforms the given phase partition to UML."
 	
-	sets do: [ :each |
-		| method |
-		method := self askMethodFor: (each innerElement).
-		
-		(method = #attr)
-			ifTrue: [
-				self transformUsingAttribute: each
-			]
-			ifFalse: [
-				(method = #epa)
-					ifTrue: [
-						self transformUsingEpa: each
-					]
-					ifFalse: [
-						self transformUsingAp: each
-					]
-			].
-		
-		each meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule.
-		engine outModel meta didChange: true.
-	]
+	| method |
+	method := self askMethodFor: aMocoOntoUmlGeneralizationSet.
+	
+	(method = #attr)
+		ifTrue: [ self transformUsingAttribute: aMocoOntoUmlGeneralizationSet ]
+		ifFalse: [
+			(method = #epa)
+				ifTrue: [ self transformUsingEpa: aMocoOntoUmlGeneralizationSet ]
+				ifFalse: [ self transformUsingAp: aMocoOntoUmlGeneralizationSet ]
+		].
+	
+	engine input guard: aMocoOntoUmlGeneralizationSet with: #MocoOntoUmlPhaseTransformationRule
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlPhaseTransformationRule >> transformUsingAp: aMocoWrappedElement [
-	| partName abstract abstractOut source target association associationOut genSet genSetOut |
-	partName := self generatePhasePartitionName: aMocoWrappedElement.
+MocoOntoUmlPhaseTransformationRule >> transformPhases [
+	"Transforms phase partitions to UML."
+	
+	| generalizationSets |
+	generalizationSets := engine input
+		selectElementsOfKind: MocoOntoUmlGeneralizationSet
+		notGuarded: #MocoOntoUmlPhaseTransformationRule.
+	
+	generalizationSets := generalizationSets select: [ :each | self checkIfPhaseGeneralizationSet: each  ].
+	
+	generalizationSets do: [ :each | self transformPhasePartition: each ]
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlPhaseTransformationRule >> transformUsingAp: aMocoOntoUmlGeneralizationSet [
+	"Transforms the given phase partition via an abstract phase."
+	
+	| partName abstract source target association genSet |
+	partName := self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet.
 
 	abstract := MocoUmlClass new.
 	abstract abstract: true;
-		name: (aMocoWrappedElement innerElement members first supertype name) , partName.
-	
-	abstractOut := MocoWrappedElement from: abstract.
-	engine outModel elements add: abstractOut.
+		name: (aMocoOntoUmlGeneralizationSet members first supertype name) , partName.
 	
 	association := MocoUmlAssociation new.
+	
 	source := MocoUmlAssociationSide new.
-	source element: (self findOutElementFor: (aMocoWrappedElement innerElement members first supertype));
+	source element: (engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype));
 		frozen: true;
 		multiplicity: (MocoUmlMultiplicity value: 1);
 		name: 'identityBearer'.
+	
 	target := MocoUmlAssociationSide new.
 	target element: abstract;
 		multiplicity: (MocoUmlMultiplicity value: 1);
 		name: 'condition'.
+	
 	association source: source;
 		target: target;
 		name: (MocoNamingUtils toCamelCase: partName).
 	
-	associationOut := MocoWrappedElement from: association.
-	engine outModel elements add: associationOut.
-	
 	genSet := MocoUmlGeneralizationSet new.
-	genSet name: (aMocoWrappedElement innerElement name);
-		disjoint: (aMocoWrappedElement innerElement disjoint);
-		covering: (aMocoWrappedElement innerElement covering).
+	genSet name: (aMocoOntoUmlGeneralizationSet name);
+		disjoint: (aMocoOntoUmlGeneralizationSet disjoint);
+		covering: (aMocoOntoUmlGeneralizationSet covering).
 	
-	aMocoWrappedElement innerElement members do: [ :each |
-		| generalization outElement meta |
+	aMocoOntoUmlGeneralizationSet members do: [ :each |
+		| generalization |
 		
 		generalization := MocoUmlGeneralization new.
 		generalization supertype: abstract;
-			subtype: (self findOutElementFor: (each subtype)).
+			subtype: (engine detectOutputElement: (each subtype)).
 		
 		genSet members add: generalization.
-			
-		outElement := MocoWrappedElement from: generalization.
 		
-		meta := ((engine inModel elements select: [ :e | (e innerElement) == each ]) first) meta.
-		
-		meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule.
-		meta outElements add: outElement.
-		engine outModel elements add: outElement.
+		engine addOutputElement: generalization withSource: each.
+		engine input guard: each with: #MocoOntoUmlPhaseTransformationRule
 	].
-
-	genSetOut := MocoWrappedElement from: genSet.
 	
-	aMocoWrappedElement meta outElements add: genSetOut.
-	
-	engine outModel elements add: genSetOut.
-	
-	aMocoWrappedElement meta outElements add: abstractOut.
-	aMocoWrappedElement meta outElements add: associationOut.
+	engine addOutputElement: genSet withSource: aMocoOntoUmlGeneralizationSet;
+		addOutputElement: abstract withSource: aMocoOntoUmlGeneralizationSet;
+		addOutputElement: association withSource: aMocoOntoUmlGeneralizationSet.
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoWrappedElement [
-	| bearer attribute ocl out |
-	bearer := self findOutElementFor: (aMocoWrappedElement innerElement members first supertype).
+MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoOntoUmlGeneralizationSet [
+	"Transforms the given phase partition to UML using a phase attribute."
+	
+	| bearer attribute ocl |
+	bearer := engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype).
 	
 	attribute := MocoUmlAttribute new.
-	attribute name: (self generatePhasePartitionName: aMocoWrappedElement);
+	attribute name: (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet);
 		type: (MocoOntoUmlType newFromName: 'String').
 	
 	(attribute multiplicity) lower: (MocoUmlMultiplicityBound value: 1);
@@ -202,53 +195,43 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoWrappedEleme
 	ocl context: bearer;
 		name: ('EN_' , attribute name , '_Condition' );
 		attribute: attribute.
-	ocl values addAll: (aMocoWrappedElement innerElement members collect: [ :each | each subtype name ]).
+	ocl values addAll: (aMocoOntoUmlGeneralizationSet members collect: [ :each | each subtype name ]).
 	
-	out := OrderedCollection with: (MocoWrappedElement from: attribute) with: (MocoWrappedElement from: ocl).
-	
-	(engine inModel elements select: [ :each | (each isWrappingType: MocoOntoUmlGeneralization) and: [ aMocoWrappedElement innerElement members anySatisfy: [ :e | e == (each innerElement) ] ] ])
+	((engine input selectElementsOfKind: MocoOntoUmlGeneralization) select: [ :each | aMocoOntoUmlGeneralizationSet members anySatisfy: [ :e | e == each ] ])
 		do: [ :each |
-			each meta outElements addAll: out.
-			each meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule
+			(engine input) at: each putOutputElement: attribute;
+				at: each putOutputElement: ocl;
+				guard: each with: #MocoOntoUmlPhaseTransformationRule
 		].
 	
-	aMocoWrappedElement innerElement members do: [ :each |
-		| phase |
-		phase := engine findOutElementsFor: (each subtype).
-		
-		phase do: [ :p |
-			engine outModel elements removeAllSuchThat: [ :e | e == p ]
-		]
-	].
+	aMocoOntoUmlGeneralizationSet members do: [ :each | engine removeOutputElement: (engine detectOutputElement: (each subtype)) ].
 	
-	aMocoWrappedElement meta outElements addAll: out.
-	engine outModel elements add: (out second)
+	engine addOutputElement: ocl withSource: aMocoOntoUmlGeneralizationSet.
+	engine input at: aMocoOntoUmlGeneralizationSet putOutputElement: attribute
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement [
-	| context ocl outOcl |
-	context := self findOutElementFor: (aMocoWrappedElement innerElement members first supertype).
+MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoOntoUmlGeneralizationSet [
+	"Transforms the given phase partition to UML using exclusive phase associations."
+	
+	| context ocl |
+	context := engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype).
 
 	ocl := MocoOclExclusiveAssociationCondition new.
 	ocl context: context;
-		name: ('EX_' , (self generatePhasePartitionName: aMocoWrappedElement) , '_Condition').
-	
-	outOcl := MocoWrappedElement from: ocl.
-	
-	engine outModel elements add: outOcl.
+		name: ('EX_' , (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet) , '_Condition').
 
-	aMocoWrappedElement innerElement members do: [ :each |
-		| source target association outElement generalization |
+	aMocoOntoUmlGeneralizationSet members do: [ :each |
+		| source target association |
 		
 		source := MocoUmlAssociationSide new.
-		source element: (self findOutElementFor: (each supertype));
+		source element: (engine detectOutputElement: (each supertype));
 			multiplicity: (MocoUmlMultiplicity value: 1);
 			frozen: true;
 			name: 'identityBearer'.
 		
 		target := MocoUmlAssociationSide new.	
-		target element: (self findOutElementFor: (each subtype));
+		target element: (engine detectOutputElement: (each subtype));
 			multiplicity: (MocoUmlMultiplicity lower: 0 upper: 1);
 			name: 'phase'.
 		
@@ -256,18 +239,12 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoWrappedElement [
 		association source: source;
 			target: target;
 			name: (MocoNamingUtils toCamelCase: (each subtype name)).
-			
-		outElement := MocoWrappedElement from: association.
 		
 		ocl associations add: association.
 		
-		generalization := (engine inModel elements select: [ :e | (e innerElement) == each ]) first.
-		
-		generalization meta markProcessedBy: #MocoOntoUmlPhaseTransformationRule.
-		generalization meta outElements add: outElement.
-		engine outModel elements add: outElement.
+		engine addOutputElement: association withSource: each.
+		engine input guard: each with: #MocoOntoUmlPhaseTransformationRule
 	].
 
-	
-	aMocoWrappedElement meta outElements add: outOcl.
+	engine addOutputElement: ocl withSource: aMocoOntoUmlGeneralizationSet
 ]

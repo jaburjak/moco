@@ -4,6 +4,9 @@ Base class for transforming OpenPonk’s specialized associations into their Moc
 Class {
 	#name : #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule,
 	#superclass : #MocoTransformationRule,
+	#instVars : [
+		'transformation'
+	],
 	#category : #'Moco-OpenPonk-Rule'
 }
 
@@ -24,37 +27,43 @@ MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule class >> stereotypeS
 
 { #category : #transforming }
 MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> execute [
-	| associations helper |
+	| associations |
+	associations := engine input
+		selectElementsOfKind: OPUMLAssociation
+		ofStereotype: (self class stereotypeSelector ifNil: [ nil ] ifNotNil: [ self class stereotypeSelector asString ])
+		notGuarded: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule.
+	
+	associations do: [ :each | self transformAssociation: each ]
+]
 
-	associations := engine inModel elements select: [ :e | (e innerElement isKindOf: OPUMLAssociation) and: [ e innerElement appliedStereotypes anySatisfy: [ :each | each isKindOf: self class stereotypeSelector ] ] ].
-	associations := associations select: [ :e | (e meta isProcessedBy: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule) not ].
+{ #category : #initialization }
+MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> initialize [
+	super initialize.
 	
-	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: engine.
-	
-	associations do: [ :element |
-		| moco outElement |
-		moco := (self class modelClass) new.
-		helper initialize: moco from: (element innerElement).
-		
-		self modifyAssociation: moco.
-		
-		outElement := MocoWrappedElement from: moco.
-		
-		engine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule.
-			
-		engine outModel meta didChange: true.
-	]
+	transformation := MocoOpenPonkOntoUmlAssociationTransformation engine: engine
 ]
 
 { #category : #'private - processing' }
-MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> modifyAssociation: aMocoOntoUmlSpecializedAssociation [
-	"Can be overriden in subclasses."
+MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> modifyAssociation: aMocoOntoUmlAssociation [
+	"Modifies the given association based on the concrete class of the transformation rule."
 ]
 
 { #category : #accessing }
 MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> priority [
 	^ 50
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule >> transformAssociation: anOPUMLAssociation [
+	"Transforms the given association into a Moco OntoUML association."
+	
+	| association |
+	association := (self class modelClass) new.
+	
+	transformation initialize: association from: anOPUMLAssociation.
+	
+	self modifyAssociation: association.
+	
+	engine addOutputElement: association withSource: anOPUMLAssociation.
+	engine input guard: anOPUMLAssociation with: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule
 ]

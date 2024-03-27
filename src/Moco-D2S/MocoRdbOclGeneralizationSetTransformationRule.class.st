@@ -10,27 +10,24 @@ Class {
 { #category : #transforming }
 MocoRdbOclGeneralizationSetTransformationRule >> execute [
 	| ocls |
-	ocls := engine inModel elements select: [ :each | (each isWrappingType: MocoOclRdbGeneralizationSetConstraint) and: [ each meta isNotProcessedBy: #MocoRdbOclGeneralizationSetTransformationRule ] ].
+	ocls := engine input
+		selectElementsOfKind: MocoOclRdbGeneralizationSetConstraint
+		notGuarded: #MocoRdbOclGeneralizationSetTransformationRule.
 	
 	ocls do: [ :each |
 		| triggers |
 		triggers := OrderedCollection new.
 		
 		triggers
-			add: (self generateSuperclassTrigger: (each innerElement));
-			addAll: (self generateSubclassInsertTriggers: (each innerElement));
-			addAll: (self generateSubclassUpdateTriggers: (each innerElement));
-			addAll: (self generateSubclassDeleteTriggers: (each innerElement)).
+			add: (self generateSuperclassTrigger: each);
+			addAll: (self generateSubclassInsertTriggers: each);
+			addAll: (self generateSubclassUpdateTriggers: each);
+			addAll: (self generateSubclassDeleteTriggers: each).
 		
-		triggers := triggers collect: [ :t | MocoWrappedElement from: t ].
+		triggers do: [ :e | engine addOutputElement: e withSource: each ].
 		
-		each meta outElements addAll: triggers.
-		engine outModel elements addAll: triggers.
-		
-		each meta markProcessedBy: #MocoRdbOclGeneralizationSetTransformationRule
-	].
-
-	ocls ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine input guard: each with: #MocoRdbOclGeneralizationSetTransformationRule
+	]
 ]
 
 { #category : #'private - transforming' }

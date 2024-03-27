@@ -13,15 +13,17 @@ MocoOntoUmlCharacterizationAssociationTransformationRule class >> modelSelector 
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
-	((aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlQuality) or: [ aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlQuality ])
+MocoOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
+	"Sets associations sides as immutable."
+	
+	((aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlQuality) or: [ aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlQuality ])
 		ifTrue: [
 			aMocoUmlAssociation source frozen: true.
 			aMocoUmlAssociation target frozen: true
 		].
 	
-	(aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlMode) ifTrue: [ aMocoUmlAssociation target frozen: true ].
-	(aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlMode) ifTrue: [ aMocoUmlAssociation source frozen: true ].
+	(aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlMode) ifTrue: [ aMocoUmlAssociation target frozen: true ].
+	(aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlMode) ifTrue: [ aMocoUmlAssociation source frozen: true ].
 ]
 
 { #category : #accessing }

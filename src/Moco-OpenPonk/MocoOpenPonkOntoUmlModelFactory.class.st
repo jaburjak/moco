@@ -8,25 +8,66 @@ Class {
 }
 
 { #category : #'private - processing' }
-MocoOpenPonkOntoUmlModelFactory class >> create: aModel [
-	| model |
-	model := MocoWrappedModel new.
+MocoOpenPonkOntoUmlModelFactory class >> addAssociations: anOpenPonkModel to: aMocoModel [
+	"Adds associations from an OpenPonk model to the given Moco model."
 	
-	self
-		wrapClassesFrom: aModel in: model;
-		wrapAssociationsFrom: aModel in: model.
+	| associations |
+	associations := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLAssociation ].
 	
-	^ model
+	associations do: [ :each | aMocoModel addElement: each ]
 ]
 
-{ #category : #processing }
+{ #category : #'private - processing' }
+MocoOpenPonkOntoUmlModelFactory class >> addClasses: anOpenPonkModel to: aMocoModel [
+	"Adds classes from the given OpenPonk model to the given Moco model."
+	
+	| classes |
+	classes := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLClass ].
+	
+	classes do: [ :each | aMocoModel addElement: each ]
+]
+
+{ #category : #'private - processing' }
+MocoOpenPonkOntoUmlModelFactory class >> addElements: anOpenPonkModel to: aMocoModel [
+	"Adds elements from the given OpenPonk model to the given Moco model."
+	
+	self
+		addClasses: anOpenPonkModel to: aMocoModel;
+		addAssociations: anOpenPonkModel to: aMocoModel;
+		addGeneralizationSets: anOpenPonkModel to: aMocoModel.
+	
+	^ aMocoModel
+]
+
+{ #category : #'private - processing' }
+MocoOpenPonkOntoUmlModelFactory class >> addGeneralizationSets: anOpenPonkModel to: aMocoModel [
+	"Adds generalization sets from the given OpenPonk model to the given Moco model."
+	
+	| classes |
+	classes := anOpenPonkModel packagedElements select: [ :e | (e isKindOf: OPUMLClass) and: [ e class canUnderstand: #generalizations ] ].
+	
+	classes do: [ :each |
+		| sets |
+		sets := Set new.
+		
+		(each generalizations do: [ :generalization |
+			generalization generalizationSets do: [ :set |
+				(aMocoModel elements noneSatisfy: [ :e | e == set ]) ifTrue: [
+					aMocoModel addElement: set
+				]
+			]
+		]).
+	]
+]
+
+{ #category : #transforming }
 MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
-	| wrappedModel engine ruleRepo mocoModel |
-	wrappedModel := self create: anOpenPonkModel.
+	"Creates a Moco OntoUML model from the given OpenPonk OntoUML model."
 	
-	mocoModel := MocoWrappedModel new.
-	
+	| engine ruleRepo |
 	engine := MocoTransformationEngine new.
+	
+	self addElements: anOpenPonkModel to: (engine input).
 	
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
 	ruleRepo rulesPackage: 'Moco-OpenPonk';
@@ -34,54 +75,8 @@ MocoOpenPonkOntoUmlModelFactory class >> createMoco: anOpenPonkModel [
 		classPrefix: 'MocoOpenPonkOntoUml'.
 	
 	ruleRepo injectTo: engine.
-	
-	engine inModel: wrappedModel;
-		outModel: mocoModel.
 		
 	engine transform.
 	
-	^ mocoModel
-]
-
-{ #category : #'private - transforming' }
-MocoOpenPonkOntoUmlModelFactory class >> wrapAssociationsFrom: anOpenPonkModel in: aWrappedModel [
-	| associations |
-	associations := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLAssociation ].
-	
-	associations do: [ :element |
-		| wrappedElement |
-		wrappedElement := MocoWrappedElement from: element.
-		
-		aWrappedModel elements add: wrappedElement.
-		
-		aWrappedModel meta didChange: true.
-	]
-]
-
-{ #category : #'private - transforming' }
-MocoOpenPonkOntoUmlModelFactory class >> wrapClassesFrom: anOpenPonkModel in: aWrappedModel [
-	| classes |
-	classes := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLClass ].
-	
-	classes do: [ :element |
-		| wrappedElement |
-		wrappedElement := MocoWrappedElement from: element.
-		
-		aWrappedModel elements add: wrappedElement.
-		
-		(element class canUnderstand: #generalizations) ifTrue: [ 
-			| sets |
-			sets := Set new.
-			
-			(element generalizations do: [ :each |
-				each generalizationSets do: [ :set |
-					(aWrappedModel elements contains: [ :e | (e innerElement) == set ]) ifFalse: [
-						aWrappedModel elements add: (MocoWrappedElement from: set)
-					]
-				]
-			]).
-		].
-		
-		aWrappedModel meta didChange: true.
-	]
+	^ engine output
 ]

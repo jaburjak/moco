@@ -9,21 +9,14 @@ Class {
 
 { #category : #transforming }
 MocoUmlRdbCopyTransformationRule >> execute [
+	"Copies all elements from the input model to the output model."
+	
 	| elements |
-	elements := engine inModel elements reject: [ :each | each meta isProcessedBy: #MocoUmlRdbCopyTransformationRule ].
+	elements := engine input selectElementsNotGuarded: #MocoUmlRdbCopyTransformationRule.
 
 	elements do: [ :each |
-		| out |
-		out := MocoWrappedElement from: (each innerElement deepCopy).
-		
-		each meta markProcessedBy: #MocoUmlRdbCopyTransformationRule.
-		each meta outElements add: out.
-		
-		engine outModel elements add: out
-	].
-
-	elements ifNotEmpty: [
-		engine outModel meta didChange: true
+		engine addOutputElement: (each deepCopy) withSource: each.
+		engine input guard: each with: #MocoUmlRdbCopyTransformationRule
 	]
 ]
 

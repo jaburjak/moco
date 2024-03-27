@@ -10,25 +10,25 @@ Class {
 { #category : #transforming }
 MocoUmlGeneralizationTransformationRule >> execute [
 	| generalizations |
-	generalizations := engine inModel elements select: [ :each | (each isWrappingType: MocoUmlGeneralization) and: [ (each meta isProcessedBy: #MocoUmlGeneralizationTransformationRule) not ] ].
+	generalizations := engine input
+		selectElementsOfKind: MocoUmlGeneralization
+		notGuarded: #MocoUmlGeneralizationTransformationRule.
 	
-	generalizations do: [ :each |
-		self transformToReferencingTables: each.
-		
-		each meta markProcessedBy: #MocoUmlGeneralizationTransformationRule
-	].
-
-	generalizations ifNotEmpty: [ engine outModel meta didChange: true ]
+	generalizations do: [ :each | self transformToReferencingTables: each ]
 ]
 
 { #category : #'private - processing' }
 MocoUmlGeneralizationTransformationRule >> findPrimaryKey: aMocoRdbTable [
+	"Returns the PRIMARY KEY constraint of the given table."
+	
 	^ (aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first
 ]
 
 { #category : #'private - processing' }
 MocoUmlGeneralizationTransformationRule >> findTableFor: aMocoUmlClass [
-	^ ((engine findOutElementsFor: aMocoUmlClass) select: [ :each | each isWrappingType: MocoRdbTable ]) first innerElement
+	"Returns the database table that was created from the given class."
+	
+	^ engine detectOutputElement: aMocoUmlClass ofKind: MocoRdbTable
 ]
 
 { #category : #'private - processing' }
@@ -65,10 +65,12 @@ MocoUmlGeneralizationTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoUmlGeneralizationTransformationRule >> transformToReferencingTables: aMocoWrappedElement [
+MocoUmlGeneralizationTransformationRule >> transformToReferencingTables: aMocoUmlGeneralization [
+	"Transforms a UML generalization to referencing tables database realization."
+	
 	| general specific primaryKey foreignKey targetOcl sourceOcl |
-	general := self findTableFor: (aMocoWrappedElement innerElement supertype).
-	specific := self findTableFor: (aMocoWrappedElement innerElement subtype).
+	general := self findTableFor: (aMocoUmlGeneralization supertype).
+	specific := self findTableFor: (aMocoUmlGeneralization subtype).
 	
 	primaryKey := self findPrimaryKey: general.
 	
@@ -78,12 +80,11 @@ MocoUmlGeneralizationTransformationRule >> transformToReferencingTables: aMocoWr
 	specific constraints add: foreignKey.
 	
 	targetOcl := self generateImmutabilityConstraint: specific onColumn: (foreignKey columns first).
-	targetOcl := MocoWrappedElement from: targetOcl.
-	
 	sourceOcl := self generateDeleteConstraintForTable: specific andColumn: (foreignKey columns first) withTargetTable: (foreignKey referencedTable) andColumn: (foreignKey referencedColumns first).
-	sourceOcl := MocoWrappedElement from: sourceOcl.
 	
-	aMocoWrappedElement meta outElements addAll: { (MocoWrappedElement from: foreignKey). targetOcl. sourceOcl }.
+	engine input at: aMocoUmlGeneralization putOutputElement: foreignKey.
+	engine addOutputElement: targetOcl withSource: aMocoUmlGeneralization;
+		addOutputElement: sourceOcl withSource: aMocoUmlGeneralization.
 	
-	engine outModel elements addAll: { targetOcl. sourceOcl }
+	engine input guard: aMocoUmlGeneralization with: #MocoUmlGeneralizationTransformationRule
 ]

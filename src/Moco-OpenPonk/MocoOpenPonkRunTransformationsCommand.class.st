@@ -80,12 +80,11 @@ MocoOpenPonkRunTransformationsCommand >> openOpenPonk: aCollection [
 ]
 
 { #category : #'private - processing' }
-MocoOpenPonkRunTransformationsCommand >> packageModel: aMocoWrappedModel as: aString usingRulesWithTag: aString2 andClassPrefix: aString3 [
+MocoOpenPonkRunTransformationsCommand >> packageModel: aMocoModel as: aString usingRulesWithTag: aString2 andClassPrefix: aString3 [
 	| engine rulesRepo model |
 	engine := MocoTransformationEngine new.
 	
-	engine inModel: (MocoWrappedModelFactory fromModel: aMocoWrappedModel);
-		outModel: (MocoWrappedModel new).
+	engine input addElements: aMocoModel.
 		
 	rulesRepo := MocoTransformationRuleDynamicRepository new.
 	rulesRepo rulesPackage: 'Moco-OpenPonk';
@@ -97,7 +96,7 @@ MocoOpenPonkRunTransformationsCommand >> packageModel: aMocoWrappedModel as: aSt
 	engine transform.
 	
 	model := OPUMLPackage new name: aString.
-	model packagedElements: (engine outModel elements collect: [ :each | each innerElement ]).
+	model packagedElements: engine output elements.
 	
 	^ model
 ]

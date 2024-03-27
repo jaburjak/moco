@@ -3,9 +3,8 @@ Base class for OCL invariants.
 "
 Class {
 	#name : #MocoOclInvariant,
-	#superclass : #Object,
+	#superclass : #MocoOclConstraint,
 	#instVars : [
-		'context',
 		'name'
 	],
 	#category : #'Moco-Ocl-Model'
@@ -14,16 +13,6 @@ Class {
 { #category : #'instance creation' }
 MocoOclInvariant class >> new [
 	(self asString = 'MocoOclInvariant') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
-]
-
-{ #category : #accessing }
-MocoOclInvariant >> context [
-	^ context
-]
-
-{ #category : #accessing }
-MocoOclInvariant >> context: anObject [
-	context := anObject
 ]
 
 { #category : #initialization }

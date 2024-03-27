@@ -10,12 +10,16 @@ Class {
 	#category : #'Moco-OpenPonk-Utils'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 MocoOpenPonkModelStorage class >> ontoUmlModel [
+	"Retrieves a model from the storage."
+	
 	^ OntoUmlModel
 ]
 
 { #category : #accessing }
 MocoOpenPonkModelStorage class >> ontoUmlModel: aModel [
+	"Stores the given model."
+	
 	OntoUmlModel := aModel
 ]

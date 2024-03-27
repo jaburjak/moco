@@ -9,6 +9,10 @@ Class {
 
 { #category : #transforming }
 MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
+	"MocoUmlRdbCopyTransformationRule copied elements from the input model to the output model. This rule fixes references
+	 in the output elements, as after copying, they still point to elements in the input model, but they must point to the
+	 copies in the output model."
+	
 	self fixGeneralizations;
 		fixGeneralizationSets;
 		fixAssociations;
@@ -17,117 +21,119 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
 
 { #category : #'private - transforming' }
 MocoUmlRdbCopyFixReferencesTransformationRule >> fixAssociations [
+	"Relinks association source and target to the copied elements."
+	
 	| associations |
-	associations := engine outModel elements select: [ :each | (each isWrappingType: MocoUmlAssociation) and: [ each meta isNotProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule ] ].
+	associations := engine output
+		selectElementsOfKind: MocoUmlAssociation
+		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
 	
 	associations do: [ :each |
 		| original |
-		original := engine findInElementFor: each.
+		original := engine detectInputElement: each ofKind: MocoUmlAssociation.
 		
 		original ifNotNil: [ "ignore associations generated in the current transformation phase"
 			| source target |
 			
-			source := (engine findOutElementsFor: (original innerElement source element)) first innerElement.
-			target := (engine findOutElementsFor: (original innerElement target element)) first innerElement.
+			source := (engine detectOutputElement: (original source element)).
+			target := (engine detectOutputElement: (original target element)).
 			
-			each innerElement source element: source.
-			each innerElement target element: target
+			each source element: source.
+			each target element: target
 		].
-			
-		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
-	].
-
-	associations ifNotEmpty: [
-		engine outModel meta didChange: true
+		
+		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		engine output setModified
 	]
 ]
 
 { #category : #'private - transforming' }
 MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditions: aCollection [
+	"Relinks associations in exclusive association OCLs to output elements."
+	
 	| ocls |
-	ocls := aCollection select: [ :each | each isWrappingType: MocoOclExclusiveAssociationCondition ].
+	ocls := aCollection select: [ :each | each isKindOf: MocoOclExclusiveAssociationCondition ].
 	
 	ocls do: [ :each |
 		| original associations |
-		original := engine findInElementFor: each.
+		original := engine detectInputElement: each.
 		
-		associations := original innerElement associations collect: [ :a |
-			(engine findOutElementsFor: a) first innerElement
-		].
+		associations := original associations collect: [ :a | engine detectOutputElement: a ].
 		
-		each innerElement associations removeAll.
-		each innerElement associations addAll: associations
+		each associations removeAll.
+		each associations addAll: associations
 	]
 ]
 
 { #category : #'private - transforming' }
 MocoUmlRdbCopyFixReferencesTransformationRule >> fixGeneralizationSets [
+	"Relinks members of generalization sets to generalizations in the output model."
+	
 	| sets |
-	sets := engine outModel elements select: [ :each | (each isWrappingType: MocoUmlGeneralizationSet) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	sets := engine output
+		selectElementsOfKind: MocoUmlGeneralizationSet
+		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
 	
 	sets do: [ :each |
 		| original members |
-		original := engine findInElementFor: each.
+		original := engine detectInputElement: each.
 		
-		members := original innerElement members collect: [ :member |
-			(engine findOutElementsFor: member) first innerElement
-		].
-	
-		each innerElement members removeAll.
-		each innerElement members addAll: members.
+		members := original members collect: [ :member | engine detectOutputElement: member ].
 		
-		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
-	].
-
-	sets ifNotEmpty: [
-		engine outModel meta didChange: true
+		each members removeAll.
+		each members addAll: members.
+		
+		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		engine output setModified
 	]
 ]
 
 { #category : #'private - transforming' }
 MocoUmlRdbCopyFixReferencesTransformationRule >> fixGeneralizations [
+	"Relinks classes in generalizations to elements in the output model."
+	
 	| generalizations |
-	generalizations := engine outModel elements select: [ :each | (each isWrappingType: MocoUmlGeneralization) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	generalizations := engine output
+		selectElementsOfKind: MocoUmlGeneralization
+		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
 	
 	generalizations do: [ :each |
 		| original general specific |
-		original := engine findInElementFor: each.
+		original := engine detectInputElement: each.
 		
-		general := (engine findOutElementsFor: (original innerElement supertype)) first innerElement.
-		specific := (engine findOutElementsFor: (original innerElement subtype)) first innerElement.
+		general := engine detectOutputElement: (original supertype).
+		specific := engine detectOutputElement: (original subtype).
 		
-		each innerElement supertype: general.
-		each innerElement subtype: specific.
+		each supertype: general.
+		each subtype: specific.
 		
-		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
-	].
-
-	generalizations ifNotEmpty: [
-		engine outModel meta didChange: true
+		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		engine output setModified
 	]
 ]
 
 { #category : #'private - transforming' }
 MocoUmlRdbCopyFixReferencesTransformationRule >> fixOcl [
+	"Relinks the context of OCL constraints to the elements in the output model."
+	
 	| ocls |
-	ocls := engine outModel elements select: [ :each | ((each isWrappingType: MocoOclCondition) or: [ each isWrappingType: MocoOclInvariant ]) and: [ (each meta isProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule) not ] ].
+	ocls := engine output
+		selectElementsOfKind: MocoOclConstraint
+		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
 	
 	ocls do: [ :each |
 		| original context |
-		original := engine findInElementFor: each.
+		original := engine detectInputElement: each.
 		
-		context := (engine findOutElementsFor: (original innerElement context)) first innerElement.
+		context := engine detectOutputElement: (original context).
 		
-		each innerElement context: context.
+		each context: context.
 		
-		each meta markProcessedBy: #MocoUmlRdbCopyFixReferencesTransformationRule
+		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		engine output setModified
 	].
 
-	self fixExclusiveAssociationConditions: ocls.
-
-	ocls ifNotEmpty: [
-		engine outModel meta didChange: true
-	]
+	self fixExclusiveAssociationConditions: ocls
 ]
 
 { #category : #accessing }

@@ -10,20 +10,17 @@ Class {
 { #category : #transforming }
 MocoRdbForeignKeyTransformationRule >> execute [
 	| tables |
-	tables := (engine inModel elements select: [ :e | e isWrappingType: MocoRdbTable ]) select: [ :e | e meta isNotProcessedBy: #MocoRdbForeignKeyTransformationRule ].
+	tables := engine input
+		selectElementsOfKind: MocoRdbTable
+		notGuarded: #MocoRdbForeignKeyTransformationRule.
 	
 	tables do: [ :each |
 		| statements |
-		statements := self toAlterTableStatements: (each innerElement).
-		statements := statements collect: [ :e | MocoWrappedElement from: e ].
+		statements := self toAlterTableStatements: each.
 		
-		engine outModel elements addAll: statements.
-		
-		each meta outElements addAll: statements.
-		each meta markProcessedBy: #MocoRdbForeignKeyTransformationRule.
-	].
-
-	tables ifNotEmpty: [ engine outModel meta didChange: true ]
+		statements do: [ :st | engine addOutputElement: st withSource: each ].
+		engine input guard: each with: #MocoRdbForeignKeyTransformationRule
+	]
 ]
 
 { #category : #accessing }
@@ -31,8 +28,10 @@ MocoRdbForeignKeyTransformationRule >> priority [
 	^ 99
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - transforming' }
 MocoRdbForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForKey: aMocoRdbForeignKey [
+	"Returns an ALTER TABLE statement for the given foreign key."
+	
 	| stmt body |
 	stmt := MocoSqlOracleAlterTable new.
 	
@@ -55,8 +54,10 @@ MocoRdbForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForK
 	^ stmt
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - transforming' }
 MocoRdbForeignKeyTransformationRule >> toAlterTableStatements: aMocoRdbTable [
+	"Returns ALTER TABLE statements for foreign keys of the given table."
+	
 	^ (aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbForeignKey ])
 		collect: [ :each | self toAlterTable: aMocoRdbTable statementForKey: each ]
 ]

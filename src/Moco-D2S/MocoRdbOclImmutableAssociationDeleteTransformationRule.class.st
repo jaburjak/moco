@@ -10,20 +10,17 @@ Class {
 { #category : #transforming }
 MocoRdbOclImmutableAssociationDeleteTransformationRule >> execute [
 	| ocls |
-	ocls := engine inModel elements select: [ :each | (each isWrappingType: MocoOclRdbImmutableAssociationDeleteCondition) and: [ each meta isNotProcessedBy: #MocoRdbOclImmutableAssociationDeleteTransformationRule ] ].
+	ocls := engine input
+		selectElementsOfKind: MocoOclRdbImmutableAssociationDeleteCondition
+		notGuarded: #MocoRdbOclImmutableAssociationDeleteTransformationRule.
 	
 	ocls do: [ :each |
 		| trigger |
-		trigger := self generateTrigger: (each innerElement).
-		trigger := MocoWrappedElement from: trigger.
+		trigger := self generateTrigger: each.
 		
-		each meta outElements add: trigger.
-		engine outModel elements add: trigger.
-		
-		each meta markProcessedBy: #MocoRdbOclImmutableAssociationDeleteTransformationRule
-	].
-
-	ocls ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine addOutputElement: trigger withSource: each.
+		engine input guard: each with: #MocoRdbOclImmutableAssociationDeleteTransformationRule
+	]
 ]
 
 { #category : #'private - processing' }

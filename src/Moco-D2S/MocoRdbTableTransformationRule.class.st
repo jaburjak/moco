@@ -13,19 +13,16 @@ Class {
 { #category : #transforming }
 MocoRdbTableTransformationRule >> execute [
 	| tables |
-
-	tables := (engine inModel elements select: [ :e | e isWrappingType: MocoRdbTable ]) select: [ :e | e meta isNotProcessedBy: #MocoRdbTableTransformationRule ].
+	tables := engine input
+		selectElementsOfKind: MocoRdbTable
+		notGuarded: #MocoRdbTableTransformationRule.
 	
-	tables do: [ :element |
-		| outElement |
-		outElement := MocoWrappedElement from: (self toCreateTable: element innerElement).
+	tables do: [ :each |
+		| statement |
+		statement := self toCreateTable: each.
 		
-		engine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoRdbTableTransformationRule.
-			
-		engine outModel meta didChange: true.
+		engine addOutputElement: statement withSource: each.
+		engine input guard: each with: #MocoRdbTableTransformationRule
 	]
 ]
 
@@ -33,7 +30,7 @@ MocoRdbTableTransformationRule >> execute [
 MocoRdbTableTransformationRule >> initialize [
 	super initialize.
 	
-	typeResolver := MocoSqlOracleDataTypeResolver new
+	typeResolver := MocoSqlOracleDataTypeResolver instance
 ]
 
 { #category : #accessing }
@@ -41,21 +38,28 @@ MocoRdbTableTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - transforming' }
 MocoRdbTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
+	"Returns a table column definition."
+	
 	| str |
 	str := String new writeStream.
 	
-	str
-		nextPutAll: (MocoSqlOracleEscaping escapeName: (aMocoRdbColumn name));
-		nextPutAll: ' ';
-		nextPutAll: (self toTypeDeclaration: (aMocoRdbColumn type)).
+	str nextPutAll: (MocoSqlOracleEscaping escapeName: (aMocoRdbColumn name)).
+	
+	aMocoRdbColumn type ifNotNil: [
+		str
+			nextPutAll: ' ';
+			nextPutAll: (self toTypeDeclaration: (aMocoRdbColumn type))
+	].
 		
 	^ str contents
 ]
 
 { #category : #'private - transforming' }
 MocoRdbTableTransformationRule >> toCreateTable: aMocoRdbTable [
+	"Returns a CREATE TABLE statement for the given table."
+	
 	| sql |
 	sql := MocoSqlOracleCreateTable new.
 	sql name: aMocoRdbTable name.
@@ -69,8 +73,10 @@ MocoRdbTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	^ sql
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - transforming' }
 MocoRdbTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
+	"Returns PRIMARY KEY constraint definitions."
+	
 	| keys |
 	keys := aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ].
 	
@@ -79,15 +85,19 @@ MocoRdbTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - transforming' }
 MocoRdbTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
+	"Returns column type declaration for the given data type."
+	
 	aMocoRdbDataType accept: typeResolver.
 	
 	^ typeResolver typeDeclaration
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - transforming' }
 MocoRdbTableTransformationRule >> toUniqueKeyDefinitions: aMocoRdbTable [
+	"Returns UNIQUE constraint definitions."
+	
 	| keys |
 	keys := aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbUniqueKey ].
 	

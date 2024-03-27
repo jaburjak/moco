@@ -10,24 +10,23 @@ Class {
 { #category : #transforming }
 MocoRdbOclEnumerationTransformationRule >> execute [
 	| ocls |
-	ocls := engine inModel elements select: [ :each | (each isWrappingType: MocoOclRdbEnumerationConstraint) and: [ each meta isNotProcessedBy: #MocoRdbOclEnumerationTransformationRule ] ].
+	ocls := engine input
+		selectElementsOfKind: MocoOclRdbEnumerationConstraint
+		notGuarded: #MocoRdbOclEnumerationTransformationRule.
 	
 	ocls do: [ :each |
 		| statement |
-		statement := self generateCheck: (each innerElement).
-		statement := MocoWrappedElement from: statement.
+		statement := self generateCheck: each.
 		
-		each meta outElements add: statement.
-		engine outModel elements add: statement.
-		
-		each meta markProcessedBy: #MocoRdbOclEnumerationTransformationRule
-	].
-
-	ocls ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine addOutputElement: statement withSource: each.
+		engine input guard: each with: #MocoRdbOclEnumerationTransformationRule
+	]
 ]
 
 { #category : #'private - transforming' }
 MocoRdbOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumerationConstraint [
+	"Creates an ALTER TABLE statement with a CHECK for the given enumeration constraint."
+	
 	| body column stmt |
 	body := String new writeStream.
 	

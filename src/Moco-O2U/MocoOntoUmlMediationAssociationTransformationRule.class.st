@@ -13,25 +13,27 @@ MocoOntoUmlMediationAssociationTransformationRule class >> modelSelector [
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlMediationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
-	(((aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlRelator) not) and: [ aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlRelator ])
+MocoOntoUmlMediationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
+	"Makes the opposite side of the Relator immutable and ensures the association direction is from the Role to the Relator."
+	
+	(((aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlRelator) not) and: [ aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlRelator ])
 		ifTrue: [
 			aMocoUmlAssociation source frozen: true
 		].
 
-	(((aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlRelator) not) and: [ aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlRelator ])
+	(((aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlRelator) not) and: [ aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlRelator ])
 		ifTrue: [
 			aMocoUmlAssociation target frozen: true
 		].
 
-	(((aMocoWrappedElement innerElement source element isKindOf: MocoOntoUmlRole) not) and: [ aMocoWrappedElement innerElement target element isKindOf: MocoOntoUmlRole ])
+	(((aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlRole) not) and: [ aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlRole ])
 		ifTrue: [
 			| tmp |
 			tmp := aMocoUmlAssociation source.
 			
 			aMocoUmlAssociation source: (aMocoUmlAssociation target);
 				target: tmp
-		].
+		]
 ]
 
 { #category : #accessing }

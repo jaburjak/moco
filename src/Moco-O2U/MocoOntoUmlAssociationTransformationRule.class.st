@@ -15,50 +15,57 @@ MocoOntoUmlAssociationTransformationRule class >> modelSelector [
 { #category : #transforming }
 MocoOntoUmlAssociationTransformationRule >> execute [
 	| associations |
-	associations := engine inModel elements select: [ :each | (each isWrappingType: (self class modelSelector)) and: [ (each meta outElements isEmpty) and: [ (each meta isProcessedBy: #MocoOntoUmlAssociationTransformationRule) not ] ] ].
+	associations := engine input
+		selectElementsOfKind: (self class modelSelector)
+		notGuarded: #MocoOntoUmlAssociationTransformationRule.
 	
-	associations do: [ :each |
-		| uml source target out |
-
-		uml := MocoUmlAssociation new.
-		uml name: (each innerElement name);
-			derived: (each innerElement derived).
-		
-		source := MocoUmlAssociationSide new.
-		source element: ((engine findOutElementsFor: (each innerElement source element)) first innerElement);
-			visibility: (each innerElement source visibility);
-			multiplicity: (each innerElement source multiplicity);
-			name: (each innerElement source name);
-			frozen: (each innerElement source frozen).
-		
-		target := MocoUmlAssociationSide new.
-		target element: ((engine findOutElementsFor: (each innerElement target element)) first innerElement);
-			visibility: (each innerElement target visibility);
-			multiplicity: (each innerElement target multiplicity);
-			name: (each innerElement target name);
-			frozen: (each innerElement target frozen).
-		
-		uml source: source;
-			target: target.
-
-		((self modifyAssociation: uml fromOriginal: each) = false)
-			ifFalse: [
-				out := MocoWrappedElement from: uml.
-				each meta outElements add: out.
-				engine outModel elements add: out.
-				engine outModel meta didChange: true.
-			].
-		
-		each meta markProcessedBy: #MocoOntoUmlAssociationTransformationRule.
-	]
+	associations := associations reject: [ :each | (engine selectOutputElements: each) isNotEmpty ].
+	
+	associations do: [ :each | self transformAssociation: each ]
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
-	"may be implemented in subclasses"
+MocoOntoUmlAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
+	"Modifies the transformed UML association. Returns false if the association shoud be discarded."
 ]
 
 { #category : #accessing }
 MocoOntoUmlAssociationTransformationRule >> priority [
 	^ 43
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlAssociationTransformationRule >> transformAssociation: aMocoOntoUmlAssociation [
+	"Transforms the given OntoUML association to a UML association."
+	
+	| uml |
+
+	uml := MocoUmlAssociation new.
+	uml name: (aMocoOntoUmlAssociation name);
+		derived: (aMocoOntoUmlAssociation derived);
+		source: (self transformAssociationSide: (aMocoOntoUmlAssociation source));
+		target: (self transformAssociationSide: (aMocoOntoUmlAssociation target)).
+	
+	((self modifyAssociation: uml fromOriginal: aMocoOntoUmlAssociation) = false)
+		ifFalse: [
+			engine addOutputElement: uml withSource: aMocoOntoUmlAssociation
+		].
+	
+	engine input guard: aMocoOntoUmlAssociation with: #MocoOntoUmlAssociationTransformationRule
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlAssociationTransformationRule >> transformAssociationSide: aMocoOntoUmlAssociationSide [
+	"Transforms the given OntoUML association side to UML."
+	
+	| uml |
+	uml := MocoUmlAssociationSide new.
+	
+	uml element: (engine detectOutputElement: (aMocoOntoUmlAssociationSide element));
+		visibility: (aMocoOntoUmlAssociationSide visibility);
+		multiplicity: (aMocoOntoUmlAssociationSide multiplicity);
+		name: (aMocoOntoUmlAssociationSide name);
+		frozen: (aMocoOntoUmlAssociationSide frozen).
+	
+	^ uml
 ]

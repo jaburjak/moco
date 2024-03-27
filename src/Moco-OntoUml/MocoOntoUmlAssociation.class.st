@@ -13,6 +13,13 @@ Class {
 	#category : #'Moco-OntoUml-Model'
 }
 
+{ #category : #testing }
+MocoOntoUmlAssociation >> anySideIncludes: anObject [
+	"Returns true if the association has the given object at either side."
+	
+	^ ((source element) == anObject) or: [ (target element) == anObject ]
+]
+
 { #category : #accessing }
 MocoOntoUmlAssociation >> derived [
 	^ derived

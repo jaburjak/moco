@@ -8,13 +8,12 @@ Class {
 }
 
 { #category : #printing }
-MocoModelPrinter class >> print: aModel to: aStream [
-	| elements first |
-	elements := aModel elements collect: [ :each | each innerElement ].
+MocoModelPrinter class >> print: aMocoModel to: aStream [
+	| first |
 	
 	first := true.
 	
-	elements do: [ :each |
+	(aMocoModel elements) do: [ :each |
 		first ifFalse: [ aStream cr; cr ].
 		
 		each printTo: aStream.

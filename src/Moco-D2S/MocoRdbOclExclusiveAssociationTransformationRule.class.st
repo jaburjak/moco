@@ -10,26 +10,22 @@ Class {
 { #category : #transforming }
 MocoRdbOclExclusiveAssociationTransformationRule >> execute [
 	| ocls |
-	ocls := engine inModel elements select: [ :each | (each isWrappingType: MocoOclRdbExclusiveAssociationCondition) and: [ each meta isNotProcessedBy: #MocoRdbOclExclusiveAssociationTransformationRule ] ].
+	ocls := engine input
+		selectElementsOfKind: MocoOclRdbExclusiveAssociationCondition
+		notGuarded: #MocoRdbOclExclusiveAssociationTransformationRule.
 	
 	ocls do: [ :each |
 		| triggers |
 		triggers := OrderedCollection new.
 		
 		triggers
-			add: (self generateSourceTrigger: (each innerElement));
-			addAll: (self generateInsertTriggers: (each innerElement));
-			addAll: (self generateUpdateTriggers: (each innerElement)).
+			add: (self generateSourceTrigger: each);
+			addAll: (self generateInsertTriggers: each);
+			addAll: (self generateUpdateTriggers: each).
 		
-		triggers := triggers collect: [ :t | MocoWrappedElement from: t ].
-		
-		each meta outElements addAll: triggers.
-		engine outModel elements addAll: triggers.
-		
-		each meta markProcessedBy: #MocoRdbOclExclusiveAssociationTransformationRule
-	].
-
-	ocls ifNotEmpty: [ engine outModel meta didChange: true ]
+		triggers do: [ :e | engine addOutputElement: e withSource: each ].
+		engine input guard: each with: #MocoRdbOclExclusiveAssociationTransformationRule
+	]
 ]
 
 { #category : #'private - processing' }

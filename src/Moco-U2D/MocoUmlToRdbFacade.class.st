@@ -8,9 +8,13 @@ Class {
 }
 
 { #category : #'private - transforming' }
-MocoUmlToRdbFacade class >> preprocess: aMocoWrappedModel [
-	| engine ruleRepo outModel |
+MocoUmlToRdbFacade class >> preprocess: aMocoModel [
+	"Creates a preprocessed UML model suitable for transformation to an RDB model."
+	
+	| engine ruleRepo |
 	engine := MocoTransformationEngine new.
+
+	engine input addElements: aMocoModel.
 
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
 	ruleRepo rulesPackage: 'Moco-U2D';
@@ -18,28 +22,22 @@ MocoUmlToRdbFacade class >> preprocess: aMocoWrappedModel [
 		classPrefix: 'MocoUml'.
 
 	ruleRepo injectTo: engine.
-
-	outModel := MocoWrappedModel new.
 	
-	engine inModel: (MocoWrappedModelFactory fromModel: aMocoWrappedModel);
-		outModel: outModel.
-		
 	engine transform.
 	
-	^ outModel.
+	^ engine output
 ]
 
-{ #category : #accessing }
-MocoUmlToRdbFacade class >> transform: aMocoWrappedModel [
-	| preModel engine ruleRepo outModel |
-	preModel := self preprocess: aMocoWrappedModel.
+{ #category : #transforming }
+MocoUmlToRdbFacade class >> transform: aMocoModel [
+	"Transforms the given UML model to a relational database model."
 	
-	outModel := MocoWrappedModel new.
+	| preModel engine ruleRepo |
+	preModel := self preprocess: aMocoModel.
 	
 	engine := MocoTransformationEngine new.
 	
-	engine inModel: (MocoWrappedModelFactory fromModel: preModel retainMetaProperties: #(generatedBy));
-		outModel: outModel.
+	engine input addElements: preModel keepMeta: #(generatedBy).
 		
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
 	ruleRepo rulesPackage: 'Moco-U2D';
@@ -50,5 +48,5 @@ MocoUmlToRdbFacade class >> transform: aMocoWrappedModel [
 	
 	engine transform.
 	
-	^ { preModel. outModel }.
+	^ { preModel. engine output }
 ]

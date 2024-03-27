@@ -19,21 +19,12 @@ MocoOntoUmlClassTransformationRule class >> umlClass [
 
 { #category : #transforming }
 MocoOntoUmlClassTransformationRule >> execute [
-	| kinds |
-
-	kinds := (engine inModel elements select: [ :e | e isWrappingType: (self class modelSelector) ]) select: [ :e | e meta isNotProcessedBy: #MocoOntoUmlClassTransformationRule ].
+	| classes |
+	classes := engine input
+		selectElementsOfKind: (self class modelSelector)
+		notGuarded: #MocoOntoUmlClassTransformationRule.
 	
-	kinds do: [ :element |
-		| outElement |
-		outElement := MocoWrappedElement from: (self toUmlClass: element innerElement).
-		
-		engine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoOntoUmlClassTransformationRule.
-			
-		engine outModel meta didChange: true.
-	]
+	classes do: [ :each | self transformClass: each ]
 ]
 
 { #category : #accessing }
@@ -42,14 +33,34 @@ MocoOntoUmlClassTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
+MocoOntoUmlClassTransformationRule >> toUmlAttribute: aMocoOntoUmlAttribute [
+	"Transforms the given OntoUML class attribute to a UML class attribute."
+	
+	^ MocoOntoUmlToUmlAttributeTransformation toUmlAttribute: aMocoOntoUmlAttribute
+]
+
+{ #category : #'private - transforming' }
 MocoOntoUmlClassTransformationRule >> toUmlClass: aMocoOntoUmlClass [
+	"Returns a UML class created from the given OntoUML class."
+	
 	| uml |
 	
 	uml := (self class umlClass) new.
 	uml name: (aMocoOntoUmlClass name);
 		abstract: (aMocoOntoUmlClass abstract).
 	
-	uml attributes addAll: (aMocoOntoUmlClass attributes).
+	uml attributes addAll: (aMocoOntoUmlClass attributes collect: [ :each | self toUmlAttribute: each ]).
 	
 	^ uml
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlClassTransformationRule >> transformClass: aMocoOntoUmlClass [
+	"Transforms the given OntoUML class to a UML class."
+	
+	| uml |
+	uml := self toUmlClass: aMocoOntoUmlClass.
+	
+	engine addOutputElement: uml withSource: aMocoOntoUmlClass.
+	engine input guard: aMocoOntoUmlClass with: #MocoOntoUmlClassTransformationRule
 ]

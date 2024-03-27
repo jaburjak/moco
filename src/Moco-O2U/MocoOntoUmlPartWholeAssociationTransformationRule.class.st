@@ -14,6 +14,8 @@ MocoOntoUmlPartWholeAssociationTransformationRule class >> modelSelector [
 
 { #category : #'private - processing' }
 MocoOntoUmlPartWholeAssociationTransformationRule >> findPartSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlPartWholeAssociation [
+	"Returns the part side of the association."
+	
 	((aMocoOntoUmlPartWholeAssociation source shareability type isNotNil) and: [ aMocoOntoUmlPartWholeAssociation target shareability type isNil ])
 		ifTrue: [
 			^ aMocoUmlAssociation source
@@ -29,6 +31,8 @@ MocoOntoUmlPartWholeAssociationTransformationRule >> findPartSide: aMocoUmlAssoc
 
 { #category : #'private - processing' }
 MocoOntoUmlPartWholeAssociationTransformationRule >> findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlPartWholeAssociation [
+	"Returns the whole side of the association."
+	
 	((aMocoOntoUmlPartWholeAssociation source shareability type isNotNil) and: [ aMocoOntoUmlPartWholeAssociation target shareability type isNil ])
 		ifTrue: [
 			^ aMocoUmlAssociation target
@@ -43,17 +47,19 @@ MocoOntoUmlPartWholeAssociationTransformationRule >> findWholeSide: aMocoUmlAsso
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlPartWholeAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoWrappedElement [
+MocoOntoUmlPartWholeAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
+	"Transforms essential and inseparable relationship stereotypes to appropriate immutability constraints."
+	
 	| partSide wholeSide |
-	partSide := (self findPartSide: aMocoUmlAssociation fromOriginal: (aMocoWrappedElement innerElement)).
-	wholeSide := (self findWholeSide: aMocoUmlAssociation fromOriginal: (aMocoWrappedElement innerElement)).
+	partSide := (self findPartSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation).
+	wholeSide := (self findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation).
 
-	((partSide isNotNil) and: [ aMocoWrappedElement innerElement essential ])
+	((partSide isNotNil) and: [ aMocoOntoUmlAssociation essential ])
 		ifTrue: [
 			partSide frozen: true.
 		].
 	
-	((wholeSide isNotNil) and: [ aMocoWrappedElement innerElement inseparable ])
+	((wholeSide isNotNil) and: [ aMocoOntoUmlAssociation inseparable ])
 		ifTrue: [
 			wholeSide frozen: true.
 		]

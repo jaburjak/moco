@@ -9,30 +9,39 @@ Class {
 
 { #category : #transforming }
 MocoOpenPonkOntoUmlGeneralizationTransformationRule >> execute [
-	| elements |
-	elements := engine inModel elements select: [ :e | (e innerElement class canUnderstand: #generalizations) and: [ (e isWrappingType: OPUMLGeneralizationSet) not ] ].
-	elements := elements select: [ :e | (e meta isProcessedBy: #MocoOntoUmlGeneralizationTransformationRule) not ].
+	| generalizations |
+	generalizations := engine input selectElementsNotGuarded: #MocoOntoUmlGeneralizationTransformationRule.
+	generalizations := generalizations select: [ :each | (each class canUnderstand: #generalizations) and: [ (each isKindOf: OPUMLGeneralizationSet) not ] ].
 	
-	elements do: [ :el |
-		el innerElement generalizations do: [ :each |
-			| gen out |
-			gen := MocoOntoUmlGeneralization new.
-		
-			gen supertype: ((engine findOutElementsFor: (each general)) first innerElement);
-			subtype: ((engine findOutElementsFor: (each specific)) first innerElement).
+	generalizations do: [ :each |
+		each generalizations do: [ :g |
+			| generalization |
+			generalization := self toGeneralization: g.
 			
-			out := MocoWrappedElement from: gen.
-			
-			el meta outElements add: out.
-			engine outModel elements add: out.
-			engine outModel meta didChange: true.
+			engine addOutputElement: generalization withSource: each
 		].
-	
-		el meta markProcessedBy: #MocoOntoUmlGeneralizationTransformationRule.
+		
+		engine input guard: each with: #MocoOntoUmlGeneralizationTransformationRule
 	]
 ]
 
 { #category : #accessing }
 MocoOpenPonkOntoUmlGeneralizationTransformationRule >> priority [
 	^ 60
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkOntoUmlGeneralizationTransformationRule >> toGeneralization: anOPUMLGeneralization [
+	"Returns Moco generalization create from an OpenPonk model."
+	
+	| generalization general specific |
+	generalization := MocoOntoUmlGeneralization new.
+	
+	general := engine detectOutputElement: (anOPUMLGeneralization general) ofKind: MocoOntoUmlClass.
+	specific := engine detectOutputElement: (anOPUMLGeneralization specific) ofKind: MocoOntoUmlClass.
+	
+	generalization supertype: general;
+		subtype: specific.
+	
+	^ generalization
 ]

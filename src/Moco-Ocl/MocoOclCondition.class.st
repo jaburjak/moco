@@ -3,10 +3,9 @@ Base class that represents an OCL pre or post codition.
 "
 Class {
 	#name : #MocoOclCondition,
-	#superclass : #Object,
+	#superclass : #MocoOclConstraint,
 	#instVars : [
 		'name',
-		'context',
 		'operation'
 	],
 	#category : #'Moco-Ocl-Model'
@@ -20,16 +19,6 @@ MocoOclCondition class >> new [
 { #category : #accessing }
 MocoOclCondition class >> type [
 	^ self subclassResponsibility
-]
-
-{ #category : #accessing }
-MocoOclCondition >> context [
-	^ context
-]
-
-{ #category : #accessing }
-MocoOclCondition >> context: anObject [
-	context := anObject
 ]
 
 { #category : #initialization }

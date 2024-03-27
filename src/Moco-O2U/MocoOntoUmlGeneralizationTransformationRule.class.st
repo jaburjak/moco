@@ -9,26 +9,17 @@ Class {
 
 { #category : #accessing }
 MocoOntoUmlGeneralizationTransformationRule >> execute [
-	| gens |
-
-	gens := (engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralization ]) select: [ :e | (e meta isNotProcessedBy: #MocoOntoUmlGeneralizationTransformationRule) and: [ e meta outElements isEmpty ] ].
+	| generalizations |
+	generalizations := engine input
+		selectElementsOfKind: MocoOntoUmlGeneralization
+		notGuarded: #MocoOntoUmlGeneralizationTransformationRule.
 	
-	gens do: [ :element |
-		| outElement |
-		outElement := MocoWrappedElement from: (self toUmlGeneralization: (element innerElement)).
-		
-		engine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoOntoUmlGeneralizationTransformationRule.
-			
-		engine outModel meta didChange: true.
+	generalizations := generalizations reject: [ :each | (engine detectOutputElement: each) isNotNil ]. "generalization may have already been processed by another rule"
+	
+	generalizations do: [ :each |
+		engine addOutputElement: (self toUmlGeneralization: each) withSource: each.
+		engine input guard: each with: #MocoOntoUmlGeneralizationTransformationRule
 	]
-]
-
-{ #category : #'private - processing' }
-MocoOntoUmlGeneralizationTransformationRule >> findOutElementFor: anElement [
-	^ (engine findOutElementsFor: anElement) first innerElement
 ]
 
 { #category : #accessing }
@@ -37,12 +28,14 @@ MocoOntoUmlGeneralizationTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlGeneralizationTransformationRule >> toUmlGeneralization: aGeneralization [
+MocoOntoUmlGeneralizationTransformationRule >> toUmlGeneralization: aMocoOntoUmlGeneralization [
+	"Returns a UML generalization create from the given OntoUML generalization."
+	
 	| uml |
 	uml := MocoUmlGeneralization new.
 	
-	uml supertype: (self findOutElementFor: (aGeneralization supertype));
-		subtype: (self findOutElementFor: (aGeneralization subtype)).
+	uml supertype: (engine detectOutputElement: (aMocoOntoUmlGeneralization supertype));
+		subtype: (engine detectOutputElement: (aMocoOntoUmlGeneralization subtype)).
 	
 	^ uml
 ]

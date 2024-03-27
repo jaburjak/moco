@@ -4,34 +4,44 @@ Transforms OpenPonk’s OntoUML association to a Moco OntoUML association.
 Class {
 	#name : #MocoOpenPonkOntoUmlAssociationTransformationRule,
 	#superclass : #MocoTransformationRule,
+	#instVars : [
+		'transformation'
+	],
 	#category : #'Moco-OpenPonk-Rule'
 }
 
 { #category : #transforming }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> execute [
-	| associations helper |
+	| associations |
+	associations := engine input
+		selectElementsOfKind: OPUMLAssociation
+		ofStereotype: nil
+		notGuarded: #MocoOpenPonkOntoUmlAssociationTransformationRule.
 	
-	associations := MocoOpenPonkUmlQuery selectElementsFrom: (engine inModel) ofStereotype: nil ofClass: OPUMLAssociation ignore: #MocoOpenPonkOntoUmlAssociationTransformationRule.
+	associations do: [ :each | self transformAssociation: each ]
+]
+
+{ #category : #initialization }
+MocoOpenPonkOntoUmlAssociationTransformationRule >> initialize [
+	super initialize.
 	
-	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: engine.
-	
-	associations do: [ :element |
-		| moco outElement |
-		moco := MocoOntoUmlAssociation new.
-		helper initialize: moco from: (element innerElement).
-		
-		outElement := MocoWrappedElement from: moco.
-		
-		engine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoOpenPonkOntoUmlAssociationTransformationRule.
-			
-		engine outModel meta didChange: true.
-	]
+	transformation := MocoOpenPonkOntoUmlAssociationTransformation engine: engine
 ]
 
 { #category : #accessing }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> priority [
 	^ 51
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkOntoUmlAssociationTransformationRule >> transformAssociation: anOPUMLAssociation [
+	"Transforms the given association into a Moco OntoUML association."
+	
+	| association |
+	association := MocoOntoUmlAssociation new.
+	
+	transformation initialize: association from: anOPUMLAssociation.
+	
+	engine addOutputElement: association withSource: anOPUMLAssociation.
+	engine input guard: anOPUMLAssociation with: #MocoOpenPonkOntoUmlAssociationTransformationRule
 ]

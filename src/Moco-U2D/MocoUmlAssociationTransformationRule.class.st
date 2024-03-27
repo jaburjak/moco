@@ -9,60 +9,33 @@ Class {
 
 { #category : #'private - testing' }
 MocoUmlAssociationTransformationRule >> checkIfOneToOne: aMocoUmlAssociation [
+	"Returns true if the given association is of one-to-one kind."
+	
 	^ (aMocoUmlAssociation source multiplicity upper isSingle) and: [ aMocoUmlAssociation target multiplicity upper isSingle ]
 ]
 
 { #category : #transforming }
 MocoUmlAssociationTransformationRule >> execute [
 	| associations |
-	associations := engine inModel elements select: [ :each | (each isWrappingType: MocoUmlAssociation) and: [ (each meta isProcessedBy: #MocoUmlAssociationTransformationRule) not ] ].
+	associations := engine input
+		selectElementsOfKind: MocoUmlAssociation
+		notGuarded: #MocoUmlAssociationTransformationRule.
 	
-	associations do: [ :each | self toReferenceColumn: each ].
-	
-	associations ifNotEmpty: [
-		engine outModel meta didChange: true
-	]
+	associations do: [ :each | self toReferenceColumn: each ]
 ]
 
 { #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> findPrimaryKey: aMocoRdbTable [
+	"Returns the PRIMARY KEY constraint of the given table."
+	
 	^ (aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first
 ]
 
 { #category : #'private - processing' }
-MocoUmlAssociationTransformationRule >> findReferencedSideOf: aMocoUmlAssociation [
-	"Returns the referenced (target) side of the association."
-	
-	| referencing |
-	referencing := self findReferencingSideOf: aMocoUmlAssociation.
-	
-	((aMocoUmlAssociation source) == referencing) ifTrue: [ ^ (aMocoUmlAssociation target) ].
-	
-	^ (aMocoUmlAssociation source)
-]
-
-{ #category : #'private - processing' }
-MocoUmlAssociationTransformationRule >> findReferencingSideOf: aMocoUmlAssociation [
-	"Returns the referencing (source) side of the association."
-	
-	(aMocoUmlAssociation source multiplicity upper isMultiple)
-		ifTrue: [ ^ (aMocoUmlAssociation source) ]. "many-to-one"
-	
-	(aMocoUmlAssociation target multiplicity upper isMultiple)
-		ifTrue: [ ^ (aMocoUmlAssociation target) ]. "one-to-many"
-	
-	((aMocoUmlAssociation source multiplicity lower isOptional) and: [ aMocoUmlAssociation target multiplicity lower isMandatory ])
-		ifTrue: [ ^ (aMocoUmlAssociation source) ]. "one[0..1]-to-one[1..1]"
-	
-	((aMocoUmlAssociation source multiplicity lower isMandatory) and: [ aMocoUmlAssociation target multiplicity lower isOptional ])
-		ifTrue: [ ^ (aMocoUmlAssociation target) ]. "one[1..1]-to-one[0..1]"
-	
-	^ (aMocoUmlAssociation source) "one[0..0]-to-one[0..0] or one[1..1]-to-one[1..1]"
-]
-
-{ #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> findTableFor: aMocoUmlClass [
-	^ (((engine findOutElementsFor: aMocoUmlClass) select: [ :each | each isWrappingType: MocoRdbTable ]) first) innerElement
+	"Returns the database table that was created from the given class."
+	
+	^ engine detectOutputElement: aMocoUmlClass ofKind: MocoRdbTable
 ]
 
 { #category : #'private - processing' }
@@ -108,9 +81,11 @@ MocoUmlAssociationTransformationRule >> generateMandatoryMultiplicityConstraintF
 
 { #category : #'private - processing' }
 MocoUmlAssociationTransformationRule >> generateReferencingColumn: aMocoUmlAssociation [
+	"Generates the referencing column at the source table of the given association."
+	
 	| column referenced referencedTable primaryKey |
 	column := MocoRdbColumn new.
-	referenced := self findReferencedSideOf: aMocoUmlAssociation.
+	referenced := MocoUmlAssociationTransformation findReferencedSideOf: aMocoUmlAssociation.
 	
 	referencedTable := self findTableFor: (referenced element).
 	primaryKey := self findPrimaryKey: referencedTable.
@@ -150,14 +125,16 @@ MocoUmlAssociationTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
-	| column foreignKey referencingSide referencingTable referencedSide referencedTable n m |
-	column := self generateReferencingColumn: (aMocoWrappedElement innerElement).
+MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoUmlAssociation [
+	"Transforms the given association to a reference between two tables."
 	
-	referencingSide := self findReferencingSideOf: (aMocoWrappedElement innerElement).
+	| column foreignKey referencingSide referencingTable referencedSide referencedTable lowerBound upperBound |
+	column := self generateReferencingColumn: aMocoUmlAssociation.
+	
+	referencingSide := MocoUmlAssociationTransformation findReferencingSideOf: aMocoUmlAssociation.
 	referencingTable := self findTableFor: (referencingSide element).
 	
-	referencedSide := self findReferencedSideOf: (aMocoWrappedElement innerElement).
+	referencedSide := MocoUmlAssociationTransformation findReferencedSideOf: aMocoUmlAssociation.
 	referencedTable := self findTableFor: (referencedSide element).
 	
 	foreignKey := MocoRdbForeignKey newInTable: referencingTable atColumn: column referencingTable: referencedTable andColumn: ((self findPrimaryKey: referencedTable) columns first).
@@ -165,7 +142,7 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 	referencingTable columns add: column.
 	referencingTable constraints add: foreignKey.
 	
-	(self checkIfOneToOne: (aMocoWrappedElement innerElement)) ifTrue: [
+	(self checkIfOneToOne: aMocoUmlAssociation) ifTrue: [
 		| uniqueKey |
 		uniqueKey := MocoRdbUniqueKey new.
 		uniqueKey name: ('UQ_' , (referencingTable name) , '_' , (column name)).
@@ -174,49 +151,41 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoWrappedElement [
 	].
 
 	((referencingSide multiplicity upper isBounded) and: [ referencingSide multiplicity upper isMultiple ])
-		ifTrue: [ m := referencingSide multiplicity upper value ]
-		ifFalse: [ m := nil ].
+		ifTrue: [ upperBound := referencingSide multiplicity upper value ]
+		ifFalse: [ upperBound := nil ].
 	
-	(((referencingSide multiplicity lower isBounded) and: [ referencingSide multiplicity lower isMultiple ]) or: [ (m isNotNil) and: [ referencingSide multiplicity lower isOne ] ] )
-		ifTrue: [ n := referencingSide multiplicity lower value ]
-		ifFalse: [ n := nil ].
+	(((referencingSide multiplicity lower isBounded) and: [ referencingSide multiplicity lower isMultiple ]) or: [ (upperBound isNotNil) and: [ referencingSide multiplicity lower isOne ] ] )
+		ifTrue: [ lowerBound := referencingSide multiplicity lower value ]
+		ifFalse: [ lowerBound := nil ].
 	
-	((n isNotNil) or: [ m isNotNil ]) ifTrue: [
+	((lowerBound isNotNil) or: [ upperBound isNotNil ]) ifTrue: [
 			| ocl |
-			ocl := self generateSpecialMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey referencedColumns first) withLower: n andUpper: m.
-			ocl := MocoWrappedElement from: ocl.
+			ocl := self generateSpecialMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey referencedColumns first) withLower: lowerBound andUpper: upperBound.
 			
-			aMocoWrappedElement meta outElements add: ocl.
-			engine outModel elements add: ocl
+			engine addOutputElement: ocl withSource: aMocoUmlAssociation
 		]
 		ifFalse: [
 			(referencingSide multiplicity lower isOne) ifTrue: [
 				| ocl |
 				ocl := self generateMandatoryMultiplicityConstraintForSourceTable: referencingTable andColumn: column andTargetTable: referencedTable andColumn: (foreignKey referencedColumns first).
-				ocl := MocoWrappedElement from: ocl.
 				
-				aMocoWrappedElement meta outElements add: ocl.
-				engine outModel elements add: ocl
+				engine addOutputElement: ocl withSource: aMocoUmlAssociation
 			]
 		].
 
 	((referencedSide frozen) or: [ referencingSide frozen ]) ifTrue: [
 		| ocl |
 		ocl := self generateImmutableColumnConstraintForTable: referencingTable andColumn: column.
-		ocl := MocoWrappedElement from: ocl.
 		
-		aMocoWrappedElement meta outElements add: ocl.
-		engine outModel elements add: ocl
+		engine addOutputElement: ocl withSource: aMocoUmlAssociation
 	].
 
 	(referencingSide frozen) ifTrue: [
 		| ocl |
 		ocl := self generateDeleteConstraintForTable: referencingTable andColumn: column withTargetTable: referencedTable andColumn: (foreignKey referencedColumns first).
-		ocl := MocoWrappedElement from: ocl.
 		
-		aMocoWrappedElement meta outElements add: ocl.
-		engine outModel elements add: ocl
+		engine addOutputElement: ocl withSource: aMocoUmlAssociation
 	].
 	
-	aMocoWrappedElement meta markProcessedBy: #MocoUmlAssociationTransformationRule
+	engine input guard: aMocoUmlAssociation with: #MocoUmlAssociationTransformationRule
 ]

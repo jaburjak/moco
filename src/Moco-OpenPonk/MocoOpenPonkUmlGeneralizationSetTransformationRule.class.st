@@ -10,25 +10,24 @@ Class {
 { #category : #transforming }
 MocoOpenPonkUmlGeneralizationSetTransformationRule >> execute [
 	| sets |
-	sets := engine inModel elements select: [ :each | (each isWrappingType: MocoUmlGeneralizationSet) and: [ each meta isNotProcessedBy: #MocoOpenPonkUmlGeneralizationSetTransformationRule ] ].
+	sets := engine input
+		selectElementsOfKind: MocoUmlGeneralizationSet
+		notGuarded: #MocoOpenPonkUmlGeneralizationSetTransformationRule.
 	
 	sets do: [ :each |
 		| set |
-		set := self toOpenPonkGeneralizationSet: (each innerElement).
-		set := MocoWrappedElement from: set.
+		set := self toOpenPonkGeneralizationSet: each.
 		
-		each meta outElements add: set.
-		engine outModel elements add: set.
-		
-		each meta markProcessedBy: #MocoOpenPonkUmlGeneralizationSetTransformationRule
-	].
-
-	sets ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine addOutputElement: set withSource: each.
+		engine input guard: each with: #MocoOpenPonkUmlGeneralizationSetTransformationRule
+	]
 ]
 
 { #category : #'private - processing' }
 MocoOpenPonkUmlGeneralizationSetTransformationRule >> findOutGeneralizationFor: aMocoUmlGeneralization [
-	^ ((engine findOutElementsFor: aMocoUmlGeneralization) select: [ :each | each isWrappingType: OPUMLGeneralization ]) first innerElement
+	"Returns the corresponding OpenPonk generalization set for the given Moco element."
+	
+	^ engine detectOutputElement: aMocoUmlGeneralization ofKind: OPUMLGeneralization
 ]
 
 { #category : #accessing }
@@ -38,6 +37,8 @@ MocoOpenPonkUmlGeneralizationSetTransformationRule >> priority [
 
 { #category : #'private - transforming' }
 MocoOpenPonkUmlGeneralizationSetTransformationRule >> toOpenPonkGeneralizationSet: aMocoUmlGeneralizationSet [
+	"Creates an OpenPonk generalization set from the given Moco element."
+	
 	| op |
 	op := OPUMLGeneralizationSet new.
 	

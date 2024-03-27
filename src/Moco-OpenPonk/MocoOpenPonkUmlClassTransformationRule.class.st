@@ -10,20 +10,18 @@ Class {
 { #category : #transforming }
 MocoOpenPonkUmlClassTransformationRule >> execute [
 	| classes |
-	classes := engine inModel elements select: [ :each | (each isWrappingType: MocoUmlClass) and: [ each meta isNotProcessedBy: #MocoOpenPonkUmlClassTransformationRule ] ].
+	classes := engine input
+		selectElementsOfKind: MocoUmlClass
+		notGuarded: #MocoOpenPonkUmlClassTransformationRule.
 	
 	classes do: [ :each |
 		| class |
-		class := self toOpenPonkClass: (each innerElement).
-		class := MocoWrappedElement from: class.
+		class := self toOpenPonkClass: each.
 		
-		each meta outElements add: class.
-		engine outModel elements add: class.
+		engine addOutputElement: class withSource: each.
 		
-		each meta markProcessedBy: #MocoOpenPonkUmlClassTransformationRule
-	].
-
-	classes ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine input guard: each with: #MocoOpenPonkUmlClassTransformationRule
+	]
 ]
 
 { #category : #accessing }
@@ -33,6 +31,8 @@ MocoOpenPonkUmlClassTransformationRule >> priority [
 
 { #category : #'private - transforming' }
 MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttribute: aMocoUmlAttribute [
+	"Creates an OpenPonk class attribute from the given Moco element."
+	
 	| attr multiplicity |
 	attr := OPUMLProperty new.
 	
@@ -41,10 +41,12 @@ MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttribute: aMocoUmlAttribute
 		isReadOnly: (aMocoUmlAttribute immutable);
 		isStatic: (aMocoUmlAttribute static).
 	
-	attr type: (OPUMLPrimitiveType new).
-	attr type name: (aMocoUmlAttribute type name).
+	aMocoUmlAttribute type ifNotNil: [
+		attr type: (OPUMLPrimitiveType new).
+		attr type name: (aMocoUmlAttribute type name)
+	].
 	
-	multiplicity := MocoOpenPonkOntoUmlAttributeHelper toOpenPonkMultiplicity: (aMocoUmlAttribute multiplicity).
+	multiplicity := MocoOpenPonkUmlAttributeTransformation toOpenPonkMultiplicity: (aMocoUmlAttribute multiplicity).
 	attr lowerValue: (multiplicity first);
 		upperValue: (multiplicity last).
 		
@@ -53,18 +55,15 @@ MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttribute: aMocoUmlAttribute
 
 { #category : #'private - transforming' }
 MocoOpenPonkUmlClassTransformationRule >> toOpenPonkClass: aMocoUmlClass [
+	"Creates an OpenPonk class from the given Moco element."
+	
 	| op |
 	op := OPUMLClass new.
 	
 	op name: (aMocoUmlClass name);
 		isAbstract: (aMocoUmlClass abstract).
 	
-	aMocoUmlClass attributes do: [ :each |
-		| attr |
-		attr := self toOpenPonkAttribute: each.
-	
-		op ownedAttributes add: attr
-	].
+	aMocoUmlClass attributes do: [ :each | op ownedAttributes add: (self toOpenPonkAttribute: each) ].
 		
 	^ op
 ]

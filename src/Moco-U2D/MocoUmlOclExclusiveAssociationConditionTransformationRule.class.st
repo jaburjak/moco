@@ -10,25 +10,25 @@ Class {
 { #category : #transforming }
 MocoUmlOclExclusiveAssociationConditionTransformationRule >> execute [
 	| conditions |
-	conditions := engine inModel elements select: [ :each | (each isWrappingType: MocoOclExclusiveAssociationCondition) and: [ each meta isNotProcessedBy: #MocoUmlOclExclusivePhaseConditionTranformationRule ] ].
+	conditions := engine input
+		selectElementsOfKind: MocoOclExclusiveAssociationCondition
+		notGuarded: #MocoUmlOclExclusivePhaseConditionTranformationRule.
 	
-	conditions do: [ :each | self transformCondition: each ].
-	
-	conditions ifNotEmpty: [
-		engine outModel meta didChange: true
-	]
+	conditions do: [ :each | self transformCondition: each ]
 ]
 
 { #category : #'private - processing' }
 MocoUmlOclExclusiveAssociationConditionTransformationRule >> findTableFor: aMocoUmlAssociation [
-	| table column |
+	"Returns the referencing table and column of the given association."
 	
-	table := (engine findOutElementsFor: (aMocoUmlAssociation target element)) first innerElement.
+	| referencedTable table column |
+	referencedTable := engine detectOutputElement: ((MocoUmlAssociationTransformation findReferencedSideOf: aMocoUmlAssociation) element) ofKind: MocoRdbTable.
+	table := engine detectOutputElement: ((MocoUmlAssociationTransformation findReferencingSideOf: aMocoUmlAssociation) element) ofKind: MocoRdbTable.
 	
 	column := (table constraints select: [ :each |
-		(each isKindOf: MocoRdbForeignKey) and: [ (each referencedTable) == ((engine findOutElementsFor: (aMocoUmlAssociation source element)) first innerElement) ]
+		(each isKindOf: MocoRdbForeignKey) and: [ (each referencedTable) == referencedTable ]
 	]) first columns first.
-
+	
 	^ { table. column }
 ]
 
@@ -38,28 +38,26 @@ MocoUmlOclExclusiveAssociationConditionTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoUmlOclExclusiveAssociationConditionTransformationRule >> transformCondition: aMocoWrappedElement [
-	| ocl context out |
+MocoUmlOclExclusiveAssociationConditionTransformationRule >> transformCondition: aMocoOclExclusiveAssociationCondition [
+	"Transforms exclusive association OCL constraint to a database model."
+	
+	| ocl context |
 	ocl := MocoOclRdbExclusiveAssociationCondition new.
 	
-	context := (engine findOutElementsFor: (aMocoWrappedElement innerElement context)) first innerElement.
+	context := engine detectOutputElement: (aMocoOclExclusiveAssociationCondition context).
 	
-	ocl name: (MocoNamingUtils toUpperSnakeCase: (aMocoWrappedElement innerElement name));
+	ocl name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclExclusiveAssociationCondition name));
 		context: context;
 		column: ((context constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).
 	
-	aMocoWrappedElement innerElement associations do: [ :each |
+	aMocoOclExclusiveAssociationCondition associations do: [ :each |
 		| table |
 		table := self findTableFor: each.
 		
 		ocl referencingTables add: (table first).
 		ocl referencingColumns add: (table last)
 	].
-	
-	out := MocoWrappedElement from: ocl.
-	
-	aMocoWrappedElement meta outElements add: out.
-	aMocoWrappedElement meta markProcessedBy: #MocoUmlOclExclusivePhaseConditionTranformationRule.
-	
-	engine outModel elements add: out
+
+	engine addOutputElement: ocl withSource: aMocoOclExclusiveAssociationCondition.
+	engine input guard: aMocoOclExclusiveAssociationCondition with: #MocoUmlOclExclusivePhaseConditionTranformationRule
 ]

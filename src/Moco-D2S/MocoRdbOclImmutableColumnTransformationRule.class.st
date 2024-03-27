@@ -10,20 +10,17 @@ Class {
 { #category : #transforming }
 MocoRdbOclImmutableColumnTransformationRule >> execute [
 	| ocls |
-	ocls := engine inModel elements select: [ :each | (each isWrappingType: MocoOclRdbImmutableColumnCondition) and: [ each meta isNotProcessedBy: #MocoRdbOclImmutableColumnTransformationRule ] ].
+	ocls := engine input
+		selectElementsOfKind: MocoOclRdbImmutableColumnCondition
+		notGuarded: #MocoRdbOclImmutableColumnTransformationRule.
 	
 	ocls do: [ :each |
 		| trigger |
-		trigger := self generateTrigger: (each innerElement).
-		trigger := MocoWrappedElement from: trigger.
+		trigger := self generateTrigger: each.
 		
-		each meta outElements add: trigger.
-		engine outModel elements add: trigger.
-		
-		each meta markProcessedBy: #MocoRdbOclImmutableColumnTransformationRule
-	].
-
-	ocls ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine addOutputElement: trigger withSource: each.
+		engine input guard: each with: #MocoRdbOclImmutableColumnTransformationRule
+	]
 ]
 
 { #category : #'private - processing' }

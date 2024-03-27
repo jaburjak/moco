@@ -9,28 +9,32 @@ Class {
 
 { #category : #'private - processing' }
 MocoOntoUmlRelatorOptimizationTransformationRule >> checkIfOptimizable: aMocoOntoUmlRelator [
+	"Returns true if the relator has no attributes, no extra associations and does not participate in generalizations."
+	
 	| class associations |
 	class := self findOutClassFor: aMocoOntoUmlRelator.
 	
 	class ifNil: [ ^ false ].
 	
-	class := class innerElement.
-	
-	class attributes ifNotEmpty: [ ^ false ].
+	class attributes
+		ifNotEmpty: [ ^ false ]. "has attributes"
 	
 	associations := self findAssociationsFor: class.
 	
-	((associations size) ~= 2) ifTrue: [ ^ false ].
+	((associations size) ~= 2)
+		ifTrue: [ ^ false ]. "unexpected number of associations"
 	
-	(associations anySatisfy: [ :each | ((each innerElement source frozen) and: [ (each innerElement source element) == class ]) or: [ (each innerElement target frozen) and: [ (each innerElement target element) == class ] ] ])
-		ifTrue: [ ^ false ].
+	(associations anySatisfy: [ :each | ((each source frozen) and: [ (each source element) == class ]) or: [ (each target frozen) and: [ (each target element) == class ] ] ])
+		ifTrue: [ ^ false ]. "unexpected immutable association side"
 	
-	(associations anySatisfy: [ :each | (each innerElement source aggregation type isNotNil) or: [ each innerElement target aggregation type isNotNil ] ]) ifTrue: [ ^ false ].
+	(associations anySatisfy: [ :each | (each source aggregation type isNotNil) or: [ each target aggregation type isNotNil ] ])
+		ifTrue: [ ^ false ]. "unexpected aggregation"
 		
-	(associations anySatisfy: [ :each | (each innerElement source element) == (each innerElement target element) ]) ifTrue: [ ^ false ].
+	(associations anySatisfy: [ :each | (each source element) == (each target element) ])
+		ifTrue: [ ^ false ]. "relator references itself"
 	
-	(engine outModel elements anySatisfy: [ :each | (each isWrappingType: MocoUmlGeneralization) and: [ ((each innerElement supertype) == class) or: [ (each innerElement subtype) == class ] ] ])
-		ifTrue: [ ^ false ].
+	((engine output selectElementsOfKind: MocoUmlGeneralization) anySatisfy: [ :each | ((each supertype) == class) or: [ (each subtype) == class ] ])
+		ifTrue: [ ^ false ]. "participates in generalizations"
 	
 	^ true
 ]
@@ -38,40 +42,44 @@ MocoOntoUmlRelatorOptimizationTransformationRule >> checkIfOptimizable: aMocoOnt
 { #category : #transforming }
 MocoOntoUmlRelatorOptimizationTransformationRule >> execute [
 	| relators |
-	relators := engine inModel elements select: [ :each | (each isWrappingType: MocoOntoUmlRelator) and: [ each meta isNotProcessedBy: #MocoOntoUmlRelatorOptimizationTransformationRule ] ].
+	relators := engine input
+		selectElementsOfKind: MocoOntoUmlRelator
+		notGuarded: #MocoOntoUmlRelatorOptimizationTransformationRule.
 	
 	relators do: [ :each |
-		(self checkIfOptimizable: (each innerElement)) ifTrue: [
+		(self checkIfOptimizable: each) ifTrue: [
 			| question |
 			question := MocoChoiceBuilder new.
-	
-			question question: ('Relator "' , (each innerElement name) , '" has no properties and can be optimized out. How do you want to proceed?');
+			
+			question question: ('Relator "' , (each name) , '" has no properties and can be optimized out. How do you want to proceed?');
 				addChoice: 'Keep as is' withId: #keep;
 				addChoice: 'Remove from model' withId: #optimize.
-				
-			((engine askChoice: question) = #optimize) ifTrue: [
-				self optimizeRelator: each.
-				
-				engine outModel meta didChange: true
-			]
+			
+			((engine askChoice: question) = #optimize) ifTrue: [ self optimizeRelator: each ]
 		].
-	
-		each meta markProcessedBy: #MocoOntoUmlRelatorOptimizationTransformationRule
+		
+		engine input guard: each with: #MocoOntoUmlRelatorOptimizationTransformationRule
 	]
 ]
 
 { #category : #'private - processing' }
 MocoOntoUmlRelatorOptimizationTransformationRule >> findAssociationsFor: aMocoUmlClass [
-	^ engine outModel elements select: [ :each | (each isWrappingType: MocoUmlAssociation) and: [ ((each innerElement source element) == aMocoUmlClass) or: [ (each innerElement target element) == aMocoUmlClass ] ] ]
+	"Returns associations that reference the given class."
+	
+	^ (engine output selectElementsOfKind: MocoUmlAssociation) select: [ :each | each anySideIncludes: aMocoUmlClass ]
 ]
 
 { #category : #'private - processing' }
 MocoOntoUmlRelatorOptimizationTransformationRule >> findOutClassFor: aMocoOntoUmlClass [
-	^ (engine findOutElementsFor: aMocoOntoUmlClass) detect: [ :each | each isWrappingType: MocoUmlClass ] ifNone: [ nil ]
+	"Returns UML class generated from the given OntoUML class."
+	
+	^ engine detectOutputElement: aMocoOntoUmlClass ofKind: MocoUmlClass
 ]
 
 { #category : #'private - processing' }
 MocoOntoUmlRelatorOptimizationTransformationRule >> multiplyMultiplicities: aCollection [
+	"Multiplies association multiplicities. Input [a..b]*[c..d] results in [a*c..b*d]."
+	
 	| parts |
 	parts := OrderedCollection with: (aCollection collect: [ :each | each lower ]) with: (aCollection collect: [ :each | each upper ]).
 	parts := parts collect: [ :each | each inject: [ 1 ] into: [ :r :e | r value ifNil: [ nil ] ifNotNil: [ e value ifNil: [ nil ] ifNotNil: [ (r value) * (e value) ] ] ] ].
@@ -80,34 +88,36 @@ MocoOntoUmlRelatorOptimizationTransformationRule >> multiplyMultiplicities: aCol
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlRelatorOptimizationTransformationRule >> optimizeRelator: aMocoWrappedElement [
+MocoOntoUmlRelatorOptimizationTransformationRule >> optimizeRelator: aMocoOntoUmlRelator [
+	"Removes the relator from the output model and directly connects the mediated classes."
+	
 	| class associations sourceClassSide sourceRelatorSide targetClassSide targetRelatorSide association sourceSide targetSide |
-	class := (self findOutClassFor: (aMocoWrappedElement innerElement)) innerElement.
+	class := self findOutClassFor: aMocoOntoUmlRelator.
 	associations := self findAssociationsFor: class.
 	
-	((associations first innerElement source element) == class)
+	((associations first source element) == class)
 		ifTrue: [
-			sourceClassSide := associations first innerElement target.
-			sourceRelatorSide := associations first innerElement source
+			sourceClassSide := associations first target.
+			sourceRelatorSide := associations first source
 		]
 		ifFalse: [
-			sourceClassSide := associations first innerElement source.
-			sourceRelatorSide := associations first innerElement target
+			sourceClassSide := associations first source.
+			sourceRelatorSide := associations first target
 		].
 	
-	((associations second innerElement source element) == class)
+	((associations second source element) == class)
 		ifTrue: [
-			targetClassSide := associations second innerElement target.
-			targetRelatorSide := associations second innerElement source
+			targetClassSide := associations second target.
+			targetRelatorSide := associations second source
 		]
 		ifFalse: [
-			targetClassSide := associations second innerElement source.
-			targetRelatorSide := associations second innerElement target
+			targetClassSide := associations second source.
+			targetRelatorSide := associations second target
 		].
 	
 	association := MocoUmlAssociation new.
-	association name: (MocoNamingUtils toFirstLowerCase: (aMocoWrappedElement innerElement name));
-		derived: (associations first innerElement derived and: (associations second innerElement derived)).
+	association name: (MocoNamingUtils toFirstLowerCase: (aMocoOntoUmlRelator name));
+		derived: (associations first derived and: [ associations second derived ]).
 	
 	sourceSide := sourceClassSide copy.
 	sourceSide multiplicity: (self multiplyMultiplicities: (OrderedCollection with: (sourceClassSide multiplicity) with: (targetRelatorSide multiplicity))).
@@ -118,18 +128,10 @@ MocoOntoUmlRelatorOptimizationTransformationRule >> optimizeRelator: aMocoWrappe
 	association source: sourceSide;
 		target: targetSide.
 	
-	associations do: [ :each |
-		engine outModel elements removeAllSuchThat: [ :e | e == each ].
-		aMocoWrappedElement meta outElements removeAllSuchThat: [ :e | e == each ].
-	].
+	associations do: [ :each | engine removeOutputElement: each ].
 	
-	association := MocoWrappedElement from: association.
-	
-	engine outModel elements add: association.
-	aMocoWrappedElement meta outElements add: association.
-	
-	engine outModel elements removeAllSuchThat: [ :each | (each innerElement) == class ].
-	aMocoWrappedElement meta outElements removeAllSuchThat: [ :each | (each innerElement) == class ]
+	engine addOutputElement: association withSource: aMocoOntoUmlRelator;
+		removeOutputElement: class
 ]
 
 { #category : #accessing }

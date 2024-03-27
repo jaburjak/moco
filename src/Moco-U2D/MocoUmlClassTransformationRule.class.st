@@ -13,29 +13,16 @@ Class {
 { #category : #transforming }
 MocoUmlClassTransformationRule >> execute [
 	| classes |
-
-	classes := (engine inModel elements select: [ :e | e isWrappingType: MocoUmlClass ]) select: [ :e | e meta isNotProcessedBy: #MocoUmlClassTransformationRule ].
+	classes := engine input
+		selectElementsOfKind: MocoUmlClass
+		notGuarded: #MocoUmlClassTransformationRule.
 	
-	classes do: [ :element |
-		| outElement outElements |
-		outElement := MocoWrappedElement from: (self toTable: element).
-		
-		engine outModel elements add: outElement.
-		
-		outElements := OrderedCollection new.
-		outElements add: outElement; addAll: (element meta outElements). "make sure MocoRdbTable is first in outElements"
-		element meta outElements removeAll.
-		element meta outElements addAll: outElements.
-		
-		element meta markProcessedBy: #MocoUmlClassTransformationRule.
-			
-		engine outModel meta didChange: true.
-	]
+	classes do: [ :each | self transformClass: each ]
 ]
 
 { #category : #'private - processing' }
 MocoUmlClassTransformationRule >> generateIdentityColumn: aMocoRdbTable [
-	"Generates an ID column an a PRIMARY KEY for the given table."
+	"Generates an ID column and a PRIMARY KEY for the given table."
 	
 	| col con |
 	col := MocoRdbColumn new.
@@ -55,7 +42,7 @@ MocoUmlClassTransformationRule >> generateIdentityColumn: aMocoRdbTable [
 MocoUmlClassTransformationRule >> initialize [
 	super initialize.
 	
-	columnDataTypeMapper := MocoUmlToRdbDataTypeMapper new.
+	columnDataTypeMapper := MocoUmlToRdbDataTypeMapper instance
 ]
 
 { #category : #accessing }
@@ -64,12 +51,9 @@ MocoUmlClassTransformationRule >> priority [
 ]
 
 { #category : #'private - processing' }
-MocoUmlClassTransformationRule >> resolveClassAttributes: aMocoUmlClass [
-	^ aMocoUmlClass attributes
-]
-
-{ #category : #'private - processing' }
 MocoUmlClassTransformationRule >> resolveColumnType: aMocoUmlType [
+	"Returns the database type corresponding to the given object model type."
+	
 	aMocoUmlType ifNil: [ ^ nil ].
 	aMocoUmlType name ifEmpty: [ ^ nil ].
 
@@ -77,14 +61,16 @@ MocoUmlClassTransformationRule >> resolveColumnType: aMocoUmlType [
 ]
 
 { #category : #'private - transforming' }
-MocoUmlClassTransformationRule >> toColumn: aMocoUmlAttribute ofTable: aMocoRdbTable ofClass: aMocoWrappedElement [
-	| column |
+MocoUmlClassTransformationRule >> toColumn: aMocoUmlAttribute ofTable: aMocoRdbTable ofClass: aMocoUmlClass [
+	"Returns a table column and its OCL constraints created from the given class attribute."
 
+	| column constraints |
 	column := MocoRdbColumn new.
+	constraints := OrderedCollection new.
 	
 	column name: (MocoNamingUtils toUpperSnakeCase: (aMocoUmlAttribute name));
 		type: (self resolveColumnType: (aMocoUmlAttribute type)).
-		
+	
 	(aMocoUmlAttribute multiplicity lower value <= 0)
 		ifTrue: [ column nullable: true ]
 		ifFalse: [ column nullable: false ].
@@ -97,28 +83,43 @@ MocoUmlClassTransformationRule >> toColumn: aMocoUmlAttribute ofTable: aMocoRdbT
 			column: column;
 			operation: #UPDATE.
 		
-		ocl := MocoWrappedElement from: ocl.
-		
-		aMocoWrappedElement meta outElements add: ocl.
-		engine outModel elements add: ocl
+		constraints add: ocl
 	].
 	
-	^ column
+	^ { column. constraints }
 ]
 
 { #category : #'private - transforming' }
-MocoUmlClassTransformationRule >> toTable: aMocoWrappedElement [
-	| table id |
+MocoUmlClassTransformationRule >> toTable: aMocoUmlClass [
+	"Returns a table and additional OCL constraints created from the given class."
+
+	| table id columns |
 	table := MocoRdbTable new.
 	
-	table name: (MocoNamingUtils toUpperSnakeCase: (aMocoWrappedElement innerElement name)).
+	table name: (MocoNamingUtils toUpperSnakeCase: (aMocoUmlClass name)).
 	
 	id := self generateIdentityColumn: table.
 	
 	table columns add: (id first).
 	table constraints add: (id last).
 	
-	table columns addAll: ((self resolveClassAttributes: aMocoWrappedElement innerElement) collect: [ :each | self toColumn: each ofTable: table ofClass: aMocoWrappedElement ]).
+	columns := (aMocoUmlClass attributes) collect: [ :each | self toColumn: each ofTable: table ofClass: aMocoUmlClass ].
 	
-	^ table
+	table columns addAll: (columns collect: [ :each | each first ]).
+	
+	^ { table. columns flatCollect: [ :each | each second ] }
+]
+
+{ #category : #'private - transforming' }
+MocoUmlClassTransformationRule >> transformClass: aMocoUmlClass [
+	"Transforms the given class to a database table."
+	
+	| table |
+	table := self toTable: aMocoUmlClass.
+	
+	engine addOutputElement: (table first) withSource: aMocoUmlClass.
+	
+	table second do: [ :each | engine addOutputElement: each withSource: aMocoUmlClass ].
+	
+	engine input guard: aMocoUmlClass with: #MocoUmlClassTransformationRule
 ]

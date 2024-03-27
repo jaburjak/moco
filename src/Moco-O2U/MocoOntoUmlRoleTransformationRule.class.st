@@ -4,15 +4,19 @@ Transforms OntoUML Roles into UML classes.
 Class {
 	#name : #MocoOntoUmlRoleTransformationRule,
 	#superclass : #MocoOntoUmlClassTransformationRule,
-	#instVars : [
-		'modelElements'
-	],
 	#category : #'Moco-O2U-Rule'
 }
 
 { #category : #'private - accessing' }
 MocoOntoUmlRoleTransformationRule class >> modelSelector [
 	^ MocoOntoUmlRole
+]
+
+{ #category : #'private - testing' }
+MocoOntoUmlRoleTransformationRule >> checkIfRoleGeneralization: aMocoOntoUmlGeneralization [
+	"Returns true if the given generalization is a role generalization."
+	
+	^ (aMocoOntoUmlGeneralization subtype isKindOf: MocoOntoUmlRole) and: [ MocoOntoUmlIdentityUtils checkIfHasIdentity: (aMocoOntoUmlGeneralization supertype) inModel: (engine input elements) ]
 ]
 
 { #category : #transforming }
@@ -22,56 +26,47 @@ MocoOntoUmlRoleTransformationRule >> execute [
 	self transformRoleGeneralizations
 ]
 
-{ #category : #'private - processing' }
-MocoOntoUmlRoleTransformationRule >> findOutElementFor: anObject [
-	^ (engine findOutElementsFor: anObject) first innerElement
-]
-
-{ #category : #'private - accessing' }
-MocoOntoUmlRoleTransformationRule >> modelElements [
-	modelElements ifNil: [
-		modelElements := engine inModel elements collect: [ :each | each innerElement ]
-	].
-
-	^ modelElements
-]
-
 { #category : #accessing }
 MocoOntoUmlRoleTransformationRule >> priority [
 	^ 99
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations [
-	| gens |
-	gens := (engine inModel elements select: [ :e | (e isWrappingType: MocoOntoUmlGeneralization) and: [ e meta isNotProcessedBy: #MocoOntoUmlRoleTransformationRule ] ]).
-	gens := gens select: [ :each | (each innerElement subtype isKindOf: MocoOntoUmlRole) and: [ MocoOntoUmlIdentityUtils checkIfHasIdentity: (each innerElement supertype) inModel: (self modelElements) ] ].
+MocoOntoUmlRoleTransformationRule >> transformRoleGeneralization: aMocoOntoUmlGeneralization [
+	"Transform the given role generalization to an association."
 	
-	gens do: [ :each |
-		| association source target outElement |
-		association := MocoUmlAssociation new.
-		source := MocoUmlAssociationSide new.
-		target := MocoUmlAssociationSide new.
+	| association source target |
+	association := MocoUmlAssociation new.
+	source := MocoUmlAssociationSide new.
+	target := MocoUmlAssociationSide new.
+	
+	source element: (engine detectOutputElement: (aMocoOntoUmlGeneralization supertype));
+		multiplicity: (MocoUmlMultiplicity value: 1);
+		frozen: true;
+		name: 'identityBearer'.
 		
-		source element: (self findOutElementFor: (each innerElement supertype));
-			multiplicity: (MocoUmlMultiplicity value: 1);
-			frozen: true;
-			name: 'identityBearer'.
-			
-		target element: (self findOutElementFor: (each innerElement subtype));
-			multiplicity: (MocoUmlMultiplicity lower: 0 upper: 1);
-			name: 'role'.
-		
-		association source: source;
-			target: target;
-			name: (MocoNamingUtils toCamelCase: (each innerElement subtype name)) , 'Role'.
-		
-		outElement := MocoWrappedElement from: association.
-		
-		each meta outElements add: outElement.
-		each meta markProcessedBy: #MocoOntoUmlRoleTransformationRule.
-		
-		engine outModel elements add: outElement.
-		engine outModel meta didChange: true.
-	]
+	target element: (engine detectOutputElement: (aMocoOntoUmlGeneralization subtype));
+		multiplicity: (MocoUmlMultiplicity lower: 0 upper: 1);
+		name: 'role'.
+	
+	association source: source;
+		target: target;
+		name: (MocoNamingUtils toCamelCase: (aMocoOntoUmlGeneralization subtype name)) , 'Role'.
+	
+	engine addOutputElement: association withSource: aMocoOntoUmlGeneralization.
+	engine input guard: aMocoOntoUmlGeneralization with: #MocoOntoUmlRoleTransformationRule
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlRoleTransformationRule >> transformRoleGeneralizations [
+	"Transforms role generalizations into associations."
+	
+	| generalizations |
+	generalizations := engine input
+		selectElementsOfKind: MocoOntoUmlGeneralization
+		notGuarded: #MocoOntoUmlRoleTransformationRule.
+	
+	generalizations := generalizations select: [ :each | self checkIfRoleGeneralization: each ].
+	
+	generalizations do: [ :each | self transformRoleGeneralization: each ]
 ]

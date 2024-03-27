@@ -12,30 +12,46 @@ MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule class >> newWithEngine
 	(self asString = 'MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super newWithEngine: anEngine ]
 ]
 
+{ #category : #'private - testing' }
+MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> checkIfEssential: anOPUMLAssociation [
+	"Returns true if the association is marked as essential."
+	
+	^ anOPUMLAssociation appliedStereotypes first essential
+]
+
+{ #category : #'private - testing' }
+MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> checkIfInseparable: anOPUMLAssociation [
+	"Returns true if the association is marked as inseparable."
+	
+	^ anOPUMLAssociation appliedStereotypes first inseparable
+]
+
 { #category : #transforming }
 MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> execute [
-	| associations helper |
+	| associations |
+	associations := engine input
+		selectElementsOfKind: OPUMLAssociation
+		ofStereotype: (self class stereotypeSelector ifNil: [ nil ] ifNotNil: [ self class stereotypeSelector asString ])
+		notGuarded: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule.
+	
+	associations do: [ :each | self transformAssociation: each ]
+]
 
-	associations := engine inModel elements select: [ :e | (e innerElement isKindOf: OPUMLAssociation) and: [ e innerElement appliedStereotypes anySatisfy: [ :each | each isKindOf: self class stereotypeSelector ] ] ].
-	associations := associations select: [ :e | (e meta isProcessedBy: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule) not ].
+{ #category : #'private - transforming' }
+MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> transformAssociation: anOPUMLAssociation [
+	"Transforms the OpenPonk association to a Moco association."
 	
-	helper := MocoOpenPonkOntoUmlAssociationHelper withEngine: engine.
+	| association |
+	association := (self class modelClass) new.
 	
-	associations do: [ :element |
-		| moco outElement |
-		moco := (self class modelClass) new.
-		helper initialize: moco from: (element innerElement).
+	transformation initialize: association from: anOPUMLAssociation.
+	
+	association essential: (self checkIfEssential: anOPUMLAssociation);
+		inseparable: (self checkIfInseparable: anOPUMLAssociation).	
+	
+	self modifyAssociation: association.
 		
-		moco essential: (element innerElement appliedStereotypes first essential);
-			inseparable: (element innerElement appliedStereotypes first inseparable).
-		
-		outElement := MocoWrappedElement from: moco.
-		
-		engine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule.
-			
-		engine outModel meta didChange: true.
-	]
+	engine addOutputElement: association withSource: anOPUMLAssociation.
+	engine input guard: anOPUMLAssociation with: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule;
+		guard: anOPUMLAssociation with: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule
 ]

@@ -7,24 +7,21 @@ Class {
 	#category : #'Moco-D2S-Facade'
 }
 
-{ #category : #accessing }
-MocoRdbOracleToSqlFacade class >> transform: aMocoWrappedModel [
-	| engine ruleRepo outModel |
+{ #category : #transforming }
+MocoRdbOracleToSqlFacade class >> transform: aMocoModel [
+	| engine ruleRepo |
 	engine := MocoTransformationEngine new.
+	
+	engine input addElements: aMocoModel.
 
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
 	ruleRepo rulesPackage: 'Moco-D2S';
 		rulesTag: 'Rule';
 		classPrefix: 'MocoRdb'.
-		
-	ruleRepo injectTo: engine.
-
-	outModel := MocoWrappedModel new.
 	
-	engine inModel: (MocoWrappedModelFactory fromModel: aMocoWrappedModel);
-		outModel: outModel.
-		
+	ruleRepo injectTo: engine.
+	
 	engine transform.
 	
-	^ outModel.
+	^ engine output
 ]

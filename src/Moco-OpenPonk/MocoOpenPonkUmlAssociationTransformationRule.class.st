@@ -10,25 +10,24 @@ Class {
 { #category : #transforming }
 MocoOpenPonkUmlAssociationTransformationRule >> execute [
 	| associations |
-	associations := engine inModel elements select: [ :each | (each isWrappingType: MocoUmlAssociation) and: [ each meta isNotProcessedBy: #MocoOpenPonkUmlAssociationTransformationRule ] ].
+	associations := engine input
+		selectElementsOfKind: MocoUmlAssociation
+		notGuarded: #MocoOpenPonkUmlAssociationTransformationRule.
 	
 	associations do: [ :each |
 		| association |
-		association := self toOpenPonkAssociation: (each innerElement).
-		association := MocoWrappedElement from: association.
+		association := self toOpenPonkAssociation: each.
 		
-		each meta outElements add: association.
-		engine outModel elements add: association.
-		
-		each meta markProcessedBy: #MocoOpenPonkUmlAssociationTransformationRule
-	].
-
-	associations ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine addOutputElement: association withSource: each.
+		engine input guard: each with: #MocoOpenPonkUmlAssociationTransformationRule
+	]
 ]
 
 { #category : #'private - processing' }
 MocoOpenPonkUmlAssociationTransformationRule >> findOutClassFor: aMocoUmlClass [
-	^ ((engine findOutElementsFor: aMocoUmlClass) select: [ :each | each isWrappingType: OPUMLClass ]) first innerElement
+	"Returns an OpenPonk class that was generated from the given Moco element."
+	
+	^ engine detectOutputElement: aMocoUmlClass ofKind: OPUMLClass
 ]
 
 { #category : #accessing }
@@ -38,6 +37,8 @@ MocoOpenPonkUmlAssociationTransformationRule >> priority [
 
 { #category : #'private - transforming' }
 MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkAssociation: aMocoUmlAssociation [
+	"Creates an OpenPonk association from the given Moco element."
+	
 	| op |
 	op := OPUMLAssociation new.
 	
@@ -52,6 +53,8 @@ MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkAssociation: aMocoUmlA
 
 { #category : #'private - transforming' }
 MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkEnd: aMocoUmlAssociationSide [
+	"Creates an OpenPonk association side from the given side of a Moco association."
+	
 	| op multiplicity |
 	op := OPUMLProperty new.
 	
@@ -60,7 +63,7 @@ MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkEnd: aMocoUmlAssociati
 		visibility: (aMocoUmlAssociationSide visibility visibility);
 		aggregation: (aMocoUmlAssociationSide aggregation type).
 		
-	multiplicity := MocoOpenPonkOntoUmlAttributeHelper toOpenPonkMultiplicity: (aMocoUmlAssociationSide multiplicity).
+	multiplicity := MocoOpenPonkUmlAttributeTransformation toOpenPonkMultiplicity: (aMocoUmlAssociationSide multiplicity).
 	
 	op lowerValue: (multiplicity first);
 		upperValue: (multiplicity last).

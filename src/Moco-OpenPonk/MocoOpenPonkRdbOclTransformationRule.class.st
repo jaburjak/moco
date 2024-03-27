@@ -8,45 +8,39 @@ Class {
 }
 
 { #category : #'private - transforming' }
-MocoOpenPonkRdbOclTransformationRule >> addComment: aConstraint [
+MocoOpenPonkRdbOclTransformationRule >> addComment: aMocoOclConstraint [
+	"Writes out the given constraint as a comment at the element generated from the constraint’s context."
+	
 	| class body |
-	class := self findOutClassFor: (aConstraint context).
+	class := self findOutClassFor: (aMocoOclConstraint context).
 	
 	body := String new writeStream.
 	
-	aConstraint printOclTo: body.
+	aMocoOclConstraint printOclTo: body.
 	
-	class ownedComments
-		ifEmpty: [
-			| comment |
-			comment := OPUMLComment new.
-			comment body: (body contents).
-			class ownedComments add: comment
-		]
-		ifNotEmpty: [ 
-			| comment |
-			comment := class ownedComments first.
-			comment body: ((comment body) , (Character cr asString) , (Character cr asString) , (body contents))
-		]
+	MocoOpenPonkUmlClassTransformation addComment: (body contents) to: class
 ]
 
 { #category : #transforming }
 MocoOpenPonkRdbOclTransformationRule >> execute [
 	| constraints |
-	constraints := engine inModel elements select: [ :each | ((each isWrappingType: MocoOclCondition) or: [ each isWrappingType: MocoOclInvariant ]) and: [ each meta isNotProcessedBy: #MocoOpenPonkRdbOclTransformationRule ] ].
+	constraints := engine input
+		selectElementsOfKind: MocoOclConstraint
+		notGuarded: #MocoOpenPonkRdbOclTransformationRule.
 	
 	constraints do: [ :each |
-		self addComment: (each innerElement).
+		self addComment: each.
 		
-		each meta markProcessedBy: #MocoOpenPonkRdbOclTransformationRule
-	].
-	
-	constraints ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine input guard: each with: #MocoOpenPonkRdbOclTransformationRule.
+		engine output setModified
+	]
 ]
 
 { #category : #'private - processing' }
 MocoOpenPonkRdbOclTransformationRule >> findOutClassFor: aMocoRdbTable [
-	^ ((engine findOutElementsFor: aMocoRdbTable) select: [ :each | each isWrappingType: OPUMLClass ]) first innerElement
+	"Returns the class element that was generated from the given table."
+
+	^ engine detectOutputElement: aMocoRdbTable ofKind: OPUMLClass
 ]
 
 { #category : #accessing }

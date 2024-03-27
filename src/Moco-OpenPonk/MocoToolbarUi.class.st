@@ -7,7 +7,7 @@ Class {
 	#category : #'Moco-OpenPonk-Ui'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - processing' }
 MocoToolbarUi class >> openMocoPlayground: aModel [
 	MocoOpenPonkModelStorage ontoUmlModel: aModel.
 	
@@ -23,7 +23,7 @@ sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel second).
 		centered
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - processing' }
 MocoToolbarUi class >> runTransformations: aBuilder [
 	| command |
 	command := MocoOpenPonkRunTransformationsCommand new.

@@ -12,28 +12,25 @@ Class {
 
 { #category : #transforming }
 MocoUmlGeneralizationSetTransformationRule >> execute [
-	| sets |
-	sets := engine inModel elements select: [ :each | (each isWrappingType: MocoUmlGeneralizationSet) and: [ each meta isNotProcessedBy: #MocoUmlGeneralizationSetTransformationRule ] ].
+	| generalizationSets |
+	generalizationSets := engine input
+		selectElementsOfKind: MocoUmlGeneralizationSet
+		notGuarded: #MocoUmlGeneralizationSetTransformationRule.
 	
-	sets do: [ :each |
-		self transformToReferencingTables: each.
-		
-		each meta markProcessedBy: #MocoUmlGeneralizationSetTransformationRule
-	].
-
-	sets ifNotEmpty: [ engine outModel meta didChange: true ]
+	generalizationSets do: [ :each | self transformToReferencingTables: each ]
 ]
 
 { #category : #'private - processing' }
 MocoUmlGeneralizationSetTransformationRule >> generateConstraint: aMocoUmlGeneralizationSet inTable: aMocoRdbTable withColumn: aMocoRdbColumn [
-	| ocl name i params |
+	"Returns a generalization set OCL constraint for the given generalization set."
 	
-	i := 1.
+	| ocl name params |
+	
 	name := 'GS_' , (aMocoUmlGeneralizationSet members first supertype name).
 	aMocoUmlGeneralizationSet name ifNotEmpty: [ name := name , '_' , (aMocoUmlGeneralizationSet name) ].
-	[ engine outModel elements anySatisfy: [ :each | (each isWrappingType: MocoOclRdbGeneralizationSetConstraint) and: [ (each innerElement name) = (name , ((i > 1) ifTrue: [ i asString ] ifFalse: [ '' ])) ] ] ]
-		whileTrue: [ i := i + 1 ].
-	name := name , ((i > 1) ifTrue: [ i asString ] ifFalse: [ '' ]).
+	name := MocoUniqueNameGenerator
+		at: [ :candidate | (engine output selectElementsOfKind: MocoOclRdbGeneralizationSetConstraint) anySatisfy: [ :each | (each name) = candidate ] ]
+		seed: name.
 	
 	ocl := MocoOclRdbGeneralizationSetConstraint new.
 	
@@ -44,8 +41,8 @@ MocoUmlGeneralizationSetTransformationRule >> generateConstraint: aMocoUmlGenera
 	
 	ocl tables addAll: (aMocoUmlGeneralizationSet members collect: [ :each |
 		| table foreignKey |
-		table := ((engine findOutElementsFor: (each subtype)) select: [ :e | e isWrappingType: MocoRdbTable ]) first innerElement.
-		foreignKey := ((engine findOutElementsFor: each) select: [ :e | e isWrappingType: MocoRdbForeignKey ]) first innerElement.
+		table := engine detectOutputElement: (each subtype) ofKind: MocoRdbTable.
+		foreignKey := engine detectOutputElement: each ofKind: MocoRdbForeignKey.
 		
 		{ table. (foreignKey columns first) }
 	]).
@@ -71,6 +68,8 @@ MocoUmlGeneralizationSetTransformationRule >> generateConstraint: aMocoUmlGenera
 
 { #category : #'private - processing' }
 MocoUmlGeneralizationSetTransformationRule >> generateDiscriminatorColumn: aMocoUmlGeneralizationSet inTable: aMocoRdbTable [
+	"Returns a discriminator column for the given generalization set."
+	
 	| type column lengths |
 	type := (dataTypeMapper map: 'String') new.
 	
@@ -97,27 +96,34 @@ MocoUmlGeneralizationSetTransformationRule >> generateDiscriminatorColumn: aMoco
 
 { #category : #'private - processing' }
 MocoUmlGeneralizationSetTransformationRule >> generateDiscriminatorName: aMocoUmlGeneralizationSet inTable: aMocoRdbTable [
-	| i name |
-	i := 1.
+	"Generates a unique discriminator column name for the given generalization set in the given table."
+	
+	| name |
 	name := 'DISCRIMINATOR'.
 	
 	aMocoUmlGeneralizationSet name ifNotEmpty: [
 		name := 'DISCR_' , (MocoNamingUtils toUpperSnakeCase: (aMocoUmlGeneralizationSet name)).
 	].
-	
-	[ aMocoRdbTable columns anySatisfy: [ :each | (each name) = (name , ((i > 1) ifTrue: [ i asString ] ifFalse: [ '' ])) ] ] whileTrue: [ i := i + 1 ].
-	
-	^ (name , ((i > 1) ifTrue: [ i asString ] ifFalse: [ '' ]))
+
+	^ MocoUniqueNameGenerator
+		at: [ :candidate | aMocoRdbTable columns anySatisfy: [ :each | (each name) = candidate ] ]
+		seed: name
 ]
 
 { #category : #'private - processing' }
 MocoUmlGeneralizationSetTransformationRule >> generateInstanceCombinations: aMocoUmlGeneralizationSet withTables: anOrderedCollection [
+	"Generates instance combinations for the generalization set OCL constraint."
+	"The return value is a collection of collections. The second-level collection contains the value of the discriminator column
+	 as the first item, and a collection of true/false values as the second item. The OCL constraint contains a list of all
+	 participating tables, the collection of true/false values indicates (in the same order) whether the table is participating
+	 at the given discriminator column value."
+	
 	| combinations |
 	combinations := OrderedCollection new.
 	
 	combinations addAll: (aMocoUmlGeneralizationSet members collect: [ :each |
 		| table |
-		table := ((engine findOutElementsFor: (each subtype)) select: [ :e | e isWrappingType: MocoRdbTable ]) first innerElement.
+		table := engine detectOutputElement: (each subtype) ofKind: MocoRdbTable.
 		
 		{
 			each subtype name.
@@ -145,7 +151,7 @@ MocoUmlGeneralizationSetTransformationRule >> generateInstanceCombinations: aMoc
 MocoUmlGeneralizationSetTransformationRule >> initialize [
 	super initialize.
 	
-	dataTypeMapper := MocoUmlToRdbDataTypeMapper new
+	dataTypeMapper := MocoUmlToRdbDataTypeMapper instance
 ]
 
 { #category : #accessing }
@@ -154,18 +160,19 @@ MocoUmlGeneralizationSetTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoUmlGeneralizationSetTransformationRule >> transformToReferencingTables: aMocoWrappedElement [
+MocoUmlGeneralizationSetTransformationRule >> transformToReferencingTables: aMocoUmlGeneralizationSet [
+	"Transforms the given generalization set to a discriminator column."
+	
 	| general column constraint |
-	general := ((engine findOutElementsFor: (aMocoWrappedElement innerElement members first supertype)) select: [ :each | each isWrappingType: MocoRdbTable ]) first innerElement.
-	column := self generateDiscriminatorColumn: (aMocoWrappedElement innerElement) inTable: general.
+	general := engine detectOutputElement: (aMocoUmlGeneralizationSet members first supertype) ofKind: MocoRdbTable.
+	column := self generateDiscriminatorColumn: aMocoUmlGeneralizationSet inTable: general.
 	
 	general columns add: column.
 	
-	constraint := self generateConstraint: (aMocoWrappedElement innerElement) inTable: general withColumn: column.
-	constraint := MocoWrappedElement from: constraint.
+	constraint := self generateConstraint: aMocoUmlGeneralizationSet inTable: general withColumn: column.
 	
-	engine outModel elements add: constraint.
+	engine input at: aMocoUmlGeneralizationSet putOutputElement: column.
+	engine addOutputElement: constraint withSource: aMocoUmlGeneralizationSet.
 	
-	aMocoWrappedElement meta outElements add: (MocoWrappedElement from: column).
-	aMocoWrappedElement meta outElements add: constraint
+	engine input guard: aMocoUmlGeneralizationSet with: #MocoUmlGeneralizationSetTransformationRule
 ]

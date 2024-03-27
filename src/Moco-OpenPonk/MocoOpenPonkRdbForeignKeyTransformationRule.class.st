@@ -9,6 +9,8 @@ Class {
 
 { #category : #'private - processing' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> determineSourceMultiplicity: aMocoRdbForeignKey inTable: aMocoRdbTable [
+	"Returns multiplicity at the source side of the association generated from the given foreign key."
+	
 	| lower upper |
 	lower := 0.
 	
@@ -22,6 +24,8 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineSourceMultiplicity: aMoc
 
 { #category : #'private - processing' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> determineTargetMultiplicity: aMocoRdbForeignKey inTable: aMocoRdbTable [
+	"Returns multiplicity at the target side of the association generated from the given foreign key."
+	
 	| lower upper |
 	(aMocoRdbForeignKey columns anySatisfy: [ :each | each nullable not ])
 		ifTrue: [ lower := 1 ]
@@ -35,31 +39,19 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineTargetMultiplicity: aMoc
 { #category : #transforming }
 MocoOpenPonkRdbForeignKeyTransformationRule >> execute [
 	| tables |
-	tables := engine inModel elements select: [ :each | (each isWrappingType: MocoRdbTable) and: [ each meta isNotProcessedBy: #MocoOpenPonkRdbForeignKeyTransformationRule ] ].
-	tables := tables select: [ :each | each innerElement constraints anySatisfy: [ :c | c isKindOf: MocoRdbForeignKey ] ].
+	tables := engine input
+		selectElementsOfKind: MocoRdbTable
+		notGuarded: #MocoOpenPonkRdbForeignKeyTransformationRule.
+	tables := tables select: [ :each | each constraints anySatisfy: [ :c | c isKindOf: MocoRdbForeignKey ] ].
 	
-	tables do: [ :each |
-		| constraints |
-		constraints := each innerElement constraints select: [ :c | c isKindOf: MocoRdbForeignKey ].
-		
-		constraints do: [ :constraint |
-			| association |
-			association := self toOpenPonkAssociation: constraint inTable: (each innerElement).
-			association := MocoWrappedElement from: association.
-			
-			each meta outElements add: association.
-			engine outModel elements add: association.
-		].
-		
-		each meta markProcessedBy: #MocoOpenPonkRdbForeignKeyTransformationRule
-	].
-
-	tables ifNotEmpty: [ engine outModel meta didChange: true ]
+	tables do: [ :each | self transformTable: each ]
 ]
 
 { #category : #'private - processing' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> findOutClassFor: aMocoRdbTable [
-	^ ((engine findOutElementsFor: aMocoRdbTable) select: [ :each | each isWrappingType: OPUMLClass ]) first innerElement
+	"Returns the class element that was generated from the given table."
+	
+	^ engine detectOutputElement: aMocoRdbTable ofKind: OPUMLClass
 ]
 
 { #category : #accessing }
@@ -69,6 +61,8 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> priority [
 
 { #category : #'private - transforming' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> toOpenPonkAssociation: aMocoRdbForeignKey inTable: aMocoRdbTable [
+	"Creates an OpenPonk association from the given foreign key that originates in the given database table."
+	
 	| op name multiplicity source target |
 	op := OPUMLAssociation new.
 	
@@ -96,4 +90,21 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> toOpenPonkAssociation: aMocoRdbFo
 	(source type) ownedAttributes add: target.
 		
 	^ op
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkRdbForeignKeyTransformationRule >> transformTable: aMocoRdbTable [
+	"Transforms foreign keys in the given table to associations."
+	
+	| constraints |
+	constraints := aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbForeignKey ].
+	
+	constraints do: [ :each |
+		| association |
+		association := self toOpenPonkAssociation: each inTable: aMocoRdbTable.
+		
+		engine addOutputElement: association withSource: aMocoRdbTable
+	].
+	
+	engine input guard: aMocoRdbTable with: #MocoOpenPonkRdbForeignKeyTransformationRule
 ]

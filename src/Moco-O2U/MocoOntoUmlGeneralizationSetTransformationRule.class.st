@@ -4,36 +4,38 @@ Transforms generalization sets from an OntoUML model to UML.
 Class {
 	#name : #MocoOntoUmlGeneralizationSetTransformationRule,
 	#superclass : #MocoTransformationRule,
-	#instVars : [
-		'modelElements'
-	],
 	#category : #'Moco-O2U-Rule'
 }
 
 { #category : #'private - processing' }
 MocoOntoUmlGeneralizationSetTransformationRule >> checkIfOptimizable: aMocoOntoUmlGeneralizationSet [
+	"Returns true if all subtypes in the given generalization set are empty classes."
+	
 	| general |
 	general := aMocoOntoUmlGeneralizationSet members first supertype.
 	
-	(MocoOntoUmlIdentityUtils checkIfHasIdentity: general inModel: (self modelElements))
-		ifFalse: [ ^ false ].
+	(MocoOntoUmlIdentityUtils checkIfHasIdentity: general inModel: (engine input elements))
+		ifFalse: [ ^ false ]. "supertype has no identity"
 	
 	aMocoOntoUmlGeneralizationSet members do: [ :each |
 		| specific |
 		
-		((engine findOutElementsFor: each) noneSatisfy: [ :e | e isWrappingType: MocoUmlGeneralization ]) ifTrue: [ ^ false ].
+		(engine detectOutputElement: each ofKind: MocoUmlGeneralization)
+			ifNil: [ ^ false ]. "generalization in the set was transformed to a construct other than a UML generalization"
 		
 		specific := each subtype.
 		
-		(specific isKindOf: MocoOntoUmlRole) ifTrue: [ ^ false ].
+		(specific isKindOf: MocoOntoUmlRole)
+			ifTrue: [ ^ false ]. "optimization of roles is handled by another transformation rule"
 		
-		specific attributes ifNotEmpty: [ ^ false ].
+		specific attributes
+			ifNotEmpty: [ ^ false ]. "subtype has attributes"
 		
-		(engine inModel elements anySatisfy: [ :e | ((e isWrappingType: MocoOntoUmlGeneralization) and: [ (e == each) not ]) and: [ ((e innerElement supertype) == specific) or: [ (e innerElement supertype) == specific ] ] ])
-			ifTrue: [ ^ false ].
-			
-		(engine inModel elements anySatisfy: [ :e | (e isWrappingType: MocoOntoUmlAssociation) and: [ ((e innerElement source element) == specific) or: [ (e innerElement target element) == specific ] ] ])
-			ifTrue: [ ^ false ]
+		((engine input selectElementsOfKind: MocoOntoUmlGeneralization) anySatisfy: [ :e | ((e == each) not) and: [ ((e supertype) == specific) or: [ (e subtype) == specific ] ] ])
+			ifTrue: [ ^ false ]. "subtype participates in multiple generalizations"
+		
+		((engine input selectElementsOfKind: MocoOntoUmlAssociation) anySatisfy: [ :e | e anySideIncludes: specific ])
+			ifTrue: [ ^ false ] "subtype participates in associations"
 	].
 	
 	^ true
@@ -41,69 +43,20 @@ MocoOntoUmlGeneralizationSetTransformationRule >> checkIfOptimizable: aMocoOntoU
 
 { #category : #accessing }
 MocoOntoUmlGeneralizationSetTransformationRule >> execute [
-	| gens |
-
-	gens := (engine inModel elements select: [ :e | e isWrappingType: MocoOntoUmlGeneralizationSet ])
-		select: [ :e | (e meta isNotProcessedBy: #MocoOntoUmlGeneralizationSetTransformationRule) and: [ e meta outElements isEmpty ] ].
+	| generalizationSets |
+	generalizationSets := engine input
+		selectElementsOfKind: MocoOntoUmlGeneralizationSet
+		notGuarded: #MocoOntoUmlGeneralizationSetTransformationRule.
 	
-	gens do: [ :element |
-		| option |
-		option := #keep.
-		
-		(self checkIfOptimizable: (element innerElement)) ifTrue: [
-			| question |
-			question := MocoChoiceBuilder new.
+	generalizationSets := generalizationSets reject: [ :each | (engine detectOutputElement: each) isNotNil ]. "generalization set may have already been processed by another rule"
 	
-			question question: ('Types ' , (', ' join: (element innerElement members collect: [ :e | '"', (e subtype name) , '"' ])) , ' in generalization set' , ((element innerElement name) ifEmpty: [ '' ] ifNotEmpty: [ ' "' , (element innerElement name) , '"' ]) , ' at "' , (element innerElement members first supertype name) , '" have no properties and can be optimized out. How do you want to proceed?');
-				addChoice: 'Keep them' withId: #keep;
-				addChoice: 'Replace with a discriminator attribute' withId: #optimize.
-				
-			option := engine askChoice: question
-		].
-		
-		(option = #optimize)
-			ifTrue: [
-				| out members |
-				out := self toDiscriminator: (element innerElement).
-				out := out collect: [ :each | MocoWrappedElement from: each ].
-				
-				out second innerElement context attributes add: (out first innerElement).
-				
-				engine outModel elements add: (out second).
-				element meta outElements addAll: out.
-				
-				members := (element innerElement members flatCollect: [ :each | (engine findOutElementsFor: each) select: [ :e | e isWrappingType: MocoUmlGeneralization ] ]) collect: [ :each | each innerElement ].
-				members addAll: (members collect: [ :each | each subtype ]).
-				
-				engine inModel elements do: [ :each | each meta outElements removeAllSuchThat: [ :e | members anySatisfy: [ :g | g == (e innerElement) ] ] ].
-				engine outModel elements removeAllSuchThat: [ :each | members anySatisfy: [ :g | g == (each innerElement) ] ].
-				engine outModel meta didChange: true
-			]
-			ifFalse: [
-				| uml outElement |
-				uml := self toUmlGeneralizationSet: (element innerElement).
-				
-				uml ifNotNil: [
-					outElement := MocoWrappedElement from: uml.
-					
-					engine outModel elements add: outElement.
-					
-					element meta outElements add: outElement.
-					
-					outElement innerElement covering ifTrue: [
-						outElement innerElement members do: [ :each | each supertype abstract: true ]
-					].
-
-					engine outModel meta didChange: true
-				]
-			].
-		
-		element meta markProcessedBy: #MocoOntoUmlGeneralizationSetTransformationRule
-	]
+	generalizationSets do: [ :each | self transformGeneralizationSet: each ]
 ]
 
 { #category : #'private - processing' }
 MocoOntoUmlGeneralizationSetTransformationRule >> generateDiscriminatorName: aMocoOntoUmlGeneralizationSet [
+	"Returns a unique name for a discriminator attribute corresponding to the given generalization set."
+	
 	aMocoOntoUmlGeneralizationSet name
 		ifNotEmpty: [ ^ MocoNamingUtils toFirstLowerCase: (aMocoOntoUmlGeneralizationSet name) ]
 		ifEmpty: [
@@ -121,15 +74,6 @@ MocoOntoUmlGeneralizationSetTransformationRule >> generateDiscriminatorName: aMo
 		]
 ]
 
-{ #category : #'private - accessing' }
-MocoOntoUmlGeneralizationSetTransformationRule >> modelElements [
-	modelElements ifNil: [
-		modelElements := engine inModel elements collect: [ :each | each innerElement ]
-	].
-
-	^ modelElements
-]
-
 { #category : #accessing }
 MocoOntoUmlGeneralizationSetTransformationRule >> priority [
 	^ 49
@@ -137,6 +81,8 @@ MocoOntoUmlGeneralizationSetTransformationRule >> priority [
 
 { #category : #'private - transforming' }
 MocoOntoUmlGeneralizationSetTransformationRule >> toDiscriminator: aMocoOntoUmlGeneralizationSet [
+	"Transforms the given generalization set to a discriminator attribute on the supertype."
+	
 	| attribute ocl values |
 	attribute := MocoOntoUmlAttribute new.
 	attribute name: (self generateDiscriminatorName: aMocoOntoUmlGeneralizationSet);
@@ -146,7 +92,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toDiscriminator: aMocoOntoUmlG
 	attribute multiplicity upper value: 1.
 	
 	ocl := MocoOclEnumerationConstraint new.
-	ocl context: (((engine findOutElementsFor: (aMocoOntoUmlGeneralizationSet members first supertype)) detect: [ :each | each isWrappingType: MocoUmlClass ]) innerElement).
+	ocl context: (engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype) ofKind: MocoUmlClass).
 	ocl name: 'EN_' , (ocl context name) , '_' , (attribute name);
 		attribute: attribute.
 	
@@ -167,22 +113,73 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toDiscriminator: aMocoOntoUmlG
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlGeneralizationSetTransformationRule >> toUmlGeneralizationSet: aGeneralizationSet [
+MocoOntoUmlGeneralizationSetTransformationRule >> toUmlGeneralizationSet: aMocoOntoUmlGeneralizationSet [
+	"Transforms the given OntoUML generalization set to a UML generalization set."
+	
 	| uml |
 	uml := MocoUmlGeneralizationSet new.
 	
-	uml covering: (aGeneralizationSet covering);
-		disjoint: (aGeneralizationSet disjoint);
-		name: (aGeneralizationSet name).
+	uml covering: (aMocoOntoUmlGeneralizationSet covering);
+		disjoint: (aMocoOntoUmlGeneralizationSet disjoint);
+		name: (aMocoOntoUmlGeneralizationSet name).
 	
-	aGeneralizationSet members do: [ :each |
-		| outElems |
-		outElems := (engine findOutElementsFor: each) select: [ :e | e isWrappingType: MocoUmlGeneralization ].
+	aMocoOntoUmlGeneralizationSet members do: [ :each |
+		| generalization |
+		generalization := engine detectOutputElement: each ofKind: MocoUmlGeneralization.
 		
-		outElems ifNotEmpty: [ uml members add: (outElems first innerElement) ].
+		generalization ifNotNil: [ uml members add: generalization ]
 	].
 
 	uml members ifEmpty: [ ^ nil ]. "Members of the OntoUML generalization set are not present in the UML model."
 	                                "They were probably transformed into a different construct, making this generalization"
 	^ uml                           "set unnecessary."
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlGeneralizationSetTransformationRule >> transformGeneralizationSet: aMocoOntoUmlGeneralizationSet [
+	"Transforms the given OntoUML generalization set to UML."
+	
+	| option |
+	option := #keep.
+	
+	(self checkIfOptimizable: (aMocoOntoUmlGeneralizationSet)) ifTrue: [
+		| question |
+		question := MocoChoiceBuilder new.
+		
+		question question: ('Types ' , (', ' join: (aMocoOntoUmlGeneralizationSet members collect: [ :e | '"', (e subtype name) , '"' ])) , ' in generalization set' , ((aMocoOntoUmlGeneralizationSet name) ifEmpty: [ '' ] ifNotEmpty: [ ' "' , (aMocoOntoUmlGeneralizationSet name) , '"' ]) , ' at "' , (aMocoOntoUmlGeneralizationSet members first supertype name) , '" have no properties and can be optimized out. How do you want to proceed?');
+			addChoice: 'Keep them' withId: #keep;
+			addChoice: 'Replace with a discriminator attribute' withId: #optimize.
+			
+		option := engine askChoice: question
+	].
+	
+	(option = #optimize)
+		ifTrue: [
+			| discriminator members |
+			discriminator := self toDiscriminator: aMocoOntoUmlGeneralizationSet.
+			
+			discriminator second context attributes add: (discriminator first).
+			
+			engine input at: aMocoOntoUmlGeneralizationSet putOutputElement: (discriminator first).
+			engine addOutputElement: (discriminator second) withSource: aMocoOntoUmlGeneralizationSet.
+			
+			members := (aMocoOntoUmlGeneralizationSet members flatCollect: [ :each | engine selectOutputElements: each ofKind: MocoUmlGeneralization ]).
+			members addAll: (members collect: [ :each | each subtype ]).
+			
+			members do: [ :each | engine removeOutputElement: each ]
+		]
+		ifFalse: [
+			| uml |
+			uml := self toUmlGeneralizationSet: aMocoOntoUmlGeneralizationSet.
+			
+			uml ifNotNil: [
+				engine addOutputElement: uml withSource: aMocoOntoUmlGeneralizationSet.
+				
+				uml covering ifTrue: [
+					uml members do: [ :each | each supertype abstract: true ]
+				]
+			]
+		].
+	
+	engine input guard: aMocoOntoUmlGeneralizationSet with: #MocoOntoUmlGeneralizationSetTransformationRule
 ]

@@ -6,7 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'outElements',
-		'processedBy',
+		'guards',
 		'properties'
 	],
 	#category : #'Moco-Core-Model'
@@ -22,28 +22,32 @@ MocoElementMetaData >> at: aSymbol put: anObject [
 	properties at: aSymbol put: anObject
 ]
 
+{ #category : #testing }
+MocoElementMetaData >> checkGuard: aSymbol [
+	"Checks whether the given guard symbol is set."
+	
+	^ guards includes: aSymbol
+]
+
+{ #category : #testing }
+MocoElementMetaData >> checkNotGuard: aSymbol [
+	"Checks whether the given guard symbol is not set."
+	
+	^ (self checkGuard: aSymbol) not
+]
+
+{ #category : #'private - accessing' }
+MocoElementMetaData >> guards [
+	^ guards
+]
+
 { #category : #initialization }
 MocoElementMetaData >> initialize [
 	super initialize.
 	
 	outElements := OrderedCollection new.
-	processedBy := OrderedCollection new.
+	guards := Set new.
 	properties := Dictionary new
-]
-
-{ #category : #testing }
-MocoElementMetaData >> isNotProcessedBy: anObject [
-	^ (self isProcessedBy: anObject) not
-]
-
-{ #category : #testing }
-MocoElementMetaData >> isProcessedBy: anObject [
-	^ processedBy includes: anObject
-]
-
-{ #category : #accessing }
-MocoElementMetaData >> markProcessedBy: anObject [
-	processedBy add: anObject
 ]
 
 { #category : #accessing }
@@ -51,7 +55,9 @@ MocoElementMetaData >> outElements [
 	^ outElements
 ]
 
-{ #category : #'private - accessing' }
-MocoElementMetaData >> processedBy [
-	^ processedBy
+{ #category : #accessing }
+MocoElementMetaData >> setGuard: aSymbol [
+	"Adds a new guard symbol."
+	
+	guards add: aSymbol
 ]

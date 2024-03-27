@@ -8,45 +8,39 @@ Class {
 }
 
 { #category : #'private - transforming' }
-MocoOpenPonkUmlOclTransformationRule >> addComment: aConstraint [
+MocoOpenPonkUmlOclTransformationRule >> addComment: aMocoOclConstraint [
+	"Writes out the given constraint to the class generated from the constraint’s context."
+	
 	| class body |
-	class := self findOutClassFor: (aConstraint context).
+	class := self findOutClassFor: (aMocoOclConstraint context).
 	
 	body := String new writeStream.
 	
-	aConstraint printOclTo: body.
+	aMocoOclConstraint printOclTo: body.
 	
-	class ownedComments
-		ifEmpty: [
-			| comment |
-			comment := OPUMLComment new.
-			comment body: (body contents).
-			class ownedComments add: comment
-		]
-		ifNotEmpty: [ 
-			| comment |
-			comment := class ownedComments first.
-			comment body: ((comment body) , (Character cr asString) , (Character cr asString) , (body contents))
-		]
+	MocoOpenPonkUmlClassTransformation addComment: (body contents) to: class
 ]
 
 { #category : #transforming }
 MocoOpenPonkUmlOclTransformationRule >> execute [
 	| constraints |
-	constraints := engine inModel elements select: [ :each | ((each isWrappingType: MocoOclCondition) or: [ each isWrappingType: MocoOclInvariant ]) and: [ each meta isNotProcessedBy: #MocoOpenPonkUmlOclTransformationRule ] ].
+	constraints := engine input
+		selectElementsOfKind: MocoOclConstraint
+		notGuarded: #MocoOpenPonkUmlOclTransformationRule.
 	
 	constraints do: [ :each |
-		self addComment: (each innerElement).
+		self addComment: each.
 		
-		each meta markProcessedBy: #MocoOpenPonkUmlOclTransformationRule
-	].
-	
-	constraints ifNotEmpty: [ engine outModel meta didChange: true ]
+		engine input guard: each with: #MocoOpenPonkUmlOclTransformationRule.
+		engine output setModified
+	]
 ]
 
 { #category : #'private - processing' }
 MocoOpenPonkUmlOclTransformationRule >> findOutClassFor: aMocoUmlClass [
-	^ ((engine findOutElementsFor: aMocoUmlClass) select: [ :each | each isWrappingType: OPUMLClass ]) first innerElement
+	"Returns the OpenPonk model class that was generated from the given Moco class."
+	
+	^ engine detectOutputElement: aMocoUmlClass ofKind: OPUMLClass
 ]
 
 { #category : #accessing }

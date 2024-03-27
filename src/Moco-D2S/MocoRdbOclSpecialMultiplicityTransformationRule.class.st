@@ -10,25 +10,21 @@ Class {
 { #category : #transforming }
 MocoRdbOclSpecialMultiplicityTransformationRule >> execute [
 	| ocls |
-	ocls := engine inModel elements select: [ :each | (each isWrappingType: MocoOclRdbSpecialMultiplicityConstraint) and: [ each meta isNotProcessedBy: #MocoRdbOclSpecialMultiplicityTransformationRule ] ].
+	ocls := engine input
+		selectElementsOfKind: MocoOclRdbSpecialMultiplicityConstraint
+		notGuarded: #MocoRdbOclSpecialMultiplicityTransformationRule.
 	
 	ocls do: [ :each |
 		| triggers |
 		triggers := OrderedCollection new.
 		
 		triggers
-			add: (self generateTargetTrigger: (each innerElement));
-			add: (self generateSourceTrigger: (each innerElement)).
+			add: (self generateTargetTrigger: each);
+			add: (self generateSourceTrigger: each).
 		
-		triggers := triggers collect: [ :t | MocoWrappedElement from: t ].
-		
-		each meta outElements addAll: triggers.
-		engine outModel elements addAll: triggers.
-		
-		each meta markProcessedBy: #MocoRdbOclSpecialMultiplicityTransformationRule
-	].
-
-	ocls ifNotEmpty: [ engine outModel meta didChange: true ]
+		triggers do: [ :e | engine addOutputElement: e withSource: each ].
+		engine input guard: each with: #MocoRdbOclSpecialMultiplicityTransformationRule
+	]
 ]
 
 { #category : #'private - processing' }

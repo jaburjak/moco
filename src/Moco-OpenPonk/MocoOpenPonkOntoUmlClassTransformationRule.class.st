@@ -19,25 +19,13 @@ MocoOpenPonkOntoUmlClassTransformationRule class >> stereotypeSelector [
 
 { #category : #transforming }
 MocoOpenPonkOntoUmlClassTransformationRule >> execute [
-	| kinds |
-
-	kinds := MocoOpenPonkUmlQuery
-		selectElementsFrom: (engine inModel)
-		ofStereotype: ((self class stereotypeSelector) ifNil: [ nil ] ifNotNil: [ self class stereotypeSelector asString ])
-		ofClass: OPUMLClass
-		ignore: #MocoOpenPonkOntoUmlClassTransformationRule.
+	| classes |
+	classes := engine input
+		selectElementsOfKind: OPUMLClass
+		ofStereotype: (self class stereotypeSelector ifNil: [ nil ] ifNotNil: [ self class stereotypeSelector asString ])
+		notGuarded: #MocoOpenPonkOntoUmlClassTransformationRule.
 	
-	kinds do: [ :element |
-		| outElement |
-		outElement := MocoWrappedElement from: (self toMocoClass: element innerElement).
-		
-		engine outModel elements add: outElement.
-		
-		element meta outElements add: outElement.
-		element meta markProcessedBy: #MocoOpenPonkOntoUmlClassTransformationRule.
-			
-		engine outModel meta didChange: true.
-	]
+	classes do: [ :each | self transformClass: each ]
 ]
 
 { #category : #accessing }
@@ -46,11 +34,43 @@ MocoOpenPonkOntoUmlClassTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOpenPonkOntoUmlClassTransformationRule >> toMocoClass: aClass [
-	| moco |
-	moco := (self class modelClass) new.
+MocoOpenPonkOntoUmlClassTransformationRule >> transformAttribute: anOPUMLAttribute [
+	"Transforms OpenPonk class attribute to a Moco class attribute."
 	
-	MocoOpenPonkOntoUmlClassHelper initialize: moco from: aClass.
+	| attr |
+	attr := MocoOntoUmlAttribute new.
 	
-	^ moco
+	attr name: anOPUMLAttribute name.
+	attr visibility visibility: ((MocoOpenPonkUmlAttributeTransformation toMocoVisibility: (anOPUMLAttribute visibility)) visibility).
+	attr static: anOPUMLAttribute isStatic.
+	attr immutable: anOPUMLAttribute isReadOnly.
+	attr multiplicity lower: (MocoUmlMultiplicityBound value: ((anOPUMLAttribute lowerValue) ifNil: [ 1 ] ifNotNil: [ anOPUMLAttribute lowerValue value ])).
+	attr multiplicity upper: (MocoUmlMultiplicityBound value: ((anOPUMLAttribute upperValue) ifNil: [ 1 ] ifNotNil: [ anOPUMLAttribute upperValue value ])).
+	anOPUMLAttribute type ifNotNil: [ attr type: (MocoOntoUmlType newFromName: (anOPUMLAttribute type name)) ].
+		
+	^ attr
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkOntoUmlClassTransformationRule >> transformAttributes: anOPUMLClass [
+	"Returns attributes of the given OpenPonk UML class a Moco attributes."
+	
+	^ (anOPUMLClass ownedAttributes select: [ :each | each association isNil ])
+		collect: [ :each | self transformAttribute: each ]
+]
+
+{ #category : #'private - transforming' }
+MocoOpenPonkOntoUmlClassTransformationRule >> transformClass: anOPUMLClass [
+	"Transforms an OpenPonk OntoUML class into a Moco OntoUML class."
+	
+	| class |
+	class := (self class modelClass) new.
+	
+	class name: (anOPUMLClass name);
+		abstract: (anOPUMLClass isAbstract).
+	
+	class attributes addAll: (self transformAttributes: anOPUMLClass).
+	
+	engine addOutputElement: class withSource: anOPUMLClass.
+	engine input guard: anOPUMLClass with: #MocoOpenPonkOntoUmlClassTransformationRule
 ]
