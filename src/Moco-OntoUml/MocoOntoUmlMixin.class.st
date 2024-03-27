@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #accessing }
+MocoOntoUmlMixin >> isSortal [
+	^ false
+]
+
+{ #category : #accessing }
 MocoOntoUmlMixin >> providesIdentity [
 	^ false
 ]

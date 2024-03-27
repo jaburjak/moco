@@ -4,9 +4,6 @@ Transforms OntoUML Phases into UML classes.
 Class {
 	#name : #MocoOntoUmlPhaseTransformationRule,
 	#superclass : #MocoOntoUmlClassTransformationRule,
-	#instVars : [
-		'modelElements'
-	],
 	#category : #'Moco-O2U-Rule'
 }
 

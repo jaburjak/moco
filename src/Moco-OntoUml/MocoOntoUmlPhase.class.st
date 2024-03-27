@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #accessing }
+MocoOntoUmlPhase >> isSortal [
+	^ true
+]
+
+{ #category : #accessing }
 MocoOntoUmlPhase >> providesIdentity [
 	^ false
 ]

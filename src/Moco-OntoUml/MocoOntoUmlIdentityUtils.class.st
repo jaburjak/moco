@@ -9,12 +9,12 @@ Class {
 
 { #category : #testing }
 MocoOntoUmlIdentityUtils class >> checkIfHasIdentity: aMocoOntoUmlClass inModel: aCollection [
+	"Returns true if the given OntoUML class has an identity provided by either itself or by its supertype in the given model."
+	
 	aMocoOntoUmlClass providesIdentity ifTrue: [ ^ true ].
 	
-	(aCollection select: [ :each | (each isKindOf: MocoOntoUmlGeneralization) and: [ (each subtype) == aMocoOntoUmlClass ] ])
-		do: [ :each |
-			(self checkIfHasIdentity: (each supertype) inModel: aCollection) ifTrue: [ ^ true ]
-		].
-	
-	^ false
+	^ (aCollection select: [ :each | (each isKindOf: MocoOntoUmlGeneralization) and: [ (each subtype) == aMocoOntoUmlClass ] ])
+		anySatisfy: [ :each |
+			(self checkIfHasIdentity: (each supertype) inModel: aCollection)
+		]
 ]

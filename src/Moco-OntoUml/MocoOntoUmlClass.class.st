@@ -41,6 +41,11 @@ MocoOntoUmlClass >> initialize [
 ]
 
 { #category : #accessing }
+MocoOntoUmlClass >> isSortal [
+	^ true
+]
+
+{ #category : #accessing }
 MocoOntoUmlClass >> name [
 	^ name
 ]
