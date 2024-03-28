@@ -21,12 +21,18 @@ MocoOntoUmlPhaseTransformationRule >> askMethodFor: aMocoOntoUmlGeneralizationSe
 	
 	builder := MocoChoiceBuilder new.
 	
-	builder question: question;
-		addChoice: 'Transform using exclusive phase associations' withId: #epa;
-		addChoice: 'Transform by an abstract phase' withId: #ap.
+	builder question: question.
+	
+	((aMocoOntoUmlGeneralizationSet disjoint) and: [ aMocoOntoUmlGeneralizationSet covering ])
+		ifTrue: [ builder addChoice: 'Transform using exclusive phase associations' withId: #epa. ].
+	
+	builder addChoice: 'Transform by an abstract phase' withId: #ap.
 	
 	(self checkIfOptimizable: aMocoOntoUmlGeneralizationSet)
 		ifTrue: [ builder addChoice: 'Transform to a phase attribute' withId: #attr ].
+	
+	((builder choices size) = 1)
+		ifTrue: [ ^ builder choices first id ].
 	
 	^ engine askChoice: builder
 ]
@@ -34,9 +40,6 @@ MocoOntoUmlPhaseTransformationRule >> askMethodFor: aMocoOntoUmlGeneralizationSe
 { #category : #'private - testing' }
 MocoOntoUmlPhaseTransformationRule >> checkIfOptimizable: aMocoOntoUmlGeneralizationSet [
 	"Checks if none of the subtypes in the generalization sets contain any attributes, are part of any associations and are not supertypes of any other classes."
-	
-	aMocoOntoUmlGeneralizationSet ifNotDisjoint: [ ^ false ].
-	aMocoOntoUmlGeneralizationSet ifNotCovering: [ ^ false ].
 	
 	aMocoOntoUmlGeneralizationSet members do: [ :each |
 		each subtype attributes ifNotEmpty: [ ^ false ].
@@ -195,7 +198,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoOntoUmlGener
 	ocl context: bearer;
 		name: ('EN_' , attribute name , '_Condition' );
 		attribute: attribute.
-	ocl values addAll: (aMocoOntoUmlGeneralizationSet members collect: [ :each | each subtype name ]).
+	ocl values addAll: (((MocoOntoUmlGeneralizationSetTransformation generateInstanceCombinations: aMocoOntoUmlGeneralizationSet) collect: [ :each | '' join: (each collect: [ :e | e name ]) ])).
 	
 	((engine input selectElementsOfKind: MocoOntoUmlGeneralization) select: [ :each | aMocoOntoUmlGeneralizationSet members anySatisfy: [ :e | e == each ] ])
 		do: [ :each |
