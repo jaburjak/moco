@@ -13,27 +13,27 @@ MocoOntoUmlContainmentAssociationTransformationRule class >> modelSelector [
 ]
 
 { #category : #'private - processing' }
-MocoOntoUmlContainmentAssociationTransformationRule >> findPartSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlContainmentAssociation [
-	"Returns the side of the Quantity."
+MocoOntoUmlContainmentAssociationTransformationRule >> findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlContainmentAssociation [
+	"Returns the side opposite of the Quantity."
 	
 	((aMocoOntoUmlContainmentAssociation source element isKindOf: MocoOntoUmlQuantity) and: [ (aMocoOntoUmlContainmentAssociation target element isKindOf: MocoOntoUmlQuantity) not ])
-		ifTrue: [ ^ (aMocoUmlAssociation source) ].
+		ifTrue: [ ^ (aMocoUmlAssociation target) ].
 	
 	((aMocoOntoUmlContainmentAssociation target element isKindOf: MocoOntoUmlQuantity) and: [ (aMocoOntoUmlContainmentAssociation source element isKindOf: MocoOntoUmlQuantity) not ])
-		ifTrue: [ ^ (aMocoUmlAssociation target) ].
+		ifTrue: [ ^ (aMocoUmlAssociation source) ].
 	
 	^ nil
 ]
 
 { #category : #'private - processing' }
 MocoOntoUmlContainmentAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
-	"Makes the side of the Quantity immutable."
+	"Makes the side opposite of the Quantity immutable."
 	
-	| partSide |
-	partSide := (self findPartSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation).
+	| wholeSide |
+	wholeSide := (self findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation).
 
-	partSide ifNotNil: [
-		partSide frozen: true
+	wholeSide ifNotNil: [
+		wholeSide frozen: true
 	]
 ]
 
