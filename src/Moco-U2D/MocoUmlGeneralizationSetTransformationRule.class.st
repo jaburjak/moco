@@ -131,6 +131,8 @@ MocoUmlGeneralizationSetTransformationRule >> generateInstanceCombinations: aMoc
 		}
 	]).
 
+	combinations sort: [ :a :b | (a first) < (b first) ].
+
 	aMocoUmlGeneralizationSet ifNotDisjoint: [
 		| tmp |
 		tmp := combinations combinations collect: [ :each |
