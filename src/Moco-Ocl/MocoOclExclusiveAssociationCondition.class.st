@@ -27,5 +27,12 @@ MocoOclExclusiveAssociationCondition >> printOclTo: aStream [
 	super printOclTo: aStream.
 	
 	aStream
-		nextPutAll: (' XOR ' join: (associations collect: [ :each | 'self.' , (each name) , ' <> OclVoid' ]))
+		nextPutAll: (' XOR ' join: (associations collect: [ :each |
+			| conditions |
+			conditions := each collect: [ :e | 'self.' , (e name) , ' <> OclVoid' ].
+			
+			((conditions size) > 1)
+				ifTrue: [ '(' , (' AND ' join: conditions) , ')' ]
+				ifFalse: [ conditions first ]
+		]))
 ]

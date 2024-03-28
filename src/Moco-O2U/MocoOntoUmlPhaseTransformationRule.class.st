@@ -214,12 +214,14 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoOntoUmlGener
 MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoOntoUmlGeneralizationSet [
 	"Transforms the given phase partition to UML using exclusive phase associations."
 	
-	| context ocl |
+	| context ocl associations |
 	context := engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype).
 
 	ocl := MocoOclExclusiveAssociationCondition new.
 	ocl context: context;
 		name: ('EX_' , (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet) , '_Condition').
+	
+	associations := OrderedCollection new.
 
 	aMocoOntoUmlGeneralizationSet members do: [ :each |
 		| source target association |
@@ -240,11 +242,19 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoOntoUmlGeneralizat
 			target: target;
 			name: (MocoNamingUtils toCamelCase: (each subtype name)).
 		
-		ocl associations add: association.
+		associations add: association.
 		
 		engine addOutputElement: association withSource: each.
 		engine input guard: each with: #MocoOntoUmlPhaseTransformationRule
 	].
+
+	associations sort: [ :a :b | (a name) < (b name) ].
+	
+	(aMocoOntoUmlGeneralizationSet disjoint)
+		ifTrue: [ associations := associations collect: [ :each | OrderedCollection with: each ] ]
+		ifFalse: [ associations := associations combinations ].
+
+	ocl associations addAll: associations.
 
 	engine addOutputElement: ocl withSource: aMocoOntoUmlGeneralizationSet
 ]

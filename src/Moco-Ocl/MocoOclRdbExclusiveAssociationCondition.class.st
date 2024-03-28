@@ -23,8 +23,30 @@ MocoOclRdbExclusiveAssociationCondition >> column: aMocoRdbColumn [
 ]
 
 { #category : #'private - processing' }
-MocoOclRdbExclusiveAssociationCondition >> generateAssociationVariableName: aMocoRdbTable [
-	^ (MocoNamingUtils toPascalCase: ((aMocoRdbTable name asLowercase) copyReplaceAll: '_' with: ' ')) , '_Instance'
+MocoOclRdbExclusiveAssociationCondition >> generateAssociationVariableName: aCollection [
+	^ (MocoNamingUtils toPascalCase: ((' ' join: (aCollection collect: [ :e | e name asLowercase])) copyReplaceAll: '_' with: ' ')) , '_Instance'
+]
+
+{ #category : #'private - processing' }
+MocoOclRdbExclusiveAssociationCondition >> generateExistsClause: aMocoRdbTable withColumn: aMocoRdbColumn [
+	| varName stream |
+	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
+	
+	stream := String new writeStream.
+	
+	stream
+		nextPutAll: (aMocoRdbTable name);
+		nextPutAll: '.allInstances()->exists(';
+		nextPutAll: varName;
+		nextPutAll: ' | ';
+		nextPutAll: varName;
+		nextPutAll: '.';
+		nextPutAll: (aMocoRdbColumn name);
+		nextPutAll: ' = self.';
+		nextPutAll: (column name);
+		nextPutAll: ')'.
+	
+	^ stream contents
 ]
 
 { #category : #initialization }
@@ -36,26 +58,17 @@ MocoOclRdbExclusiveAssociationCondition >> initialize [
 ]
 
 { #category : #printing }
-MocoOclRdbExclusiveAssociationCondition >> printAssociation: aMocoRdbTable withColumn: aMocoRdbColumn to: aStream [
+MocoOclRdbExclusiveAssociationCondition >> printAssociations: aCollection withColumns: aCollection2 to: aStream [
 	| varName |
-	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
+	varName := MocoNamingUtils toShortName: ('_' join: (aCollection collect: [ :e | e name ])).
 	
 	aStream
 		nextPutAll: 'def ';
-		nextPutAll: (self generateAssociationVariableName: aMocoRdbTable);
+		nextPutAll: (self generateAssociationVariableName: aCollection);
 		nextPutAll: ': Boolean =';
 		cr;
 		nextPutAll: '  ';
-		nextPutAll: (aMocoRdbTable name);
-		nextPutAll: '.allInstances()->exists(';
-		nextPutAll: varName;
-		nextPutAll: ' | ';
-		nextPutAll: varName;
-		nextPutAll: '.';
-		nextPutAll: (aMocoRdbColumn name);
-		nextPutAll: ' = self.';
-		nextPutAll: (column name);
-		nextPutAll: ')'
+		nextPutAll: (' AND ' join: ((aCollection with: aCollection2 collect: [ :t :c | self generateExistsClause: t withColumn: t ])))
 ]
 
 { #category : #printing }
@@ -63,7 +76,7 @@ MocoOclRdbExclusiveAssociationCondition >> printOclTo: aStream [
 	super printOclTo: aStream.
 	
 	referencingTables with: referencingColumns do: [ :t :c |
-		self printAssociation: t withColumn: c to: aStream.
+		self printAssociations: t withColumns: c to: aStream.
 		aStream cr
 	].
 

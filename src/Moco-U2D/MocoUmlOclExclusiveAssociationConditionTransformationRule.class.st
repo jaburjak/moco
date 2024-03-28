@@ -51,11 +51,11 @@ MocoUmlOclExclusiveAssociationConditionTransformationRule >> transformCondition:
 		column: ((context constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).
 	
 	aMocoOclExclusiveAssociationCondition associations do: [ :each |
-		| table |
-		table := self findTableFor: each.
+		| tables |
+		tables := each collect: [ :a | self findTableFor: a ].
 		
-		ocl referencingTables add: (table first).
-		ocl referencingColumns add: (table last)
+		ocl referencingTables add: (tables collect: [ :e | e first ]).
+		ocl referencingColumns add: (tables collect: [ :e | e last ])
 	].
 
 	engine addOutputElement: ocl withSource: aMocoOclExclusiveAssociationCondition.

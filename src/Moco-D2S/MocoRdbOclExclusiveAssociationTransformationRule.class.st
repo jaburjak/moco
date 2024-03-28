@@ -83,16 +83,16 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMoco
 		nextPutAll: '  SELECT COUNT(1) INTO "l_count" FROM DUAL WHERE ('.
 	
 	(aMocoOclRdbExclusiveAssociationCondition referencingTables) with: (aMocoOclRdbExclusiveAssociationCondition referencingColumns) do: [ :t :c |
-		(t == aMocoRdbTable) ifTrue: [ column := c ]
+		((t first) == aMocoRdbTable) ifTrue: [ column := c first ]
 	].
 	
 	first := true.
 	
 	(aMocoOclRdbExclusiveAssociationCondition referencingTables) with: (aMocoOclRdbExclusiveAssociationCondition referencingColumns) do: [ :t :c |
-		(t == aMocoRdbTable) ifFalse: [
+		((t first) == aMocoRdbTable) ifFalse: [
 			body cr; nextPutAll: '    '.
 			first ifFalse: [ body nextPutAll: 'OR ' ].
-			body nextPutAll: (self generateExists: true clauseFor: t andColumn: c withReferenced: column andLabel: ':new').
+			body nextPutAll: (self generateExists: true clauseFor: (t first) andColumn: (c first) withReferenced: column andLabel: ':new').
 			first := false
 		]
 	].
@@ -122,7 +122,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMoc
 	
 	((aMocoOclRdbExclusiveAssociationCondition referencingTables size) < 2) ifTrue: [ ^ triggers ].
 	
-	triggers addAll: (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateInsertTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: each ] ).
+	triggers addAll: (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateInsertTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: (each first) ] ).
 	
 	^ triggers
 ]
@@ -158,7 +158,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMoco
 			ifFalse: [ str cr; nextPutAll: '    OR (' ].
 		
 		(aMocoOclRdbExclusiveAssociationCondition referencingTables) with: (aMocoOclRdbExclusiveAssociationCondition referencingColumns) do: [ :t :c |
-			str nextPutAll: (self generateExists: (t == each) clauseFor: t andColumn: c withReferenced: (aMocoOclRdbExclusiveAssociationCondition column) andLabel: ':new').
+			str nextPutAll: (self generateExists: (t == each) clauseFor: (t first) andColumn: (c first) withReferenced: (aMocoOclRdbExclusiveAssociationCondition column) andLabel: ':new').
 			(t == (aMocoOclRdbExclusiveAssociationCondition referencingTables last)) ifFalse: [ str cr; nextPutAll: '      AND ' ]
 		].
 		
@@ -218,7 +218,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMoco
 		body nextPutAll: '('.
 
 		(aMocoOclRdbExclusiveAssociationCondition referencingTables) with: (aMocoOclRdbExclusiveAssociationCondition referencingColumns) do: [ :t :c |
-			body nextPutAll: (self generateExists: (t == each) clauseFor: t andColumn: c withReferenced: (aMocoOclRdbExclusiveAssociationCondition column) andLabel: varName).
+			body nextPutAll: (self generateExists: (t == each) clauseFor: (t first) andColumn: (c first) withReferenced: (aMocoOclRdbExclusiveAssociationCondition column) andLabel: varName).
 			(t == (aMocoOclRdbExclusiveAssociationCondition referencingTables last)) ifFalse: [ body cr; nextPutAll: '      AND ' ]
 		].
 		
@@ -245,5 +245,5 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMoco
 
 { #category : #'private - processing' }
 MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTriggers: aMocoOclRdbExclusiveAssociationCondition [
-	^ (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: each ] )
+	^ (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: (each first) ] )
 ]

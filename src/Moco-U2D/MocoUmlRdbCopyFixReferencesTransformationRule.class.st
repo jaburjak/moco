@@ -58,7 +58,9 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditio
 		| original associations |
 		original := engine detectInputElement: each.
 		
-		associations := original associations collect: [ :a | engine detectOutputElement: a ].
+		associations := original associations collect: [ :collection |
+			collection collect: [ :association | engine detectOutputElement: association ]
+		].
 		
 		each associations removeAll.
 		each associations addAll: associations
