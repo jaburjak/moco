@@ -15,7 +15,7 @@ MocoOclExclusiveAssociationCondition >> associations [
 	^ associations
 ]
 
-{ #category : #accessing }
+{ #category : #intialization }
 MocoOclExclusiveAssociationCondition >> initialize [
 	super initialize.
 	
