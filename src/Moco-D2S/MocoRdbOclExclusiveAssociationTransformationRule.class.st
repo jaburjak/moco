@@ -151,6 +151,9 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMoco
 	
 	aMocoOclRdbExclusiveAssociationCondition referencingTables do: [ :each |
 		| str |
+		
+		((each size) > 1) ifTrue: [ self error: 'MocoRdbOclExclusiveAssociationTransformationRule cannot transform a constraint with overlapping associations.' ].
+		
 		str := String new writeStream.
 		
 		(each == (aMocoOclRdbExclusiveAssociationCondition referencingTables first))
