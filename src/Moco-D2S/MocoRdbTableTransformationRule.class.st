@@ -50,7 +50,11 @@ MocoRdbTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	aMocoRdbColumn type ifNotNil: [
 		str
 			nextPutAll: ' ';
-			nextPutAll: (self toTypeDeclaration: (aMocoRdbColumn type))
+			nextPutAll: (self toTypeDeclaration: (aMocoRdbColumn type)).
+		
+		(aMocoRdbColumn nullable) ifFalse: [
+			str nextPutAll: ' NOT NULL'
+		]
 	].
 		
 	^ str contents
