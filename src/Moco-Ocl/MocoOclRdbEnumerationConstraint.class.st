@@ -32,6 +32,15 @@ MocoOclRdbEnumerationConstraint >> initialize [
 MocoOclRdbEnumerationConstraint >> printOclTo: aStream [
 	super printOclTo: aStream.
 	
+	(column nullable) ifTrue: [
+		aStream
+			nextPutAll: 'self.';
+			nextPutAll: (column name);
+			nextPutAll: ' = OclVoid'.
+		
+		(values ifNotEmpty: [ aStream nextPutAll: ' OR ' ])
+	].
+	
 	aStream
 		nextPutAll: (' OR ' join: (values collect: [ :each | 'self.' , (column name) , ' = ''' , each , '''' ]))
 ]

@@ -32,6 +32,15 @@ MocoOclEnumerationConstraint >> initialize [
 MocoOclEnumerationConstraint >> printOclTo: aStream [
 	super printOclTo: aStream.
 	
+	(attribute multiplicity lower isZero) ifTrue: [
+		aStream
+			nextPutAll: 'self.';
+			nextPutAll: (attribute name);
+			nextPutAll: ' = OclVoid'.
+		
+		(values ifNotEmpty: [ aStream nextPutAll: ' OR ' ])
+	].
+	
 	aStream
 		nextPutAll: (' OR ' join: (values collect: [ :each | 'self.' , (attribute name) , ' = ''' , each , '''' ]))
 ]
