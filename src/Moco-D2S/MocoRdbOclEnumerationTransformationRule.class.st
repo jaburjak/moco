@@ -35,7 +35,17 @@ MocoRdbOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumeration
 	body
 		nextPutAll: 'ADD CONSTRAINT ';
 		nextPutAll: (MocoSqlOracleEscaping escapeName: ('EN_' , (aMocoOclRdbEnumerationConstraint context name) , '_' , (aMocoOclRdbEnumerationConstraint column name)));
-		nextPutAll: ' CHECK (';
+		nextPutAll: ' CHECK ('.
+	
+	(aMocoOclRdbEnumerationConstraint column nullable) ifTrue: [
+		body
+			nextPutAll: column;
+			nextPutAll: ' IS NULL'.
+		
+		(aMocoOclRdbEnumerationConstraint values ifNotEmpty: [ body nextPutAll: ' OR ' ])
+	].
+	
+	body
 		nextPutAll: (' OR ' join: (aMocoOclRdbEnumerationConstraint values collect: [ :each | column , ' = ' , (MocoSqlOracleEscaping escapeLiteral: each) ]));
 		nextPutAll: ')'.
 	
