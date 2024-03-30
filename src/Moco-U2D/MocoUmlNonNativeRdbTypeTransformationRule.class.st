@@ -23,7 +23,7 @@ MocoUmlNonNativeRdbTypeTransformationRule >> checkIfTypeIsNative: aMocoUmlType [
 	
 	aMocoUmlType ifNil: [ ^ true ].
 	
-	((engine input selectElementsOfKind: MocoUmlClass) anySatisfy: [ :each | (each name) = (aMocoUmlType name) ])
+	((engine input elements) anySatisfy: [ :each | ((each isKindOf: MocoUmlClass) or: [ each isKindOf: MocoUmlEnumeration ]) and: [ (each name) = (aMocoUmlType name) ] ])
 		ifTrue: [ ^ false ].
 	
 	^ (dataTypeMapper map: (aMocoUmlType name)) isNotNil
@@ -117,7 +117,7 @@ MocoUmlNonNativeRdbTypeTransformationRule >> priority [
 MocoUmlNonNativeRdbTypeTransformationRule >> resolveAssociationTarget: aMocoUmlType [
 	"Returns the class that the given data type is referencing."
 	
-	^ (engine output selectElementsOfKind: MocoUmlClass)
-		detect: [ :each | (each name) = (aMocoUmlType name) ]
+	^ (engine output elements)
+		detect: [ :each | ((each isKindOf: MocoUmlClass) or: [ each isKindOf: MocoUmlEnumeration ]) and: [ (each name) = (aMocoUmlType name) ] ]
 		ifNone: [ self error: ('Unrecognized attribute data type: ' , (aMocoUmlType name)) ]
 ]

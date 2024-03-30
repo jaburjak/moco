@@ -20,6 +20,13 @@ MocoUmlAssociation >> anySideIncludes: anObject [
 	^ ((source element) == anObject) or: [ (target element) == anObject ]
 ]
 
+{ #category : #testing }
+MocoUmlAssociation >> anySideSatisfies: aBlock [
+	"Returns true if either side of the association satisfies the given condition."
+	
+	^ (aBlock value: (source element)) or: [ aBlock value: (target element) ]
+]
+
 { #category : #accessing }
 MocoUmlAssociation >> derived [
 	^ derived

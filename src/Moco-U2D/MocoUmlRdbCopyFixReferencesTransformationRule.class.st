@@ -125,14 +125,17 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixOcl [
 	
 	ocls do: [ :each |
 		| original context |
-		original := engine detectInputElement: each.
+		original := engine detectInputElement: each ofKind: MocoOclConstraint.
 		
-		context := engine detectOutputElement: (original context).
+		original ifNotNil: [ "ignore constraints generated during this transformation phase"
+			context := engine detectOutputElement: (original context).
+			
+			each context: context.
+			
+			engine output setModified
+		].
 		
-		each context: context.
-		
-		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
-		engine output setModified
+		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule
 	].
 
 	self fixExclusiveAssociationConditions: ocls

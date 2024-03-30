@@ -24,10 +24,15 @@ MocoOpenPonkUmlAssociationTransformationRule >> execute [
 ]
 
 { #category : #'private - processing' }
-MocoOpenPonkUmlAssociationTransformationRule >> findOutClassFor: aMocoUmlClass [
+MocoOpenPonkUmlAssociationTransformationRule >> findOutClassFor: anObject [
 	"Returns an OpenPonk class that was generated from the given Moco element."
 	
-	^ engine detectOutputElement: aMocoUmlClass ofKind: OPUMLClass
+	| class |
+	class := engine detectOutputElement: anObject ofKind: OPUMLClass.
+	
+	class ifNotNil: [ ^ class ].
+	
+	^ engine detectOutputElement: anObject ofKind: OPUMLEnumeration
 ]
 
 { #category : #accessing }

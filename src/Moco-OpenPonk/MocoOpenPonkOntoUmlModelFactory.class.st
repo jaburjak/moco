@@ -34,9 +34,20 @@ MocoOpenPonkOntoUmlModelFactory class >> addElements: anOpenPonkModel to: aMocoM
 	self
 		addClasses: anOpenPonkModel to: aMocoModel;
 		addAssociations: anOpenPonkModel to: aMocoModel;
-		addGeneralizationSets: anOpenPonkModel to: aMocoModel.
+		addGeneralizationSets: anOpenPonkModel to: aMocoModel;
+		addEnumerations: anOpenPonkModel to: aMocoModel.
 	
 	^ aMocoModel
+]
+
+{ #category : #adding }
+MocoOpenPonkOntoUmlModelFactory class >> addEnumerations: anOpenPonkModel to: aMocoModel [
+	"Adds enumerations from the given OpenPonk model to the given Moco model."
+	
+	| enumerations |
+	enumerations := anOpenPonkModel packagedElements select: [ :e | e isKindOf: OPUMLEnumeration ].
+	
+	enumerations do: [ :each | aMocoModel addElement: each ]
 ]
 
 { #category : #'private - processing' }

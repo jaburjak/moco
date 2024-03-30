@@ -25,7 +25,14 @@ MocoUmlMultiValueAttributeTransformationRule >> decomposeAttribute: aMocoUmlAttr
 	inElement := engine detectInputElement: aMocoUmlClass.
 	
 	engine addOutputElement: class withSource: inElement;
-		addOutputElement: association withSource: inElement
+		addOutputElement: association withSource: inElement.
+	
+	((engine output selectElementsOfKind: MocoOclEnumerationConstraint)
+		select: [ :each | ((each attribute) == aMocoUmlAttribute) and: [ (each context) == aMocoUmlClass ] ])
+		do: [ :each |
+			each context: (class);
+				attribute: (class attributes first)
+		]
 ]
 
 { #category : #'private - transforming' }
