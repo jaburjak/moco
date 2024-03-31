@@ -58,7 +58,8 @@ MocoTranscriptPresenter >> initializeWindow: aWindowPresenter [
 	
 	aWindowPresenter title: 'Transformation Transcript';
 		aboutText: 'Contains the transcript of the performed transformations.';
-		windowIcon: (MocoIcons mocoIcon)
+		windowIcon: (MocoIcons mocoIcon);
+		initialExtent: 800@500
 ]
 
 { #category : #accessing }
