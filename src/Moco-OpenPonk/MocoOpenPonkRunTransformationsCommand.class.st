@@ -7,8 +7,27 @@ Class {
 	#instVars : [
 		'workbench'
 	],
+	#classVars : [
+		'transcripts'
+	],
 	#category : #'Moco-OpenPonk-Ui'
 }
+
+{ #category : #'private - accessing' }
+MocoOpenPonkRunTransformationsCommand class >> registerTranscript: aMocoTranscriptPresenter in: anOPWorkbench [
+	transcripts ifNil: [ transcripts := OrderedCollection new ].
+	
+	aMocoTranscriptPresenter window whenClosedDo: [ transcripts removeAllSuchThat: [ :each | (each second window isNil) or: [ each second window isClosed ] ] ].
+	
+	transcripts add: { anOPWorkbench. aMocoTranscriptPresenter }
+]
+
+{ #category : #'private - accessing' }
+MocoOpenPonkRunTransformationsCommand class >> transcriptsOf: anOPWorkbench [
+	transcripts ifNil: [ ^ OrderedCollection new ].
+	
+	^ (transcripts select: [ :each | (each first) == anOPWorkbench ]) collect: [ :each | each second ]
+]
 
 { #category : #'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> addModel: aMocoWrappedModel withLabel: aString toTranscript: aMocoTranscriptPresenter [
@@ -61,10 +80,6 @@ MocoOpenPonkRunTransformationsCommand >> execute [
 		add: (self packageModel: (dbModel first) as: (self determineModelName: 'UML Model for RDB' or: 'UML for RDB') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
 		add: (self packageModel: (dbModel last) as: (self determineModelName: 'RDB Model' or: 'RDB') usingRulesWithTag: 'Rule-Rdb' andClassPrefix: 'MocoOpenPonkRdb').
 	
-	transcript open.
-	transcript tabs layout children last click.
-	transcript body takeKeyboardFocus.
-	
 	self showModels: models andTranscript: transcript
 ]
 
@@ -72,11 +87,40 @@ MocoOpenPonkRunTransformationsCommand >> execute [
 MocoOpenPonkRunTransformationsCommand >> openModels: aCollection in: anOPWorkbench [
 	"Adds the given collection of models to the given workbench instance, opens them and focuses the last one."
 	
-	| controller |
+	| controller replace |
 	controller := anOPWorkbench projectController.
+	
+	replace := nil.
+	(MocoSettings overwriteModels = 'Yes') ifTrue: [ replace := true ].
+	(MocoSettings overwriteModels = 'No') ifTrue: [ replace := false ].
+	
+	replace ifNil: [
+		controller project models do: [ :each |
+			(aCollection anySatisfy: [ :e | (e name) = (each name) ]) ifTrue: [
+				replace ifNil: [
+					| dialog |
+					dialog := SpConfirmDialog new
+						title: 'Found Results of Previous Transformation';
+						label: 'Replace previous models with newly transformed ones or keep all?';
+						acceptLabel: 'Overwrite';
+						cancelLabel: 'Keep all'.
+					dialog parentWindow: (anOPWorkbench window).
+					replace := dialog openBlockedDialog yourself isOk
+				]
+			]
+		]
+	].
+
+	replace ifNil: [ replace := false ].
+
+	replace ifTrue: [ ((self class transcriptsOf: anOPWorkbench) select: [ :each | each window isNotNil ]) do: [ :each | each window close ] ].
 	
 	aCollection do: [ :each |
 		| name |
+		replace ifTrue: [ (controller project models select: [ :m | (m name) beginsWith: (each name) ]) do: [ :m |
+			(controller controllers select: [ :c | (c model) == m ]) do: [ :d | anOPWorkbench closeEditorOfDiagram: (d diagramElement) ].
+			controller removeModel: m
+		] ].
 		name := MocoUniqueNameGenerator at: [ :n | controller project models anySatisfy: [ :m | (m name) = n ] ] seed: (each name) format: [ :s :i | s , ' (' , (i asString) , ')' ].
 		each name: name.
 	].
@@ -116,7 +160,9 @@ MocoOpenPonkRunTransformationsCommand >> openOpenPonk: aCollection [
 	
 	self openModels: aCollection in: wb.
 	
-	wb withWindowDo: [ :each | each centered ]
+	wb withWindowDo: [ :each | each centered ].
+	
+	^ wb
 ]
 
 { #category : #'private - processing' }
@@ -171,20 +217,33 @@ MocoOpenPonkRunTransformationsCommand >> showElementsIn: anOPDiagramController [
 
 { #category : #'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> showModels: aCollection andTranscript: aMocoTranscriptPresenter [
-	| mode |
+	| mode newWorkbench |
 	mode := MocoSettings openMode.
+	newWorkbench := nil.
 
-	(mode = 'Current window') ifTrue: [
-		aMocoTranscriptPresenter centered.
-		self openModels: aCollection in: workbench.
-		^ self
-	].
+	(mode = 'Current window')
+		ifTrue: [
+			self openModels: aCollection in: workbench
+		]
+		ifFalse: [ "New window (default)"
+			newWorkbench := self openOpenPonk: aCollection
+		].
 	
-	"New window (default)"
-	aMocoTranscriptPresenter window maximize.
-	self openOpenPonk: aCollection.
+	aMocoTranscriptPresenter open.
 	
-	^ self
+	(mode = 'Current window')
+		ifTrue: [
+			self class registerTranscript: aMocoTranscriptPresenter in: workbench.
+			aMocoTranscriptPresenter window centeredRelativeTo: (workbench window)
+		]
+		ifFalse: [
+			aMocoTranscriptPresenter window maximize
+		].
+	
+	newWorkbench ifNotNil: [ aMocoTranscriptPresenter window withAdapterDo: [ :adapter | adapter widgetDo: [ :widget | widget makeSecondTopmost ] ] ].
+	
+	aMocoTranscriptPresenter tabs layout children last click.
+	aMocoTranscriptPresenter body takeKeyboardFocus
 ]
 
 { #category : #accessing }
