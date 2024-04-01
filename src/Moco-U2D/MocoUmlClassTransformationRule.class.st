@@ -22,15 +22,18 @@ MocoUmlClassTransformationRule >> execute [
 
 { #category : #'private - processing' }
 MocoUmlClassTransformationRule >> generateIdentityColumn: aMocoRdbTable [
-	"Generates an ID column and a PRIMARY KEY for the given table."
+	"Generates an ID column and a PRIMARY KEY for the given table.
+	 In case a column with name 'ID' already exists, it will be returned instead of generating a new one."
 	
 	| col con |
-	col := MocoRdbColumn new.
+	col := aMocoRdbTable columns detect: [ :each | each name = 'ID' ] ifNone: [
+		MocoRdbColumn new
+			name: ((aMocoRdbTable name) , '_ID');
+			type: (MocoRdbTypeInteger new);
+			nullable: false;
+			yourself
+	].
 	
-	col name: ((aMocoRdbTable name) , '_ID');
-		type: (MocoRdbTypeInteger new);
-		nullable: false.
-		
 	con := MocoRdbPrimaryKey new.
 	con name: ('PK_' , (aMocoRdbTable name)).
 	con columns add: col.
@@ -98,14 +101,13 @@ MocoUmlClassTransformationRule >> toTable: aMocoUmlClass [
 	
 	table name: (MocoNamingUtils toUpperSnakeCase: (aMocoUmlClass name)).
 	
+	columns := (aMocoUmlClass attributes) collect: [ :each | self toColumn: each ofTable: table ofClass: aMocoUmlClass ].
+	table columns addAll: (columns collect: [ :each | each first ]).
+	
 	id := self generateIdentityColumn: table.
 	
-	table columns add: (id first).
-	table constraints add: (id last).
-	
-	columns := (aMocoUmlClass attributes) collect: [ :each | self toColumn: each ofTable: table ofClass: aMocoUmlClass ].
-	
-	table columns addAll: (columns collect: [ :each | each first ]).
+	(table columns noneSatisfy: [ :each | each == (id first) ]) ifTrue: [ table columns addFirst: (id first) ].
+	table constraints addFirst: (id last).
 	
 	^ { table. columns flatCollect: [ :each | each second ] }
 ]
