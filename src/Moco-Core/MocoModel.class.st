@@ -60,8 +60,12 @@ MocoModel >> at: anObject putOutputElement: anObject2 [
 	"Adds an output element to the given element."
 	
 	| output |
-	output := [ self detectElement: anObject2 ] on: Error do: [ nil ].
-	output ifNil: [ output := MocoWrappedElement from: anObject2 ].
+	output := anObject2.
+	
+	(output isKindOf: MocoWrappedElement) ifFalse: [
+		output := [ self detectElement: output ] on: Error do: [ nil ].
+		output ifNil: [ output := self wrapElement: anObject2 ]
+	].
 	
 	(self detectElement: anObject) meta outElements add: output.
 	
@@ -146,7 +150,7 @@ MocoModel >> purgeElement: aMocoWrappedElement [
 	"Removes the given element from all metadata."
 	
 	elements do: [ :each |
-		(each meta outElements anySatisfy: [ :e | each = aMocoWrappedElement ])
+		(each meta outElements anySatisfy: [ :e | e == aMocoWrappedElement ])
 			ifTrue: [ self setModified ].
 		
 		each meta outElements removeAllSuchThat: [ :e | e == aMocoWrappedElement ]

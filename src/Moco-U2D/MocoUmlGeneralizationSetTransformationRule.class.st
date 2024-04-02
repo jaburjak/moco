@@ -173,7 +173,7 @@ MocoUmlGeneralizationSetTransformationRule >> transformToReferencingTables: aMoc
 	
 	constraint := self generateConstraint: aMocoUmlGeneralizationSet inTable: general withColumn: column.
 	
-	engine input at: aMocoUmlGeneralizationSet putOutputElement: column.
+	engine atInput: aMocoUmlGeneralizationSet putOutputElement: column.
 	engine addOutputElement: constraint withSource: aMocoUmlGeneralizationSet.
 	
 	engine input guard: aMocoUmlGeneralizationSet with: #MocoUmlGeneralizationSetTransformationRule

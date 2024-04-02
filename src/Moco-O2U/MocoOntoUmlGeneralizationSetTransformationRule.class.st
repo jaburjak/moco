@@ -146,7 +146,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> transformGeneralizationSet: aM
 		| question |
 		question := MocoChoiceBuilder new.
 		
-		question question: ('Types ' , (', ' join: (aMocoOntoUmlGeneralizationSet members collect: [ :e | '"', (e subtype name) , '"' ])) , ' in generalization set' , ((aMocoOntoUmlGeneralizationSet name) ifEmpty: [ '' ] ifNotEmpty: [ ' "' , (aMocoOntoUmlGeneralizationSet name) , '"' ]) , ' at "' , (aMocoOntoUmlGeneralizationSet members first supertype name) , '" have no properties and can be optimized out. How do you want to proceed?');
+		question question: ('Types ' , (', ' join: (aMocoOntoUmlGeneralizationSet members collect: [ :e | '“', (e subtype name) , '”' ])) , ' in generalization set' , ((aMocoOntoUmlGeneralizationSet name) ifEmpty: [ '' ] ifNotEmpty: [ ' “' , (aMocoOntoUmlGeneralizationSet name) , '”' ]) , ' at “' , (aMocoOntoUmlGeneralizationSet members first supertype name) , '” have no properties and can be optimized out. How do you want to proceed?');
 			addChoice: 'Keep them' withId: #keep;
 			addChoice: 'Replace with a discriminator attribute' withId: #optimize.
 			
@@ -160,7 +160,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> transformGeneralizationSet: aM
 			
 			discriminator second context attributes add: (discriminator first).
 			
-			engine input at: aMocoOntoUmlGeneralizationSet putOutputElement: (discriminator first).
+			engine atInput: aMocoOntoUmlGeneralizationSet putOutputElement: (discriminator first).
 			engine addOutputElement: (discriminator second) withSource: aMocoOntoUmlGeneralizationSet.
 			
 			members := (aMocoOntoUmlGeneralizationSet members flatCollect: [ :each | engine selectOutputElements: each ofKind: MocoUmlGeneralization ]).

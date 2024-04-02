@@ -24,9 +24,11 @@ MocoTransformationEngine >> addOutputElement: anObject [
 MocoTransformationEngine >> addOutputElement: anObject withSource: anObject2 [
 	"Adds a new element to the output model and links it to the input element in withSource:."
 	
-	outModel addElement: anObject.
+	| output |
 	
-	inModel at: anObject2 putOutputElement: anObject
+	output := outModel addElement: anObject.
+	
+	inModel at: anObject2 putOutputElement: output
 ]
 
 { #category : #'private - transforming' }
@@ -77,6 +79,13 @@ MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
 	] ifNotNil: [
 		^ dialog choice
 	]
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> atInput: anObject putOutputElement: anObject2 [
+	"Adds an output element to the given input element."
+	
+	inModel at: anObject putOutputElement: ([ outModel detectElement: anObject2 ] on: Error do: [ nil ])
 ]
 
 { #category : #accessing }
