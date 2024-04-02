@@ -80,7 +80,7 @@ MocoUmlAssociationTransformationRule >> generateMandatoryMultiplicityConstraintF
 ]
 
 { #category : #'private - processing' }
-MocoUmlAssociationTransformationRule >> generateReferencingColumn: aMocoUmlAssociation [
+MocoUmlAssociationTransformationRule >> generateReferencingColumn: aMocoUmlAssociation inTable: aMocoRdbTable [
 	"Generates the referencing column at the source table of the given association."
 	
 	| column referenced referencedTable primaryKey |
@@ -93,6 +93,10 @@ MocoUmlAssociationTransformationRule >> generateReferencingColumn: aMocoUmlAssoc
 	(referenced name)
 		ifNotEmpty: [ column name: (MocoNamingUtils toUpperSnakeCase: (referenced name)) ]
 		ifEmpty: [ column name: (primaryKey columns first name) ].
+	
+	(aMocoRdbTable columns anySatisfy: [ :each | (each name) = (column name) ]) ifTrue: [
+		column name: ((referencedTable name) , '_' , (column name))
+	].
 	
 	column type: (primaryKey columns first type).
 	
@@ -129,13 +133,14 @@ MocoUmlAssociationTransformationRule >> toReferenceColumn: aMocoUmlAssociation [
 	"Transforms the given association to a reference between two tables."
 	
 	| column foreignKey referencingSide referencingTable referencedSide referencedTable lowerBound upperBound |
-	column := self generateReferencingColumn: aMocoUmlAssociation.
 	
 	referencingSide := MocoUmlAssociationTransformation findReferencingSideOf: aMocoUmlAssociation.
 	referencingTable := self findTableFor: (referencingSide element).
 	
 	referencedSide := MocoUmlAssociationTransformation findReferencedSideOf: aMocoUmlAssociation.
 	referencedTable := self findTableFor: (referencedSide element).
+	
+	column := self generateReferencingColumn: aMocoUmlAssociation inTable: referencingTable.
 	
 	foreignKey := MocoRdbForeignKey newInTable: referencingTable atColumn: column referencingTable: referencedTable andColumn: ((self findPrimaryKey: referencedTable) columns first).
 	
