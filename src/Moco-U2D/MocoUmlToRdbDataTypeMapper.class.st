@@ -10,7 +10,7 @@ Class {
 	#classVars : [
 		'Instance'
 	],
-	#category : #'Moco-U2D-Utils'
+	#category : #'Moco-U2D-Transformation'
 }
 
 { #category : #'instance creation' }
@@ -42,10 +42,12 @@ MocoUmlToRdbDataTypeMapper >> initialize [
 		at: #timestamp put: MocoRdbTypeTimestamp;
 		at: #bool put: MocoRdbTypeBoolean;
 		at: #boolean put: MocoRdbTypeBoolean;
+		at: #real put: MocoRdbTypeDouble;
 		at: #float put: MocoRdbTypeDouble;
 		at: #double put: MocoRdbTypeDouble;
 		at: #decimal put: MocoRdbTypeDouble;
 		at: #number put: MocoRdbTypeDouble;
+		at: #blob put: MocoRdbTypeBlob;
 		at: #list put: MocoRdbTypeBlob;
 		at: #map put: MocoRdbTypeBlob;
 		at: #array put: MocoRdbTypeBlob;
