@@ -235,7 +235,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingEpa: aMocoOntoUmlGeneralizat
 
 	ocl := MocoOclExclusiveAssociationCondition new.
 	ocl context: context;
-		name: ('EX_' , (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet) , '_Condition').
+		name: ('EX_' , (context name) , '_' , (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet) , '_Condition').
 	
 	associations := OrderedCollection new.
 
