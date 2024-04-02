@@ -43,8 +43,8 @@ MocoOntoUmlAssociationTransformationRule >> transformAssociation: aMocoOntoUmlAs
 	uml := MocoUmlAssociation new.
 	uml name: (aMocoOntoUmlAssociation name);
 		derived: (aMocoOntoUmlAssociation derived);
-		source: (self transformAssociationSide: (aMocoOntoUmlAssociation source));
-		target: (self transformAssociationSide: (aMocoOntoUmlAssociation target)).
+		source: ((self transformAssociationSide: (aMocoOntoUmlAssociation source)) ifNil: [ ^ self ]);
+		target: ((self transformAssociationSide: (aMocoOntoUmlAssociation target)) ifNil: [ ^ self ]).
 	
 	((self modifyAssociation: uml fromOriginal: aMocoOntoUmlAssociation) = false)
 		ifFalse: [
@@ -61,7 +61,7 @@ MocoOntoUmlAssociationTransformationRule >> transformAssociationSide: aMocoOntoU
 	| uml |
 	uml := MocoUmlAssociationSide new.
 	
-	uml element: (engine detectOutputElement: (aMocoOntoUmlAssociationSide element));
+	uml element: ((engine detectOutputElement: (aMocoOntoUmlAssociationSide element)) ifNil: [ ^ nil ]);
 		visibility: (aMocoOntoUmlAssociationSide visibility);
 		multiplicity: (aMocoOntoUmlAssociationSide multiplicity);
 		name: (aMocoOntoUmlAssociationSide name);

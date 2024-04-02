@@ -35,12 +35,12 @@ MocoOntoUmlRoleTransformationRule >> priority [
 MocoOntoUmlRoleTransformationRule >> transformRoleGeneralization: aMocoOntoUmlGeneralization [
 	"Transform the given role generalization to an association."
 	
-	| association source target |
+	| association source target generalization |
 	association := MocoUmlAssociation new.
 	source := MocoUmlAssociationSide new.
 	target := MocoUmlAssociationSide new.
 	
-	source element: (engine detectOutputElement: (aMocoOntoUmlGeneralization supertype));
+	source element: ((engine detectOutputElement: (aMocoOntoUmlGeneralization supertype)) ifNil: [ ^ self ]);
 		multiplicity: (MocoUmlMultiplicity value: 1);
 		frozen: true;
 		name: 'identityBearer'.
@@ -52,6 +52,9 @@ MocoOntoUmlRoleTransformationRule >> transformRoleGeneralization: aMocoOntoUmlGe
 	association source: source;
 		target: target;
 		name: (MocoNamingUtils toCamelCase: (aMocoOntoUmlGeneralization subtype name)) , 'Role'.
+	
+	generalization := engine detectOutputElement: aMocoOntoUmlGeneralization ofKind: MocoUmlGeneralization.
+	generalization ifNotNil: [ engine removeOutputElement: generalization ].
 	
 	engine addOutputElement: association withSource: aMocoOntoUmlGeneralization.
 	engine input guard: aMocoOntoUmlGeneralization with: #MocoOntoUmlRoleTransformationRule

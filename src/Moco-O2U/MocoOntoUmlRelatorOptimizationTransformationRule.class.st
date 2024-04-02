@@ -51,14 +51,14 @@ MocoOntoUmlRelatorOptimizationTransformationRule >> execute [
 			| question |
 			question := MocoChoiceBuilder new.
 			
-			question question: ('Relator "' , (each name) , '" has no properties and can be optimized out. How do you want to proceed?');
+			question question: ('Relator “' , (each name) , '” has no properties and can be optimized out. How do you want to proceed?');
 				addChoice: 'Keep as is' withId: #keep;
 				addChoice: 'Remove from model' withId: #optimize.
 			
-			((engine askChoice: question) = #optimize) ifTrue: [ self optimizeRelator: each ]
-		].
-		
-		engine input guard: each with: #MocoOntoUmlRelatorOptimizationTransformationRule
+			((engine askChoice: question) = #optimize) ifTrue: [ self optimizeRelator: each ].
+			
+			engine input guard: each with: #MocoOntoUmlRelatorOptimizationTransformationRule
+		]
 	]
 ]
 

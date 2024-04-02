@@ -17,7 +17,7 @@ MocoOntoUmlPhaseTransformationRule >> askMethodFor: aMocoOntoUmlGeneralizationSe
 	"Determines what transformation method should be used for the given phase partition."
 	
 	| question builder |
-	question := 'A phase partition was found. Please select how to transform "' , aMocoOntoUmlGeneralizationSet members first supertype name , '" and its phases ' , (', ' join: (aMocoOntoUmlGeneralizationSet members collect: [ :e | '"' , e subtype name , '"' ])) , '.' .
+	question := 'A phase partition was found. Please select how to transform “' , aMocoOntoUmlGeneralizationSet members first supertype name , '” and its phases ' , (', ' join: (aMocoOntoUmlGeneralizationSet members collect: [ :e | '“' , e subtype name , '”' ])) , '.' .
 	
 	builder := MocoChoiceBuilder new.
 	
@@ -99,7 +99,20 @@ MocoOntoUmlPhaseTransformationRule >> priority [
 MocoOntoUmlPhaseTransformationRule >> transformPhasePartition: aMocoOntoUmlGeneralizationSet [
 	"Transforms the given phase partition to UML."
 	
-	| method |
+	| generalizationSet method |
+	
+	(aMocoOntoUmlGeneralizationSet members anySatisfy: [ :each | ((engine detectOutputElement: (each supertype)) isNil) or: [ (engine detectOutputElement: (each subtype)) isNil ] ])
+		ifTrue: [ ^ self ].
+	
+	aMocoOntoUmlGeneralizationSet members do: [ :each |
+		| generalization |
+		generalization := engine detectOutputElement: each ofKind: MocoUmlGeneralization.
+		generalization ifNotNil: [ engine removeOutputElement: generalization ]
+	].
+
+	generalizationSet := engine detectOutputElement: aMocoOntoUmlGeneralizationSet ofKind: MocoUmlGeneralizationSet.
+	generalizationSet ifNotNil: [ engine removeOutputElement: generalizationSet ].
+	
 	method := self askMethodFor: aMocoOntoUmlGeneralizationSet.
 	
 	(method = #attr)

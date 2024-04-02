@@ -25,8 +25,8 @@ MocoOntoUmlGeneralizationSetTransformationRule >> checkIfOptimizable: aMocoOntoU
 		
 		specific := each subtype.
 		
-		(specific isKindOf: MocoOntoUmlRole)
-			ifTrue: [ ^ false ]. "optimization of roles is handled by another transformation rule"
+		((specific isKindOf: MocoOntoUmlRole) or: [ specific isKindOf: MocoOntoUmlPhase ])
+			ifTrue: [ ^ false ]. "optimization of roles and phases is handled by other transformation rules"
 		
 		specific attributes
 			ifNotEmpty: [ ^ false ]. "subtype has attributes"

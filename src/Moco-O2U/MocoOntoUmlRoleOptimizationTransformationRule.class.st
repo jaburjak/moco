@@ -17,7 +17,6 @@ MocoOntoUmlRoleOptimizationTransformationRule >> checkIfOptimizable: aMocoOntoUm
 	
 	((engine input selectElementsOfKind: MocoOntoUmlGeneralization) anySatisfy: [ :each | (each supertype) == aMocoOntoUmlRole ])
 		ifTrue: [ ^ false ]. "has subtypes"
-		
 	
 	associations := (engine input selectElementsOfKind: MocoOntoUmlAssociation) select: [ :each | each anySideIncludes: aMocoOntoUmlRole ].
 	
@@ -57,14 +56,14 @@ MocoOntoUmlRoleOptimizationTransformationRule >> execute [
 			| question |
 			question := MocoChoiceBuilder new.
 			
-			question question: ('Role "' , (each name) , '" has no properties and can be optimized out. How do you want to proceed?');
+			question question: ('Role “' , (each name) , '” has no properties and can be optimized out. How do you want to proceed?');
 				addChoice: 'Keep as is' withId: #keep;
 				addChoice: 'Remove from model' withId: #optimize.
 			
-			((engine askChoice: question) = #optimize) ifTrue: [ self optimizeRole: each ]
-		].
-		
-		engine input guard: each with: #MocoOntoUmlRoleOptimizationTransformationRule
+			((engine askChoice: question) = #optimize) ifTrue: [ self optimizeRole: each ].
+			
+			engine input guard: each with: #MocoOntoUmlRoleOptimizationTransformationRule
+		]
 	]
 ]
 
