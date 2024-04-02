@@ -85,7 +85,7 @@ MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
 MocoTransformationEngine >> atInput: anObject putOutputElement: anObject2 [
 	"Adds an output element to the given input element."
 	
-	inModel at: anObject putOutputElement: ([ outModel detectElement: anObject2 ] on: Error do: [ nil ])
+	inModel at: anObject putOutputElement: ([ outModel detectElement: anObject2 ] on: Error do: [ anObject2 ])
 ]
 
 { #category : #accessing }

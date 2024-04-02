@@ -7,7 +7,7 @@ Class {
 	#category : #'Moco-O2U-Rule'
 }
 
-{ #category : #accessing }
+{ #category : #transforming }
 MocoOntoUmlGeneralizationTransformationRule >> execute [
 	| generalizations |
 	generalizations := engine input
@@ -15,6 +15,8 @@ MocoOntoUmlGeneralizationTransformationRule >> execute [
 		notGuarded: #MocoOntoUmlGeneralizationTransformationRule.
 	
 	generalizations := generalizations reject: [ :each | (engine detectOutputElement: each) isNotNil ]. "generalization may have already been processed by another rule"
+	
+	generalizations := generalizations reject: [ :each | ((engine detectOutputElement: (each supertype)) isNil) or: [ (engine detectOutputElement: (each subtype)) isNil ] ].
 	
 	generalizations do: [ :each |
 		engine addOutputElement: (self toUmlGeneralization: each) withSource: each.
