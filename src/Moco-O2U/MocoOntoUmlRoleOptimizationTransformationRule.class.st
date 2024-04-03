@@ -71,20 +71,40 @@ MocoOntoUmlRoleOptimizationTransformationRule >> execute [
 MocoOntoUmlRoleOptimizationTransformationRule >> findIdentityBearer: aMocoOntoUmlRole [
 	"Returns the identity bearer of the given role."
 	
-	| identityBearer |
-	identityBearer := (engine input selectElementsOfKind: MocoOntoUmlGeneralization) select: [ :each | (each subtype) == aMocoOntoUmlRole ].
-	identityBearer := identityBearer select: [ :each | (engine selectOutputElements: each ofKind: MocoUmlAssociation) isNotEmpty ].
+	| generalizations |
+	generalizations := (engine input selectElementsOfKind: MocoOntoUmlGeneralization) select: [ :each | (each subtype) == aMocoOntoUmlRole ].
+	generalizations := generalizations reject: [ :each | { MocoOntoUmlRoleMixin. MocoOntoUmlMixin } anySatisfy: [ :e | each isKindOf: e ] ].
 	
-	identityBearer ifEmpty: [ ^ nil ].
+	((generalizations size) = 1) ifTrue: [ ^ engine detectOutputElement: (generalizations first supertype) ofKind: MocoUmlClass ].
 	
-	identityBearer := identityBearer first supertype.
+	generalizations := generalizations select: [ :each | MocoOntoUmlIdentityUtils checkIfHasIdentity: (each supertype) inModel: (engine input elements) ].
 	
-	^ engine detectOutputElement: identityBearer ofKind: MocoUmlClass
+	((generalizations size) = 1) ifTrue: [ ^ engine detectOutputElement: (generalizations first supertype) ofKind: MocoUmlClass ].
+	
+	^ nil
 ]
 
 { #category : #'private - transforming' }
 MocoOntoUmlRoleOptimizationTransformationRule >> optimizeRole: aMocoOntoUmlRole [
-	"Removes the given role class from the output model and rewires its associations to reference its identity bearer."
+	"Removes the given role class from the output model."
+	
+	| roleClass |
+	roleClass := engine detectOutputElement: aMocoOntoUmlRole ofKind: MocoUmlClass.
+	
+	self rewireAssociations: aMocoOntoUmlRole;
+		rewireGeneralizations: aMocoOntoUmlRole.
+	
+	engine removeOutputElement: roleClass
+]
+
+{ #category : #accessing }
+MocoOntoUmlRoleOptimizationTransformationRule >> priority [
+	^ 10
+]
+
+{ #category : #'private - processing' }
+MocoOntoUmlRoleOptimizationTransformationRule >> rewireAssociations: aMocoOntoUmlRole [
+	"Rewires associations of the given role to reference its identity bearer."
 	
 	| roleClass identityBearer associations |
 	roleClass := engine detectOutputElement: aMocoOntoUmlRole ofKind: MocoUmlClass.
@@ -103,11 +123,20 @@ MocoOntoUmlRoleOptimizationTransformationRule >> optimizeRole: aMocoOntoUmlRole 
 		each source multiplicity lower: (MocoUmlMultiplicityBound value: 0)
 	].
 
-	(associations select: [ :each | each anySideIncludes: roleClass ]) do: [ :each | engine removeOutputElement: each ].
-	engine removeOutputElement: roleClass
+	(associations select: [ :each | each anySideIncludes: roleClass ]) do: [ :each | engine removeOutputElement: each ]
 ]
 
-{ #category : #accessing }
-MocoOntoUmlRoleOptimizationTransformationRule >> priority [
-	^ 10
+{ #category : #'private - processing' }
+MocoOntoUmlRoleOptimizationTransformationRule >> rewireGeneralizations: aMocoOntoUmlRole [
+	"Rewires generalizations of the given role to reference its identity provider."
+	
+	| roleClass identityBearer generalizations |
+	roleClass := engine detectOutputElement: aMocoOntoUmlRole ofKind: MocoUmlClass.
+	identityBearer := self findIdentityBearer: aMocoOntoUmlRole.
+	generalizations := engine output selectElementsOfKind: MocoUmlGeneralization.
+	generalizations := generalizations select: [ :each | (each subtype) == roleClass ].
+	
+	generalizations do: [ :each |
+		each subtype: identityBearer
+	]
 ]

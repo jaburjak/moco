@@ -16,7 +16,7 @@ MocoOntoUmlRoleTransformationRule class >> modelSelector [
 MocoOntoUmlRoleTransformationRule >> checkIfRoleGeneralization: aMocoOntoUmlGeneralization [
 	"Returns true if the given generalization is a role generalization."
 	
-	^ (aMocoOntoUmlGeneralization subtype isKindOf: MocoOntoUmlRole) and: [ MocoOntoUmlIdentityUtils checkIfHasIdentity: (aMocoOntoUmlGeneralization supertype) inModel: (engine input elements) ]
+	^ (aMocoOntoUmlGeneralization subtype isKindOf: MocoOntoUmlRole) and: [ { MocoOntoUmlRoleMixin. MocoOntoUmlMixin } noneSatisfy: [ :each | aMocoOntoUmlGeneralization supertype isKindOf: each ] ]
 ]
 
 { #category : #transforming }
