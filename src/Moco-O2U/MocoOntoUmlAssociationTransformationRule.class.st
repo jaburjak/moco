@@ -65,7 +65,8 @@ MocoOntoUmlAssociationTransformationRule >> transformAssociationSide: aMocoOntoU
 		visibility: (aMocoOntoUmlAssociationSide visibility);
 		multiplicity: (aMocoOntoUmlAssociationSide multiplicity);
 		name: (aMocoOntoUmlAssociationSide name);
-		frozen: (aMocoOntoUmlAssociationSide frozen).
+		frozen: (aMocoOntoUmlAssociationSide frozen);
+		navigable: (aMocoOntoUmlAssociationSide navigable).
 	
 	^ uml
 ]

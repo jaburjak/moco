@@ -35,5 +35,11 @@ MocoUmlAssociationTransformation class >> findReferencingSideOf: aMocoUmlAssocia
 	((aMocoUmlAssociation source multiplicity lower isMandatory) and: [ aMocoUmlAssociation target multiplicity lower isOptional ])
 		ifTrue: [ ^ (aMocoUmlAssociation target) ]. "one[1..1]-to-one[0..1]"
 	
-	^ (aMocoUmlAssociation source) "one[0..0]-to-one[0..0] or one[1..1]-to-one[1..1]"
+	"one[0..0]-to-one[0..0] or one[1..1]-to-one[1..1]"
+	
+	(aMocoUmlAssociation target navigable) ifTrue: [ ^ (aMocoUmlAssociation source) ].
+	
+	(aMocoUmlAssociation source navigable) ifTrue: [ ^ (aMocoUmlAssociation target) ].
+	
+	^ (aMocoUmlAssociation source)
 ]

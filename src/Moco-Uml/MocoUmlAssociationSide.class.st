@@ -10,7 +10,8 @@ Class {
 		'visibility',
 		'multiplicity',
 		'aggregation',
-		'frozen'
+		'frozen',
+		'navigable'
 	],
 	#category : #'Moco-Uml-Model'
 }
@@ -62,6 +63,7 @@ MocoUmlAssociationSide >> initialize [
 	visibility := MocoUmlVisibility public.
 	aggregation := MocoUmlAssociationAggregation new.
 	frozen := false.
+	navigable := false
 ]
 
 { #category : #accessing }
@@ -90,6 +92,16 @@ MocoUmlAssociationSide >> name: aString [
 	] ifNotNil: [
 		name := aString
 	]
+]
+
+{ #category : #accessing }
+MocoUmlAssociationSide >> navigable [
+	^ navigable
+]
+
+{ #category : #accessing }
+MocoUmlAssociationSide >> navigable: aBoolean [
+	navigable := aBoolean ifNil: [ false ]
 ]
 
 { #category : #printing }

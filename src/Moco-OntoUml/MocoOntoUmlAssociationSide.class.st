@@ -10,7 +10,8 @@ Class {
 		'visibility',
 		'multiplicity',
 		'shareability',
-		'frozen'
+		'frozen',
+		'navigable'
 	],
 	#category : #'Moco-OntoUml-Model'
 }
@@ -44,6 +45,7 @@ MocoOntoUmlAssociationSide >> initialize [
 	visibility := MocoUmlVisibility public.
 	shareability := MocoOntoUmlAssociationShareability new.
 	frozen := false.
+	navigable := false.
 	
 	^ self
 ]
@@ -74,6 +76,16 @@ MocoOntoUmlAssociationSide >> name: aString [
 	] ifNotNil: [
 		name := aString
 	]
+]
+
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> navigable [
+	^ navigable
+]
+
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> navigable: aBoolean [
+	navigable := aBoolean ifNil: [ false ]
 ]
 
 { #category : #printing }

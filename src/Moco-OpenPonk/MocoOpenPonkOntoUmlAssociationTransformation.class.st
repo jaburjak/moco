@@ -65,7 +65,8 @@ MocoOpenPonkOntoUmlAssociationTransformation >> toMocoSide: aProperty [
 		element: (engine detectOutputElement: aProperty type);
 		visibility: (MocoOpenPonkUmlAttributeTransformation toMocoVisibility: aProperty visibility);
 		shareability: (self class toMocoShareability: aProperty aggregation);
-		frozen: (aProperty isReadOnly).
+		frozen: (aProperty isReadOnly);
+		navigable: (aProperty isNavigable).
 		
 	((aProperty lowerValue isNil) and: (aProperty upperValue isNil))
 		ifTrue: [
