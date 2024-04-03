@@ -13,11 +13,21 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineSourceMultiplicity: aMoc
 	
 	| lower upper |
 	lower := 0.
-	
 	upper := '*'.
+	
+	(aMocoRdbForeignKey columns anySatisfy: [ :each | (each nullable) not ])
+		ifTrue: [ lower := 1 ].
+	
+	((engine input selectElementsOfKind: MocoOclRdbMandatoryMultiplicityConstraint) anySatisfy: [ :each | aMocoRdbForeignKey columns anySatisfy: [ :c | c == (each sourceColumn) ] ])
+		ifTrue: [ lower := 1 ].
 	
 	(aMocoRdbTable constraints anySatisfy: [ :each | (each isKindOf: MocoRdbUniqueKey) and: [ each columns anySatisfy: [ :c | (aMocoRdbForeignKey columns anySatisfy: [ :e | e == c ]) ] ] ])
 		ifTrue: [ upper := 1 ].
+	
+	((engine input selectElementsOfKind: MocoOclRdbSpecialMultiplicityConstraint) select: [ :each | aMocoRdbForeignKey columns anySatisfy: [ :c | c == (each sourceColumn) ] ]) do: [ :each |
+		each lower ifNotNil: [ lower := each lower value ].
+		each upper ifNotNil: [ upper := each upper value ]
+	].
 		
 	^ { lower. upper }
 ]
