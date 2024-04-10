@@ -15,9 +15,6 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineSourceMultiplicity: aMoc
 	lower := 0.
 	upper := '*'.
 	
-	(aMocoRdbForeignKey columns anySatisfy: [ :each | (each nullable) not ])
-		ifTrue: [ lower := 1 ].
-	
 	((engine input selectElementsOfKind: MocoOclRdbMandatoryMultiplicityConstraint) anySatisfy: [ :each | aMocoRdbForeignKey columns anySatisfy: [ :c | c == (each sourceColumn) ] ])
 		ifTrue: [ lower := 1 ].
 	
@@ -37,6 +34,7 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineTargetMultiplicity: aMoc
 	"Returns multiplicity at the target side of the association generated from the given foreign key."
 	
 	| lower upper |
+	
 	(aMocoRdbForeignKey columns anySatisfy: [ :each | each nullable not ])
 		ifTrue: [ lower := 1 ]
 		ifFalse: [ lower := 0 ].
@@ -73,13 +71,10 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> priority [
 MocoOpenPonkRdbForeignKeyTransformationRule >> toOpenPonkAssociation: aMocoRdbForeignKey inTable: aMocoRdbTable [
 	"Creates an OpenPonk association from the given foreign key that originates in the given database table."
 	
-	| op name multiplicity source target |
+	| op multiplicity source target |
 	op := OPUMLAssociation new.
 	
-	name := String new writeStream.
-	aMocoRdbForeignKey printTo: name.
-	
-	op name: (name contents).
+	op name: ('«FK» (' , (',' join: (aMocoRdbForeignKey columns collect: [ :each | each name ])) , '=' , (',' join: (aMocoRdbForeignKey referencedColumns collect: [ :each | each name ])) , ')').
 	
 	source := OPUMLProperty new.
 	multiplicity := self determineSourceMultiplicity: aMocoRdbForeignKey inTable: aMocoRdbTable.
