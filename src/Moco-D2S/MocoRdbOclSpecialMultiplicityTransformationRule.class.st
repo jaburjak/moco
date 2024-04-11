@@ -58,8 +58,11 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoO
 	body := String new writeStream.
 	condition := String new writeStream.
 	
-	varName := MocoSqlOracleEscaping escapeName: (MocoNamingUtils toShortName: (aMocoOclRdbSpecialMultiplicityConstraint context name)).
-	varName2 := MocoSqlOracleEscaping escapeName: (MocoNamingUtils toShortName: (aMocoOclRdbSpecialMultiplicityConstraint sourceTable name)).
+	varName := MocoNamingUtils toShortName: (aMocoOclRdbSpecialMultiplicityConstraint context name).
+	varName2 := MocoNamingUtils toShortName: (aMocoOclRdbSpecialMultiplicityConstraint sourceTable name).
+	varName2 := MocoUniqueNameGenerator at: [ :each | each = varName ] seed: varName2.
+	varName := MocoSqlOracleEscaping escapeName: varName.
+	varName2 := MocoSqlOracleEscaping escapeName: varName2.
 	
 	condition
 		nextPutAll: 'SELECT COUNT(*) FROM ';
