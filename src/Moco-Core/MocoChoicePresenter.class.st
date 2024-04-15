@@ -12,7 +12,7 @@ Class {
 	#category : #'Moco-Core-Ui'
 }
 
-{ #category : #specs }
+{ #category : #layout }
 MocoChoicePresenter class >> defaultLayout [
 	^ SpBoxLayout newTopToBottom
 		add: #questionText;
@@ -63,9 +63,8 @@ MocoChoicePresenter >> initializeWindow: aWindowPresenter [
 
 { #category : #processing }
 MocoChoicePresenter >> openAndWait [
-	self open.
-	
-	self centered.
+	self open;
+		centered.
 
 	MorphicRenderLoop new doOneCycleWhile: [ self adapter widget isInWorld ].
 	
@@ -75,4 +74,9 @@ MocoChoicePresenter >> openAndWait [
 { #category : #accessing }
 MocoChoicePresenter >> question: aString [
 	questionText text: aString
+]
+
+{ #category : #accessing }
+MocoChoicePresenter >> requestWindowClose [
+	^ choice isNotNil
 ]
