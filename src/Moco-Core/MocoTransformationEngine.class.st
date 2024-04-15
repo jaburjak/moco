@@ -8,7 +8,10 @@ Class {
 		'rules',
 		'inModel',
 		'outModel',
-		'job'
+		'job',
+		'choiceLog',
+		'choiceLogPrevious',
+		'replayChoices'
 	],
 	#category : #'Moco-Core-Engine'
 }
@@ -63,22 +66,41 @@ MocoTransformationEngine >> applyRules [
 
 { #category : #accessing }
 MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
-	| dialog |
+	| dialog choice |
+	
+	(replayChoices = true) ifTrue: [
+		choice := self retrieveChoiceFor: (aMocoChoiceBuilder question).
+		choice ifNotNil: [ ^ choice ]
+	].
+	
 	dialog := (self spApplication) new: MocoChoicePresenter.
 	
 	dialog question: (aMocoChoiceBuilder question).
+	
+	choiceLogPrevious ifNotEmpty: [
+		(self retrieveChoiceFor: (aMocoChoiceBuilder question)) ifNotNil: [
+			dialog addChoice: 'Answer everything same as before' withId: #replay
+		]
+	].
 	
 	aMocoChoiceBuilder choices do: [ :each |
 		dialog addChoice: (each label) withId: (each id)
 	].
 
 	dialog openAndWait.
+
+	((dialog choice) = #replay)
+		ifTrue: [
+			choice := self retrieveChoiceFor: (aMocoChoiceBuilder question).
+			replayChoices := true
+		]
+		ifFalse: [
+			choice := dialog choice ifNil: [ aMocoChoiceBuilder choices first id ].
+		].
 	
-	dialog choice ifNil: [
-		^ aMocoChoiceBuilder choices first id
-	] ifNotNil: [
-		^ dialog choice
-	]
+	self recordChoice: (aMocoChoiceBuilder question) withResult: choice.
+	
+	^ choice
 ]
 
 { #category : #accessing }
@@ -86,6 +108,16 @@ MocoTransformationEngine >> atInput: anObject putOutputElement: anObject2 [
 	"Adds an output element to the given input element."
 	
 	inModel at: anObject putOutputElement: ([ outModel detectElement: anObject2 ] on: Error do: [ anObject2 ])
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> choiceLog [
+	^ choiceLog
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> choiceLog: aCollection [
+	choiceLogPrevious := aCollection
 ]
 
 { #category : #accessing }
@@ -181,7 +213,9 @@ MocoTransformationEngine >> initialize [
 	
 	rules := SortedCollection sortBlock: [ :a :b | (a priority) > (b priority) ].
 	inModel := MocoModel new.
-	outModel := MocoModel new
+	outModel := MocoModel new.
+	choiceLog := OrderedCollection new.
+	choiceLogPrevious := OrderedCollection new
 ]
 
 { #category : #accessing }
@@ -203,6 +237,15 @@ MocoTransformationEngine >> output [
 	^ outModel
 ]
 
+{ #category : #'private - accessing' }
+MocoTransformationEngine >> recordChoice: aString withResult: aSymbol [
+	"Records aSymbol as the answer to question aString."
+	
+	choiceLog removeAllSuchThat: [ :each | (each first) = aString ].
+	
+	choiceLog add: { aString. aSymbol }
+]
+
 { #category : #accessing }
 MocoTransformationEngine >> removeOutputElement: anObject [
 	"Removes the given element from the output model."
@@ -211,6 +254,25 @@ MocoTransformationEngine >> removeOutputElement: anObject [
 	removed := outModel removeElement: anObject.
 	
 	removed do: [ :each | inModel purgeElement: each ]
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> replayChoices [
+	^ replayChoices
+]
+
+{ #category : #accessing }
+MocoTransformationEngine >> replayChoices: aBoolean [
+	replayChoices := aBoolean
+]
+
+{ #category : #'private - accessing' }
+MocoTransformationEngine >> retrieveChoiceFor: aString [
+	"Returns the previously selected option for question aString."
+	
+	choiceLogPrevious do: [ :each | ((each first) = aString) ifTrue: [ ^ each second ] ].
+	
+	^ nil
 ]
 
 { #category : #'private - accessing' }

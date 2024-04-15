@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #transforming }
-MocoOntoUmlToUmlFacade class >> transform: aMocoModel [
+MocoOntoUmlToUmlFacade class >> transform: aMocoModel withEngineDo: aBlock [
 	"Transforms the given OntoUML model to UML."
 	
 	| engine ruleRepo |
@@ -22,8 +22,10 @@ MocoOntoUmlToUmlFacade class >> transform: aMocoModel [
 		classPrefix: 'MocoOntoUml'.
 	
 	ruleRepo injectTo: engine.
+	
+	aBlock value: engine.
 		
 	engine transform.
 	
-	^ engine output
+	^ engine
 ]

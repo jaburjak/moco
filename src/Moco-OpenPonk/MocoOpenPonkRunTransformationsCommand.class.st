@@ -8,18 +8,47 @@ Class {
 		'workbench'
 	],
 	#classVars : [
+		'choiceLogs',
 		'transcripts'
 	],
 	#category : #'Moco-OpenPonk-Ui'
 }
 
 { #category : #'private - accessing' }
+MocoOpenPonkRunTransformationsCommand class >> choiceLog: aSymbol of: anOPPackage [
+	| logs |
+	logs := self choiceLogOf: anOPPackage.
+	
+	^ logs at: aSymbol ifAbsent: [ OrderedCollection new ]
+]
+
+{ #category : #'private - accessing' }
+MocoOpenPonkRunTransformationsCommand class >> choiceLogOf: anOPPackage [
+	choiceLogs ifNil: [ ^ Dictionary new ].
+	
+	^ choiceLogs at: anOPPackage ifAbsent: [ Dictionary new ]
+]
+
+{ #category : #'private - accessing' }
 MocoOpenPonkRunTransformationsCommand class >> registerTranscript: aMocoTranscriptPresenter in: anOPWorkbench [
 	transcripts ifNil: [ transcripts := OrderedCollection new ].
 	
-	aMocoTranscriptPresenter window whenClosedDo: [ transcripts removeAllSuchThat: [ :each | (each second window isNil) or: [ each second window isClosed ] ] ].
+	aMocoTranscriptPresenter window whenClosedDo: [
+		transcripts removeAllSuchThat: [ :each | (each second window isNil) or: [ each second window isClosed ] ]
+	].
 	
 	transcripts add: { anOPWorkbench. aMocoTranscriptPresenter }
+]
+
+{ #category : #'private - accessing' }
+MocoOpenPonkRunTransformationsCommand class >> saveChoiceLog: aDictionary of: anOPPackage in: anOPWorkbench [
+	choiceLogs ifNil: [ choiceLogs := Dictionary new ].
+	
+	choiceLogs at: anOPPackage put: aDictionary.
+	
+	anOPWorkbench window whenClosedDo: [
+		choiceLogs removeKey: anOPPackage ifAbsent: [ nil ]
+	]
 ]
 
 { #category : #'private - accessing' }
@@ -60,23 +89,26 @@ MocoOpenPonkRunTransformationsCommand >> determineModelName: aString or: aString
 
 { #category : #execution }
 MocoOpenPonkRunTransformationsCommand >> execute [
-	| ontoModel umlModel dbModel sqlModel transcript models |
+	| model ontoModel umlModel dbModel sqlModel transcript models |
+	model := self currentWorkbenchDiagram model.
 	
 	ontoModel := self readOntoUmlModel.
-	umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
-	dbModel := MocoUmlToRdbFacade transform: umlModel.
+	umlModel := MocoOntoUmlToUmlFacade transform: ontoModel withEngineDo: [ :engine | engine choiceLog: (self class choiceLog: #ontouml of: model) ].
+	dbModel := MocoUmlToRdbFacade transform: (umlModel output).
 	sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel last).
+	
+	self class saveChoiceLog: ({ #ontouml->(umlModel choiceLog) } asDictionary) of: model in: (self workbench).
 	
 	transcript := (MocoSpApplication instance) new: MocoTranscriptPresenter.
 	
 	self addModel: ontoModel withLabel: 'OntoUML' toTranscript: transcript.
-	self addModel: umlModel withLabel: 'UML' toTranscript: transcript.
+	self addModel: (umlModel output) withLabel: 'UML' toTranscript: transcript.
 	self addModel: (dbModel first) withLabel: 'UML for RDB' toTranscript: transcript.
 	self addModel: (dbModel last) withLabel: 'Database' toTranscript: transcript.
 	self addModel: sqlModel withLabel: 'Oracle SQL' toTranscript: transcript.
 	
 	models := OrderedCollection new.
-	models add: (self packageModel: umlModel as: (self determineModelName: 'UML Model' or: 'UML') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
+	models add: (self packageModel: (umlModel output) as: (self determineModelName: 'UML Model' or: 'UML') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
 		add: (self packageModel: (dbModel first) as: (self determineModelName: 'UML Model for RDB' or: 'UML for RDB') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
 		add: (self packageModel: (dbModel last) as: (self determineModelName: 'RDB Model' or: 'RDB') usingRulesWithTag: 'Rule-Rdb' andClassPrefix: 'MocoOpenPonkRdb').
 	
