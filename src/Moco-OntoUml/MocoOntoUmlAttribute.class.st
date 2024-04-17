@@ -88,8 +88,8 @@ MocoOntoUmlAttribute >> type [
 ]
 
 { #category : #accessing }
-MocoOntoUmlAttribute >> type: aMocoOntoUmlType [
-	type := aMocoOntoUmlType
+MocoOntoUmlAttribute >> type: aMocoUmlType [
+	type := aMocoUmlType
 ]
 
 { #category : #accessing }

@@ -86,7 +86,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toDiscriminator: aMocoOntoUmlG
 	| attribute ocl values |
 	attribute := MocoOntoUmlAttribute new.
 	attribute name: (self generateDiscriminatorName: aMocoOntoUmlGeneralizationSet);
-		type: (MocoOntoUmlType newFromName: 'String');
+		type: (MocoUmlType newFromName: 'String');
 		immutable: true.
 	attribute multiplicity lower value: 1.
 	attribute multiplicity upper value: 1.

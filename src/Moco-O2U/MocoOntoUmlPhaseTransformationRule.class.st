@@ -200,7 +200,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoOntoUmlGener
 	
 	attribute := MocoUmlAttribute new.
 	attribute name: (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet);
-		type: (MocoOntoUmlType newFromName: 'String').
+		type: (MocoUmlType newFromName: 'String').
 	
 	(attribute multiplicity) lower: (MocoUmlMultiplicityBound value: 1);
 		upper: (MocoUmlMultiplicityBound value: 1).

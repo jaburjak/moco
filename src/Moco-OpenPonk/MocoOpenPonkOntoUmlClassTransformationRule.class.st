@@ -46,7 +46,7 @@ MocoOpenPonkOntoUmlClassTransformationRule >> transformAttribute: anOPUMLAttribu
 	attr immutable: anOPUMLAttribute isReadOnly.
 	attr multiplicity lower: (MocoUmlMultiplicityBound value: ((anOPUMLAttribute lowerValue) ifNil: [ 1 ] ifNotNil: [ anOPUMLAttribute lowerValue value ])).
 	attr multiplicity upper: (MocoUmlMultiplicityBound value: ((anOPUMLAttribute upperValue) ifNil: [ 1 ] ifNotNil: [ anOPUMLAttribute upperValue value ])).
-	anOPUMLAttribute type ifNotNil: [ attr type: (MocoOntoUmlType newFromName: (anOPUMLAttribute type name)) ].
+	anOPUMLAttribute type ifNotNil: [ attr type: (MocoUmlType newFromName: (anOPUMLAttribute type name)) ].
 		
 	^ attr
 ]
