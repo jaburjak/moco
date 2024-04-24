@@ -3,6 +3,6 @@ Represents an OntoUML Containment association.
 "
 Class {
 	#name : #MocoOntoUmlContainmentAssociation,
-	#superclass : #MocoOntoUmlSpecializedAssociation,
+	#superclass : #MocoOntoUmlPartWholeAssociation,
 	#category : #'Moco-OntoUml-Model'
 }
