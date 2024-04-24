@@ -26,32 +26,15 @@ MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> checkIfInseparable:
 	^ anOPUMLAssociation appliedStereotypes first inseparable
 ]
 
-{ #category : #transforming }
-MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> execute [
-	| associations |
-	associations := engine input
-		selectElementsOfKind: OPUMLAssociation
-		ofStereotype: (self class stereotypeSelector ifNil: [ nil ] ifNotNil: [ self class stereotypeSelector asString ])
-		notGuarded: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule.
-	
-	associations do: [ :each | self transformAssociation: each ]
-]
-
 { #category : #'private - transforming' }
 MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule >> transformAssociation: anOPUMLAssociation [
-	"Transforms the OpenPonk association to a Moco association."
+	"Sets the essential and inseparable constraints."
 	
 	| association |
-	association := (self class modelClass) new.
-	
-	transformation initialize: association from: anOPUMLAssociation.
+	association := super transformAssociation: anOPUMLAssociation.
 	
 	association essential: (self checkIfEssential: anOPUMLAssociation);
-		inseparable: (self checkIfInseparable: anOPUMLAssociation).	
+		inseparable: (self checkIfInseparable: anOPUMLAssociation).
 	
-	self modifyAssociation: association.
-		
-	engine addOutputElement: association withSource: anOPUMLAssociation.
-	engine input guard: anOPUMLAssociation with: #MocoOpenPonkOntoUmlPartWholeAssociationTransformationRule;
-		guard: anOPUMLAssociation with: #MocoOpenPonkOntoUmlSpecializedAssociationTransformationRule
+	^ association
 ]

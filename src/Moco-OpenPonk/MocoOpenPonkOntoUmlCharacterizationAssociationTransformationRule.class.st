@@ -18,15 +18,20 @@ MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule class >> stereo
 ]
 
 { #category : #'private - processing' }
-MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoOntoUmlCharacterizationAssociation [
+MocoOpenPonkOntoUmlCharacterizationAssociationTransformationRule >> transformAssociation: anOPUMLAssociation [
 	"Reverses the association direction in case a Quality or Mode is not at the target end of the association."
 	
-	((aMocoOntoUmlCharacterizationAssociation source element isKindOf: MocoOntoUmlQuality) or: [ aMocoOntoUmlCharacterizationAssociation source element isKindOf: MocoOntoUmlMode ])
+	| association |
+	association := super transformAssociation: anOPUMLAssociation.
+	
+	((association source element isKindOf: MocoOntoUmlQuality) or: [ association source element isKindOf: MocoOntoUmlMode ])
 		ifTrue: [
 			| tmp |
-			tmp := aMocoOntoUmlCharacterizationAssociation source.
+			tmp := association source.
 			
-			aMocoOntoUmlCharacterizationAssociation source: (aMocoOntoUmlCharacterizationAssociation target);
+			association source: (association target);
 				target: tmp
-		]
+		].
+	
+	^ association
 ]
