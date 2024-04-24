@@ -211,7 +211,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoOntoUmlGener
 	ocl context: bearer;
 		name: ('EN_' , attribute name , '_Condition' );
 		attribute: attribute.
-	ocl values addAll: (((MocoOntoUmlGeneralizationSetTransformation generateInstanceCombinations: aMocoOntoUmlGeneralizationSet) collect: [ :each | '' join: (each collect: [ :e | e name ]) ])).
+	ocl values addAll: (((aMocoOntoUmlGeneralizationSet subtypeCombinations) collect: [ :each | '' join: (each collect: [ :e | e name ]) ])).
 	
 	((engine input selectElementsOfKind: MocoOntoUmlGeneralization) select: [ :each | aMocoOntoUmlGeneralizationSet members anySatisfy: [ :e | e == each ] ])
 		do: [ :each |

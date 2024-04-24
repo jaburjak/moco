@@ -83,7 +83,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> priority [
 MocoOntoUmlGeneralizationSetTransformationRule >> toDiscriminator: aMocoOntoUmlGeneralizationSet [
 	"Transforms the given generalization set to a discriminator attribute on the supertype."
 	
-	| attribute ocl values |
+	| attribute ocl |
 	attribute := MocoOntoUmlAttribute new.
 	attribute name: (self generateDiscriminatorName: aMocoOntoUmlGeneralizationSet);
 		type: (MocoUmlType newFromName: 'String');
@@ -96,18 +96,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toDiscriminator: aMocoOntoUmlG
 	ocl name: 'EN_' , (ocl context name) , '_' , (attribute name);
 		attribute: attribute.
 	
-	values := OrderedCollection new.
-	values addAll: (aMocoOntoUmlGeneralizationSet members collect: [ :each | each subtype name ]).
-	
-	aMocoOntoUmlGeneralizationSet ifNotDisjoint: [
-		| tmp |
-		tmp := values combinations collect: [ :each | '' join: each ].
-		values removeAll; addAll: tmp.
-	].
-
-	aMocoOntoUmlGeneralizationSet ifNotCovering: [ values addFirst: (aMocoOntoUmlGeneralizationSet members first supertype name) ].
-	
-	ocl values addAll: values.
+	ocl values addAll: ((aMocoOntoUmlGeneralizationSet subtypeCombinations) collect: [ :each | '' join: (each collect: [ :e | e name ]) ]).
 	
 	^ { attribute. ocl }
 ]
