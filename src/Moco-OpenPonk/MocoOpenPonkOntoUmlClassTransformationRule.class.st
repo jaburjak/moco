@@ -25,7 +25,13 @@ MocoOpenPonkOntoUmlClassTransformationRule >> execute [
 		ofStereotype: (self class stereotypeSelector ifNil: [ nil ] ifNotNil: [ self class stereotypeSelector asString ])
 		notGuarded: #MocoOpenPonkOntoUmlClassTransformationRule.
 	
-	classes do: [ :each | self transformClass: each ]
+	classes do: [ :each |
+		| class |
+		class := self transformClass: each.
+		
+		engine addOutputElement: class withSource: each.
+		engine input guard: each with: #MocoOpenPonkOntoUmlClassTransformationRule
+	]
 ]
 
 { #category : #accessing }
@@ -71,6 +77,5 @@ MocoOpenPonkOntoUmlClassTransformationRule >> transformClass: anOPUMLClass [
 	
 	class attributes addAll: (self transformAttributes: anOPUMLClass).
 	
-	engine addOutputElement: class withSource: anOPUMLClass.
-	engine input guard: anOPUMLClass with: #MocoOpenPonkOntoUmlClassTransformationRule
+	^ class
 ]
