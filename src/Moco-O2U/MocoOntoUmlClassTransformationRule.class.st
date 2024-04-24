@@ -36,7 +36,19 @@ MocoOntoUmlClassTransformationRule >> priority [
 MocoOntoUmlClassTransformationRule >> toUmlAttribute: aMocoOntoUmlAttribute [
 	"Transforms the given OntoUML class attribute to a UML class attribute."
 	
-	^ MocoOntoUmlToUmlAttributeTransformation toUmlAttribute: aMocoOntoUmlAttribute
+	| uml |
+	uml := MocoUmlAttribute new
+		name: (aMocoOntoUmlAttribute name);
+		static: (aMocoOntoUmlAttribute static);
+		immutable: (aMocoOntoUmlAttribute immutable);
+		visibility: (aMocoOntoUmlAttribute visibility).
+	
+	aMocoOntoUmlAttribute type ifNotNil: [ uml type: (MocoUmlType newFromName: (aMocoOntoUmlAttribute type name)) ].
+	
+	uml multiplicity lower: (aMocoOntoUmlAttribute multiplicity lower).
+	uml multiplicity upper: (aMocoOntoUmlAttribute multiplicity upper).
+	
+	^ uml
 ]
 
 { #category : #'private - transforming' }
