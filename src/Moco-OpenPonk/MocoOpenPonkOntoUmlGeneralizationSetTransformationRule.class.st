@@ -22,7 +22,6 @@ MocoOpenPonkOntoUmlGeneralizationSetTransformationRule >> findGeneralization: an
 	"Returns a Moco generalization element corresponding to the given OpenPonk element."
 	
 	| general specific |
-	"^ engine detectOutputElement: anOPUMLGeneralization ofKind: MocoOntoUmlGeneralization."
 	
 	general := engine detectOutputElement: (anOPUMLGeneralization general).
 	specific := engine detectOutputElement: (anOPUMLGeneralization specific).
