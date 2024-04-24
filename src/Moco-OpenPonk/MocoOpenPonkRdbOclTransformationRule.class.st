@@ -18,7 +18,7 @@ MocoOpenPonkRdbOclTransformationRule >> addComment: aMocoOclConstraint [
 	
 	aMocoOclConstraint printOclTo: body.
 	
-	MocoOpenPonkUmlClassTransformation addComment: (body contents) to: class
+	MocoOpenPonkCommentUtils addComment: (body contents) to: class
 ]
 
 { #category : #transforming }

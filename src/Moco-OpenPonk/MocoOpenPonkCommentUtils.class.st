@@ -2,13 +2,13 @@
 Contains class transformation utilities.
 "
 Class {
-	#name : #MocoOpenPonkUmlClassTransformation,
+	#name : #MocoOpenPonkCommentUtils,
 	#superclass : #Object,
-	#category : #'Moco-OpenPonk-Transformation'
+	#category : #'Moco-OpenPonk-Utils'
 }
 
 { #category : #accessing }
-MocoOpenPonkUmlClassTransformation class >> addComment: aString to: anOPUMLClass [
+MocoOpenPonkCommentUtils class >> addComment: aString to: anOPUMLClass [
 	"Appends the given string as a comment of the given class."
 	
 	anOPUMLClass ownedComments
