@@ -3,13 +3,27 @@ Transforms OntoUML Containment relationship into a UML association.
 "
 Class {
 	#name : #MocoOntoUmlContainmentAssociationTransformationRule,
-	#superclass : #MocoOntoUmlAssociationTransformationRule,
+	#superclass : #MocoOntoUmlPartWholeAssociationTransformationRule,
 	#category : #'Moco-O2U-Rule'
 }
 
 { #category : #'private - accessing' }
 MocoOntoUmlContainmentAssociationTransformationRule class >> modelSelector [
 	^ MocoOntoUmlContainmentAssociation
+]
+
+{ #category : #'private - processing' }
+MocoOntoUmlContainmentAssociationTransformationRule >> findPartSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlContainmentAssociation [
+	"Returns the side of the Quantity."
+	
+	| whole |
+	whole := self findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlContainmentAssociation.
+	
+	whole ifNil: [ ^ nil ].
+	
+	^ (whole == aMocoUmlAssociation source)
+		ifTrue: [ aMocoUmlAssociation target ]
+		ifFalse: [ aMocoUmlAssociation source ]
 ]
 
 { #category : #'private - processing' }
@@ -25,19 +39,23 @@ MocoOntoUmlContainmentAssociationTransformationRule >> findWholeSide: aMocoUmlAs
 	^ nil
 ]
 
-{ #category : #'private - processing' }
-MocoOntoUmlContainmentAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
-	"Makes the side opposite of the Quantity immutable."
-	
-	| wholeSide |
-	wholeSide := (self findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation).
-
-	wholeSide ifNotNil: [
-		wholeSide frozen: true
-	]
-]
-
 { #category : #accessing }
 MocoOntoUmlContainmentAssociationTransformationRule >> priority [
 	^ 45
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlContainmentAssociationTransformationRule >> toUmlAssociation: aMocoOntoUmlAssociation [
+	"Makes the side opposite of the Quantity immutable."
+	
+	| uml wholeSide |
+	uml := super toUmlAssociation: aMocoOntoUmlAssociation.
+	
+	wholeSide := (self findWholeSide: uml fromOriginal: aMocoOntoUmlAssociation).
+
+	wholeSide ifNotNil: [
+		wholeSide frozen: true
+	].
+
+	^ uml
 ]

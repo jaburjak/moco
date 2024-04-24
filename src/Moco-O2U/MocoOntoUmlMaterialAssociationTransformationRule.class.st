@@ -12,14 +12,14 @@ MocoOntoUmlMaterialAssociationTransformationRule class >> modelSelector [
 	^ MocoOntoUmlMaterialAssociation
 ]
 
-{ #category : #'private - processing' }
-MocoOntoUmlMaterialAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
-	"Discards material associations from the model."
-	
-	^ false
-]
-
 { #category : #accessing }
 MocoOntoUmlMaterialAssociationTransformationRule >> priority [
 	^ 45
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlMaterialAssociationTransformationRule >> toUmlAssociation: aMocoOntoUmlAssociation [
+	"Discards material associations from the model."
+	
+	^ nil
 ]

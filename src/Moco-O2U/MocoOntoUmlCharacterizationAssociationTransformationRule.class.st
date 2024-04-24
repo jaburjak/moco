@@ -12,21 +12,26 @@ MocoOntoUmlCharacterizationAssociationTransformationRule class >> modelSelector 
 	^ MocoOntoUmlCharacterizationAssociation
 ]
 
-{ #category : #'private - processing' }
-MocoOntoUmlCharacterizationAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
-	"Sets associations sides as immutable."
-	
-	((aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlQuality) or: [ aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlQuality ])
-		ifTrue: [
-			aMocoUmlAssociation source frozen: true.
-			aMocoUmlAssociation target frozen: true
-		].
-	
-	(aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlMode) ifTrue: [ aMocoUmlAssociation target frozen: true ].
-	(aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlMode) ifTrue: [ aMocoUmlAssociation source frozen: true ].
-]
-
 { #category : #accessing }
 MocoOntoUmlCharacterizationAssociationTransformationRule >> priority [
 	^ 45
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlCharacterizationAssociationTransformationRule >> toUmlAssociation: aMocoOntoUmlAssociation [
+	"Sets associations sides as immutable."
+	
+	| uml |
+	uml := super toUmlAssociation: aMocoOntoUmlAssociation.
+	
+	((aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlQuality) or: [ aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlQuality ])
+		ifTrue: [
+			uml source frozen: true.
+			uml target frozen: true
+		].
+	
+	(aMocoOntoUmlAssociation source element isKindOf: MocoOntoUmlMode) ifTrue: [ uml target frozen: true ].
+	(aMocoOntoUmlAssociation target element isKindOf: MocoOntoUmlMode) ifTrue: [ uml source frozen: true ].
+	
+	^ uml
 ]

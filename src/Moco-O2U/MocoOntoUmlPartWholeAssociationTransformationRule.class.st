@@ -46,13 +46,20 @@ MocoOntoUmlPartWholeAssociationTransformationRule >> findWholeSide: aMocoUmlAsso
 	^ nil
 ]
 
-{ #category : #'private - processing' }
-MocoOntoUmlPartWholeAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
+{ #category : #accessing }
+MocoOntoUmlPartWholeAssociationTransformationRule >> priority [
+	^ 44
+]
+
+{ #category : #'private - transforming' }
+MocoOntoUmlPartWholeAssociationTransformationRule >> toUmlAssociation: aMocoOntoUmlAssociation [
 	"Transforms essential and inseparable relationship stereotypes to appropriate immutability constraints."
 	
-	| partSide wholeSide |
-	partSide := (self findPartSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation).
-	wholeSide := (self findWholeSide: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation).
+	| uml partSide wholeSide |
+	uml := super toUmlAssociation: aMocoOntoUmlAssociation.
+	
+	partSide := (self findPartSide: uml fromOriginal: aMocoOntoUmlAssociation).
+	wholeSide := (self findWholeSide: uml fromOriginal: aMocoOntoUmlAssociation).
 
 	((partSide isNotNil) and: [ aMocoOntoUmlAssociation essential ])
 		ifTrue: [
@@ -62,10 +69,7 @@ MocoOntoUmlPartWholeAssociationTransformationRule >> modifyAssociation: aMocoUml
 	((wholeSide isNotNil) and: [ aMocoOntoUmlAssociation inseparable ])
 		ifTrue: [
 			wholeSide frozen: true.
-		]
-]
-
-{ #category : #accessing }
-MocoOntoUmlPartWholeAssociationTransformationRule >> priority [
-	^ 44
+		].
+	
+	^ uml
 ]

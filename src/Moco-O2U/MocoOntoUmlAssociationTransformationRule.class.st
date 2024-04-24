@@ -21,12 +21,14 @@ MocoOntoUmlAssociationTransformationRule >> execute [
 	
 	associations := associations reject: [ :each | (engine selectOutputElements: each) isNotEmpty ].
 	
-	associations do: [ :each | self transformAssociation: each ]
-]
-
-{ #category : #'private - processing' }
-MocoOntoUmlAssociationTransformationRule >> modifyAssociation: aMocoUmlAssociation fromOriginal: aMocoOntoUmlAssociation [
-	"Modifies the transformed UML association. Returns false if the association shoud be discarded."
+	associations do: [ :each |
+		| uml |
+		uml := self toUmlAssociation: each.
+		
+		uml ifNotNil: [ engine addOutputElement: uml withSource: each ].
+		
+		engine input guard: each with: #MocoOntoUmlAssociationTransformationRule
+	]
 ]
 
 { #category : #accessing }
@@ -35,7 +37,7 @@ MocoOntoUmlAssociationTransformationRule >> priority [
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlAssociationTransformationRule >> transformAssociation: aMocoOntoUmlAssociation [
+MocoOntoUmlAssociationTransformationRule >> toUmlAssociation: aMocoOntoUmlAssociation [
 	"Transforms the given OntoUML association to a UML association."
 	
 	| uml |
@@ -43,19 +45,14 @@ MocoOntoUmlAssociationTransformationRule >> transformAssociation: aMocoOntoUmlAs
 	uml := MocoUmlAssociation new.
 	uml name: (aMocoOntoUmlAssociation name);
 		derived: (aMocoOntoUmlAssociation derived);
-		source: ((self transformAssociationSide: (aMocoOntoUmlAssociation source)) ifNil: [ ^ self ]);
-		target: ((self transformAssociationSide: (aMocoOntoUmlAssociation target)) ifNil: [ ^ self ]).
+		source: ((self toUmlAssociationSide: (aMocoOntoUmlAssociation source)) ifNil: [ ^ self ]);
+		target: ((self toUmlAssociationSide: (aMocoOntoUmlAssociation target)) ifNil: [ ^ self ]).
 	
-	((self modifyAssociation: uml fromOriginal: aMocoOntoUmlAssociation) = false)
-		ifFalse: [
-			engine addOutputElement: uml withSource: aMocoOntoUmlAssociation
-		].
-	
-	engine input guard: aMocoOntoUmlAssociation with: #MocoOntoUmlAssociationTransformationRule
+	^ uml
 ]
 
 { #category : #'private - transforming' }
-MocoOntoUmlAssociationTransformationRule >> transformAssociationSide: aMocoOntoUmlAssociationSide [
+MocoOntoUmlAssociationTransformationRule >> toUmlAssociationSide: aMocoOntoUmlAssociationSide [
 	"Transforms the given OntoUML association side to UML."
 	
 	| uml |
