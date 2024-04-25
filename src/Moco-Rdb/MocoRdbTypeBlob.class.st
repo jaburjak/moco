@@ -14,5 +14,5 @@ MocoRdbTypeBlob >> acceptVisitor: aMocoRdbDataTypeVisitor [
 
 { #category : #accessing }
 MocoRdbTypeBlob >> typeName [
-	^ 'BINARY LARGE OBJECT'
+	^ 'BLOB'
 ]

@@ -14,5 +14,5 @@ MocoRdbTypeDouble >> acceptVisitor: aMocoRdbDataTypeVisitor [
 
 { #category : #accessing }
 MocoRdbTypeDouble >> typeName [
-	^ 'DOUBLE PRECISION'
+	^ 'DOUBLE'
 ]
