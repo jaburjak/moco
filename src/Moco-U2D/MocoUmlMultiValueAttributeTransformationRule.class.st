@@ -71,8 +71,7 @@ MocoUmlMultiValueAttributeTransformationRule >> generateAssociationFrom: aMocoUm
 	association := MocoUmlAssociation new.
 	
 	source := MocoUmlAssociationSide new.
-	source element: aMocoUmlClass;
-		name: (MocoNamingUtils toCamelCase: (aMocoUmlClass name)).
+	source element: aMocoUmlClass.
 	source multiplicity lower value: 1.
 	source multiplicity upper value: 1.
 	
