@@ -37,15 +37,14 @@ MocoUmlNonNativeRdbTypeTransformationRule >> decomposeAttribute: aMocoUmlAttribu
 	association := MocoUmlAssociation new.
 	
 	source := MocoUmlAssociationSide new.
-	source element: aMocoUmlClass;
-		name: (MocoNamingUtils toCamelCase: (aMocoUmlClass name)).
-	source multiplicity lower value: 1.
-	source multiplicity upper value: 1.
-	source visibility: (aMocoUmlAttribute visibility).
+	source element: aMocoUmlClass.
+	source multiplicity lower value: 0.
+	source multiplicity upper value: nil.
 
 	target := MocoUmlAssociationSide new.
 	target element: (self resolveAssociationTarget: aMocoUmlAttribute type);
-		name: (MocoNamingUtils toCamelCase: (aMocoUmlAttribute name)).
+		name: (MocoNamingUtils toCamelCase: (aMocoUmlAttribute name));
+		visibility: (aMocoUmlAttribute visibility).
 	target multiplicity lower value: (aMocoUmlAttribute multiplicity lower value).
 	target multiplicity upper value: (aMocoUmlAttribute multiplicity upper value).
 	
