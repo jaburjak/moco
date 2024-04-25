@@ -60,17 +60,10 @@ MocoOntoUmlGeneralizationSetTransformationRule >> generateDiscriminatorName: aMo
 	aMocoOntoUmlGeneralizationSet name
 		ifNotEmpty: [ ^ MocoNamingUtils toFirstLowerCase: (aMocoOntoUmlGeneralizationSet name) ]
 		ifEmpty: [
-			| general name count |
-			general := aMocoOntoUmlGeneralizationSet members first supertype.
-			name := 'discriminator'.
-			count := 0.
+			| general |
+			general := (engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first)) supertype.
 			
-			[
-				count := count + 1.
-				general attributes anySatisfy: [ :each | (each name) = (name , ((count = 1) ifTrue: [ '' ] ifFalse: [ count asString ])) ]
-			] whileTrue.
-			
-			^ (name , ((count = 1) ifTrue: [ '' ] ifFalse: [ count asString ]))
+			^ MocoUniqueNameGenerator at: [ :each | general attributes anySatisfy: [ :a | (a name) = each ] ] seed: 'discriminator'
 		]
 ]
 
