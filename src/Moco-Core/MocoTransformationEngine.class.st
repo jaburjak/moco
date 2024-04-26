@@ -70,7 +70,10 @@ MocoTransformationEngine >> askChoice: aMocoChoiceBuilder [
 	
 	(replayChoices = true) ifTrue: [
 		choice := self retrieveChoiceFor: (aMocoChoiceBuilder question).
-		choice ifNotNil: [ ^ choice ]
+		choice ifNotNil: [
+			self recordChoice: (aMocoChoiceBuilder question) withResult: choice.
+			^ choice
+		]
 	].
 	
 	dialog := (self spApplication) new: MocoChoicePresenter.
