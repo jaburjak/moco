@@ -4,6 +4,9 @@ Transforms a table element from a relational model into OpenPonk’s class model
 Class {
 	#name : #MocoOpenPonkRdbTableTransformationRule,
 	#superclass : #MocoTransformationRule,
+	#classVars : [
+		'DataTypeCache'
+	],
 	#category : #'Moco-OpenPonk-Rule-Rdb'
 }
 
@@ -32,7 +35,7 @@ MocoOpenPonkRdbTableTransformationRule >> toOpenPonkElement: aMocoRdbTable [
 	op name: (aMocoRdbTable name).
 	
 	aMocoRdbTable columns do: [ :each | op ownedAttributes add: (self transformColumn: each) ].
-	aMocoRdbTable constraints do: [ :each | op ownedAttributes add: (self transformConstraint: each) ].
+	aMocoRdbTable constraints do: [ :each | op ownedOperations add: (self transformConstraint: each) ].
 	
 	^ op
 ]
@@ -47,12 +50,8 @@ MocoOpenPonkRdbTableTransformationRule >> transformColumn: aMocoRdbColumn [
 	prop name: (aMocoRdbColumn name).
 	
 	aMocoRdbColumn type ifNotNil: [
-		prop type: (OPUMLPrimitiveType new).
-		prop type name: (aMocoRdbColumn type typeDefinition)
+		prop type: (self class toOpenPonkDataType: aMocoRdbColumn)
 	].
-	
-	aMocoRdbColumn nullable
-		ifTrue: [ prop type name: ((prop type name) , ' NULLABLE') ].
 	
 	prop upperValue: (OPUMLLiteralUnlimitedNatural new value: 1).
 		
@@ -61,18 +60,23 @@ MocoOpenPonkRdbTableTransformationRule >> transformColumn: aMocoRdbColumn [
 
 { #category : #'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> transformConstraint: aMocoRdbConstraint [
-	"Creates an OpenPonk class attribute from the given database constraint that visually looks like the original constraint definition."
+	"Creates an OpenPonk class operation from the given database constraint."
 	
-	| prop name |
-	prop := OPUMLProperty new.
+	| op str parts |
+	op := OPUMLOperation new.
 	
-	name := String new writeStream.
-	aMocoRdbConstraint printTo: name.
+	str := String new writeStream.
+	aMocoRdbConstraint printTo: str.
 	
-	prop name: (' ' , (name contents)). "Insert a non-breaking space at the beginning to force OpenPonk to put the property"
-	                                    "after all other properties when rendering the diagram."
-		
-	^ prop
+	parts := ((str contents copyReplaceAll: '<<' with: '«') copyReplaceAll: '>>' with: '»') splitOn: '('.
+	
+	op name: parts first.
+	
+	(((parts size) > 1) and: [ (parts second size) > 1 ]) ifTrue:  [
+		op ownedParameters add: (OPUMLParameter new name: (('(' join: (parts allButFirst: 1)) allButLast: 1); yourself)
+	].
+	
+	^ op
 ]
 
 { #category : #'private - transforming' }
