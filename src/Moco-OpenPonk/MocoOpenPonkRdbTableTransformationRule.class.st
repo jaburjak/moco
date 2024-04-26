@@ -10,6 +10,22 @@ Class {
 	#category : #'Moco-OpenPonk-Rule-Rdb'
 }
 
+{ #category : #'private - processing' }
+MocoOpenPonkRdbTableTransformationRule class >> toOpenPonkDataType: aMocoRdbColumn [
+	"Converts the data type of the given column to an OpenPonk data type."
+	
+	| type |
+	type := aMocoRdbColumn type typeDefinition.
+	
+	aMocoRdbColumn nullable
+		ifTrue: [ type := (type , ' NULLABLE') ].
+	
+	DataTypeCache ifNil: [ DataTypeCache := Dictionary new ].
+	
+	^ DataTypeCache at: type
+		ifAbsentPut: [ OPUMLClass new name: type; yourself ]
+]
+
 { #category : #transforming }
 MocoOpenPonkRdbTableTransformationRule >> execute [
 	| tables |
