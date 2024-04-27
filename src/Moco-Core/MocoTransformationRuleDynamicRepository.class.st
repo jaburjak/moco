@@ -70,7 +70,7 @@ MocoTransformationRuleDynamicRepository >> listRules [
 	classes := classes select: [ :each |
 		| className |
 		className := each asString.
-		(className beginsWith: classPrefix) and: [ className endsWith: classSuffix ]
+		((classPrefix isNil) or: [ className beginsWith: classPrefix ]) and: [ (classSuffix isNil) or: [ className endsWith: classSuffix ] ]
 	].
 	
 	^ classes
