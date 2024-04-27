@@ -4,7 +4,7 @@ Prints a model.
 Class {
 	#name : #MocoModelPrinter,
 	#superclass : #Object,
-	#category : #'Moco-Core-Utils'
+	#category : #'Moco-OpenPonk-Utils'
 }
 
 { #category : #printing }
