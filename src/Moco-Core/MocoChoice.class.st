@@ -23,6 +23,8 @@ MocoChoice >> id: anObject [
 
 { #category : #initialization }
 MocoChoice >> initialize [
+	super initialize.
+	
 	label := ''
 ]
 

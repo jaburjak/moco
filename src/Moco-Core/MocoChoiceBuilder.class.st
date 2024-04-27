@@ -30,8 +30,10 @@ MocoChoiceBuilder >> choices [
 
 { #category : #initialization }
 MocoChoiceBuilder >> initialize [
+	super initialize.
+	
 	question := 'Please choose how the transformation should proceed.'.
-	choices := OrderedCollection new.
+	choices := OrderedCollection new
 ]
 
 { #category : #accessing }
