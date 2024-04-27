@@ -12,7 +12,7 @@ Class {
 
 { #category : #'instance creation' }
 MocoTransformationRule class >> new [
-	self error: 'MocoTransformationRule must be instanciated by sending newWithEngine:'
+	self error: 'MocoTransformationRule must be instantiated by sending newWithEngine:'
 	
 	
 ]
@@ -21,7 +21,7 @@ MocoTransformationRule class >> new [
 MocoTransformationRule class >> newWithEngine: anEngine [
 	| inst |
 	
-	self className = 'MocoTransformationRule' ifTrue: [ self error: 'MocoTransformationRule should not be instanciated, send newWithEngine: to concrete implementors instead.' ].
+	self className = 'MocoTransformationRule' ifTrue: [ ^ self subclassResponsibility ].
 	
 	inst := self basicNew.
 	
