@@ -9,10 +9,10 @@ Class {
 
 { #category : #transforming }
 MocoSqlOracleEscaping class >> escapeLiteral: aString [
-	^ '''' , aString , ''''
+	^ '''' , (aString copyReplaceAll: '''' with: '''''') , ''''
 ]
 
 { #category : #transforming }
 MocoSqlOracleEscaping class >> escapeName: aString [
-	^ '"' , aString , '"'
+	^ '"' , (aString copyReplaceAll: '"' with: '' ) , '"'
 ]
