@@ -14,10 +14,10 @@ MocoToolbarUi class >> openMocoPlayground: aModel [
 	(StPlayground openContents: '| openPonkModel ontoModel umlModel dbModel sqlModel |
 openPonkModel := MocoOpenPonkModelStorage ontoUmlModel.
 
-ontoModel := MocoOpenPonkOntoUmlModelFactory createMoco: openPonkModel.
-umlModel := MocoOntoUmlToUmlFacade transform: ontoModel.
-dbModel := MocoUmlToRdbFacade transform: umlModel.
-sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel second).
+ontoModel := MocoOpenPonkOntoUmlTransformationRound createMoco: openPonkModel.
+umlModel := MocoOntoUmlToUmlRound transform: ontoModel.
+dbModel := MocoUmlToRdbRound transform: umlModel.
+sqlModel := MocoRdbOracleToSqlRound transform: (dbModel second).
 
 ')
 		centered

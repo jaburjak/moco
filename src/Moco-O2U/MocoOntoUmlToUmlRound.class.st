@@ -1,14 +1,14 @@
 "
-Facade for transforming an OntoUML model to UML.
+OntoUML model to UML model transformation round.
 "
 Class {
-	#name : #MocoOntoUmlToUmlFacade,
+	#name : #MocoOntoUmlToUmlRound,
 	#superclass : #Object,
-	#category : #'Moco-O2U-Facade'
+	#category : #'Moco-O2U-Round'
 }
 
 { #category : #transforming }
-MocoOntoUmlToUmlFacade class >> transform: aMocoModel withEngineDo: aBlock [
+MocoOntoUmlToUmlRound class >> transform: aMocoModel withEngineDo: aBlock [
 	"Transforms the given OntoUML model to UML."
 	
 	| engine ruleRepo |

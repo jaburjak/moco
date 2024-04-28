@@ -1,14 +1,14 @@
 "
-Facade for transforming an Oracle relational database model to SQL statements.
+Transformation round realizing an Oracle relational database model in SQL statements.
 "
 Class {
-	#name : #MocoRdbOracleToSqlFacade,
+	#name : #MocoRdbOracleToSqlRound,
 	#superclass : #Object,
-	#category : #'Moco-D2S-Facade'
+	#category : #'Moco-D2S-Round'
 }
 
 { #category : #transforming }
-MocoRdbOracleToSqlFacade class >> transform: aMocoModel [
+MocoRdbOracleToSqlRound class >> transform: aMocoModel [
 	| engine ruleRepo |
 	engine := MocoTransformationEngine new.
 	

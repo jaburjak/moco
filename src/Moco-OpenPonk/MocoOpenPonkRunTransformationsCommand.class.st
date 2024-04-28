@@ -93,9 +93,9 @@ MocoOpenPonkRunTransformationsCommand >> execute [
 	model := self currentWorkbenchDiagram model.
 	
 	ontoModel := self readOntoUmlModel.
-	umlModel := MocoOntoUmlToUmlFacade transform: ontoModel withEngineDo: [ :engine | engine choiceLog: (self class choiceLog: #ontouml of: model) ].
-	dbModel := MocoUmlToRdbFacade transform: (umlModel output).
-	sqlModel := MocoRdbOracleToSqlFacade transform: (dbModel last).
+	umlModel := MocoOntoUmlToUmlRound transform: ontoModel withEngineDo: [ :engine | engine choiceLog: (self class choiceLog: #ontouml of: model) ].
+	dbModel := MocoUmlToRdbRound transform: (umlModel output).
+	sqlModel := MocoRdbOracleToSqlRound transform: (dbModel last).
 	
 	self class saveChoiceLog: ({ #ontouml->(umlModel choiceLog) } asDictionary) of: model in: (self workbench).
 	
@@ -225,7 +225,7 @@ MocoOpenPonkRunTransformationsCommand >> packageModel: aMocoModel as: aString us
 MocoOpenPonkRunTransformationsCommand >> readOntoUmlModel [
 	"Returns a Moco OntoUML model of the currently focused OpenPonk OntoUML model."
 	
-	^ MocoOpenPonkOntoUmlModelFactory createMoco: (self currentWorkbenchDiagram model)
+	^ MocoOpenPonkOntoUmlTransformationRound createMoco: (self currentWorkbenchDiagram model)
 ]
 
 { #category : #'private - processing' }

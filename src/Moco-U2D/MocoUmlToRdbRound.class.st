@@ -1,14 +1,14 @@
 "
-Facade for transforming a UML model to Oracle relational database.
+Transformation round of an UML model to Oracle relational database.
 "
 Class {
-	#name : #MocoUmlToRdbFacade,
+	#name : #MocoUmlToRdbRound,
 	#superclass : #Object,
-	#category : #'Moco-U2D-Facade'
+	#category : #'Moco-U2D-Round'
 }
 
 { #category : #'private - transforming' }
-MocoUmlToRdbFacade class >> preprocess: aMocoModel [
+MocoUmlToRdbRound class >> preprocess: aMocoModel [
 	"Creates a preprocessed UML model suitable for transformation to an RDB model."
 	
 	| engine ruleRepo |
@@ -29,7 +29,7 @@ MocoUmlToRdbFacade class >> preprocess: aMocoModel [
 ]
 
 { #category : #transforming }
-MocoUmlToRdbFacade class >> transform: aMocoModel [
+MocoUmlToRdbRound class >> transform: aMocoModel [
 	"Transforms the given UML model to a relational database model."
 	
 	| preModel engine ruleRepo |
