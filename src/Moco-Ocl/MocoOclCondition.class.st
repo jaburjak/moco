@@ -5,7 +5,6 @@ Class {
 	#name : #MocoOclCondition,
 	#superclass : #MocoOclConstraint,
 	#instVars : [
-		'name',
 		'operation'
 	],
 	#category : #'Moco-Ocl-Model'
@@ -26,16 +25,6 @@ MocoOclCondition >> initialize [
 	super initialize.
 	
 	name := ''
-]
-
-{ #category : #accessing }
-MocoOclCondition >> name [
-	^ name
-]
-
-{ #category : #accessing }
-MocoOclCondition >> name: aString [
-	name := aString
 ]
 
 { #category : #accessing }
@@ -61,21 +50,4 @@ MocoOclCondition >> printOclTo: aStream [
 		nextPutAll: name;
 		nextPutAll: ':';
 		cr
-]
-
-{ #category : #printing }
-MocoOclCondition >> printTo: aStream [
-	| ocl |
-	ocl := String new writeStream.
-	self printOclTo: ocl.
-	
-	ocl := (ocl contents) copyReplaceAll: (Character cr asString) with: ((Character cr asString) , '| ').
-	
-	aStream
-		nextPutAll: '+--OCL-----------';
-		cr;
-		nextPutAll: '| ';
-		nextPutAll: ocl;
-		cr;
-		nextPutAll: '+----------------'
 ]

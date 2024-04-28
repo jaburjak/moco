@@ -4,9 +4,6 @@ Base class for OCL invariants.
 Class {
 	#name : #MocoOclInvariant,
 	#superclass : #MocoOclConstraint,
-	#instVars : [
-		'name'
-	],
 	#category : #'Moco-Ocl-Model'
 }
 
@@ -22,36 +19,9 @@ MocoOclInvariant >> initialize [
 	name := ''
 ]
 
-{ #category : #accessing }
-MocoOclInvariant >> name [
-	^ name
-]
-
-{ #category : #accessing }
-MocoOclInvariant >> name: aString [
-	name := aString
-]
-
 { #category : #printing }
 MocoOclInvariant >> printOclTo: aStream [
 	aStream
 		nextPutAll: 'context ' , context name , ' inv ' , name , ':';
 		cr
-]
-
-{ #category : #printing }
-MocoOclInvariant >> printTo: aStream [
-	| ocl |
-	ocl := String new writeStream.
-	self printOclTo: ocl.
-	
-	ocl := (ocl contents) copyReplaceAll: (Character cr asString) with: ((Character cr asString) , '| ').
-	
-	aStream
-		nextPutAll: '+--OCL-----------';
-		cr;
-		nextPutAll: '| ';
-		nextPutAll: ocl;
-		cr;
-		nextPutAll: '+----------------'
 ]
