@@ -48,7 +48,7 @@ MocoRdbForeignKey >> printTo: aStream [
 	
 	aStream
 		nextPutAll: '(';
-		nextPutAll: (', ' join: (columns with: referencedColumns collect: [ :c :r | (c name) , '=' , (referencedTable name) , '.' , (r name) ]));
+		nextPutAll: (',' join: (columns with: referencedColumns collect: [ :c :r | (c name) , '=' , (referencedTable name) , '.' , (r name) ]));
 		nextPutAll: ')'
 ]
 

@@ -30,6 +30,6 @@ MocoRdbUniqueKey >> printTo: aStream [
 	
 	aStream
 		nextPutAll: '(';
-		nextPutAll: (', ' join: (columns collect: [ :each | each name ]));
+		nextPutAll: (',' join: (columns collect: [ :each | each name ]));
 		nextPutAll: ')'
 ]
