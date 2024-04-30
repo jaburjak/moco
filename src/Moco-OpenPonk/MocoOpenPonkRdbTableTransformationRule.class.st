@@ -17,8 +17,8 @@ MocoOpenPonkRdbTableTransformationRule class >> toOpenPonkDataType: aMocoRdbColu
 	| type |
 	type := aMocoRdbColumn type typeDefinition.
 	
-	aMocoRdbColumn nullable
-		ifTrue: [ type := (type , ' NULLABLE') ].
+	"aMocoRdbColumn nullable
+		ifTrue: [ type := (type , ' NULLABLE') ]."
 	
 	DataTypeCache ifNil: [ DataTypeCache := Dictionary new ].
 	
@@ -69,7 +69,8 @@ MocoOpenPonkRdbTableTransformationRule >> transformColumn: aMocoRdbColumn [
 		prop type: (self class toOpenPonkDataType: aMocoRdbColumn)
 	].
 	
-	prop upperValue: (OPUMLLiteralUnlimitedNatural new value: 1).
+	prop lowerValue: (OPUMLLiteralInteger new value: (aMocoRdbColumn nullable ifTrue: [ 0 ] ifFalse: [ 1 ]));
+		upperValue: (OPUMLLiteralUnlimitedNatural new value: 1).
 		
 	^ prop
 ]
