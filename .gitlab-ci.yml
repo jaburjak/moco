@@ -1,0 +1,18 @@
+image: debian:12
+
+stages:
+  - test
+
+build:
+  stage: test
+  before_script:
+    - apt-get -q update
+    - apt-get -y -q install unzip
+  script:
+    - mkdir test/
+    - mv build/openponk-class-editor-linux-*.zip test/openponk.zip
+    - cd test/
+    - unzip -q openponk.zip
+    - cd openponk-class-editor-linux/
+    - "./pharo/bin/pharo --headless image/openponk-class-editor.image eval --save \"Metacello new baseline: 'Moco'; repository: 'tonel://../../src'; load.\""
+    - "./pharo/bin/pharo --headless image/openponk-class-editor.image eval \"| r | r := MocoOpenPonkTestSuite new run. (r tests size) = (r passed size)\" | grep true"
