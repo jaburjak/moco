@@ -5,7 +5,8 @@ Class {
 	#name : #MocoTestTransformationEngine,
 	#superclass : #MocoTransformationEngine,
 	#instVars : [
-		'choiceAnswer'
+		'choiceAnswer',
+		'choices'
 	],
 	#category : #'Moco-Core-Tests-Engine'
 }
@@ -13,6 +14,8 @@ Class {
 { #category : #accessing }
 MocoTestTransformationEngine >> askChoice: aMocoChoiceBuilder [
 	"Returns the predefined answer."
+	
+	choices addAll: (aMocoChoiceBuilder choices collect: [ :each | each id ]).
 	
 	choiceAnswer ifNil: [ ^ self error: 'Missing answer.' ].
 	
@@ -27,4 +30,18 @@ MocoTestTransformationEngine >> choiceAnswer [
 { #category : #accessing }
 MocoTestTransformationEngine >> choiceAnswer: aSymbol [
 	choiceAnswer := aSymbol
+]
+
+{ #category : #accessing }
+MocoTestTransformationEngine >> choices [
+	"Returns all transformation option choices declared by the executed rules."
+	
+	^ choices
+]
+
+{ #category : #initialization }
+MocoTestTransformationEngine >> initialize [
+	super initialize.
+	
+	choices := OrderedCollection new
 ]
