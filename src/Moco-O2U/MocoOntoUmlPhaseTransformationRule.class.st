@@ -199,7 +199,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoOntoUmlGener
 	bearer := engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype).
 	
 	attribute := MocoUmlAttribute new.
-	attribute name: (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet);
+	attribute name: (MocoNamingUtils toFirstLowerCase: (self generatePhasePartitionName: aMocoOntoUmlGeneralizationSet));
 		type: (MocoUmlType newFromName: 'String').
 	
 	(attribute multiplicity) lower: (MocoUmlMultiplicityBound value: 1);
@@ -209,7 +209,7 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAttribute: aMocoOntoUmlGener
 	
 	ocl := MocoOclEnumerationConstraint new.
 	ocl context: bearer;
-		name: ('EN_' , attribute name , '_Condition' );
+		name: ('EN_' , (bearer name) , '_' , (MocoNamingUtils toFirstUpperCase: (attribute name)) , '_Condition' );
 		attribute: attribute.
 	ocl values addAll: (((aMocoOntoUmlGeneralizationSet subtypeCombinations) collect: [ :each | '' join: (each collect: [ :e | e name ]) ])).
 	
