@@ -47,6 +47,8 @@ MocoUmlAssociation >> initialize [
 	
 	name := ''.
 	derived := false.
+	source := MocoUmlAssociationSide new.
+	target := MocoUmlAssociationSide new
 ]
 
 { #category : #accessing }
