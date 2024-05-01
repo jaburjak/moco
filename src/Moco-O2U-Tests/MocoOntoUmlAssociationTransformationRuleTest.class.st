@@ -57,3 +57,17 @@ MocoOntoUmlAssociationTransformationRuleTest >> testAssociation [
 		assert: (association2 target multiplicity lower value) equals: (association target multiplicity lower value);
 		assert: (association2 target multiplicity upper value) equals: (association target multiplicity upper value)
 ]
+
+{ #category : #tests }
+MocoOntoUmlAssociationTransformationRuleTest >> testFormal [
+	| association |
+	association := MocoOntoUmlFormalAssociation new.
+	association source element: (source first).
+	association target element: (target first).
+	
+	engine input addElement: association.
+	
+	self execute.
+	
+	self assert: (engine output elements anySatisfy: [ :each | each isKindOf: MocoUmlAssociation ])
+]
