@@ -2,25 +2,25 @@
 Copies UML model elements without transformations.
 "
 Class {
-	#name : #MocoUmlRdbCopyTransformationRule,
+	#name : #MocoUmlCopyTransformationRule,
 	#superclass : #MocoTransformationRule,
 	#category : #'Moco-U2D-Rule-Preprocess'
 }
 
 { #category : #transforming }
-MocoUmlRdbCopyTransformationRule >> execute [
+MocoUmlCopyTransformationRule >> execute [
 	"Copies all elements from the input model to the output model."
 	
 	| elements |
-	elements := engine input selectElementsNotGuarded: #MocoUmlRdbCopyTransformationRule.
+	elements := engine input selectElementsNotGuarded: #MocoUmlCopyTransformationRule.
 
 	elements do: [ :each |
 		engine addOutputElement: (each deepCopy) withSource: each.
-		engine input guard: each with: #MocoUmlRdbCopyTransformationRule
+		engine input guard: each with: #MocoUmlCopyTransformationRule
 	]
 ]
 
 { #category : #accessing }
-MocoUmlRdbCopyTransformationRule >> priority [
+MocoUmlCopyTransformationRule >> priority [
 	^ 50
 ]

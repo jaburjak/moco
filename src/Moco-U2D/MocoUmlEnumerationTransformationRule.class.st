@@ -2,13 +2,13 @@
 Transforms enumeration attributes and associations to simple string attributes with an enumeration constraint.
 "
 Class {
-	#name : #MocoUmlRdbEnumerationTransformationRule,
+	#name : #MocoUmlEnumerationTransformationRule,
 	#superclass : #MocoTransformationRule,
 	#category : #'Moco-U2D-Rule-Preprocess'
 }
 
 { #category : #'private - processing' }
-MocoUmlRdbEnumerationTransformationRule >> collapseAssociationsToAttributes: aMocoUmlEnumeration [
+MocoUmlEnumerationTransformationRule >> collapseAssociationsToAttributes: aMocoUmlEnumeration [
 	"Removes associations to the given enumeration and replaces them with attributes in the originating classes."
 	
 	((engine output selectElementsOfKind: MocoUmlAssociation) select: [ :each | each anySideIncludes: aMocoUmlEnumeration ]) do: [ :association |
@@ -35,17 +35,17 @@ MocoUmlRdbEnumerationTransformationRule >> collapseAssociationsToAttributes: aMo
 ]
 
 { #category : #transforming }
-MocoUmlRdbEnumerationTransformationRule >> execute [
+MocoUmlEnumerationTransformationRule >> execute [
 	| enumerations |
 	enumerations := engine output
 		selectElementsOfKind: MocoUmlEnumeration
-		notGuarded: #MocoUmlRdbEnumerationTransformationRule.
+		notGuarded: #MocoUmlEnumerationTransformationRule.
 	
 	enumerations do: [ :each | self transformEnumeration: each ]
 ]
 
 { #category : #'private - processing' }
-MocoUmlRdbEnumerationTransformationRule >> generateEnumerationConstraints: aMocoUmlEnumeration [
+MocoUmlEnumerationTransformationRule >> generateEnumerationConstraints: aMocoUmlEnumeration [
 	"Adds enumeration constraints for all attributes referencing the given enumeration and changes their type to a simple string."
 	
 	(engine output selectElementsOfKind: MocoUmlClass) do: [ :class |
@@ -59,7 +59,7 @@ MocoUmlRdbEnumerationTransformationRule >> generateEnumerationConstraints: aMoco
 ]
 
 { #category : #'private - processing' }
-MocoUmlRdbEnumerationTransformationRule >> generateOcl: aMocoUmlEnumeration onAttribute: aMocoUmlAttribute inClass: aMocoUmlClass [
+MocoUmlEnumerationTransformationRule >> generateOcl: aMocoUmlEnumeration onAttribute: aMocoUmlAttribute inClass: aMocoUmlClass [
 	"Generates an OCL enumeration constraint from the given enumeration."
 	
 	| ocl |
@@ -74,12 +74,12 @@ MocoUmlRdbEnumerationTransformationRule >> generateOcl: aMocoUmlEnumeration onAt
 ]
 
 { #category : #accessing }
-MocoUmlRdbEnumerationTransformationRule >> priority [
+MocoUmlEnumerationTransformationRule >> priority [
 	^ 30
 ]
 
 { #category : #'private - transforming' }
-MocoUmlRdbEnumerationTransformationRule >> transformEnumeration: aMocoUmlEnumeration [
+MocoUmlEnumerationTransformationRule >> transformEnumeration: aMocoUmlEnumeration [
 	"Transforms attributes and associations that reference the given enumeration to simple string attributes with an enumeration constraint."
 	
 	self collapseAssociationsToAttributes: aMocoUmlEnumeration;

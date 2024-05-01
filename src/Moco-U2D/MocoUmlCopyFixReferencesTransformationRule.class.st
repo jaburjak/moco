@@ -2,13 +2,13 @@
 Updates references to object copies made by MocoUmlRdbCopyTransformationRule.
 "
 Class {
-	#name : #MocoUmlRdbCopyFixReferencesTransformationRule,
+	#name : #MocoUmlCopyFixReferencesTransformationRule,
 	#superclass : #MocoTransformationRule,
 	#category : #'Moco-U2D-Rule-Preprocess'
 }
 
 { #category : #transforming }
-MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
+MocoUmlCopyFixReferencesTransformationRule >> execute [
 	"MocoUmlRdbCopyTransformationRule copied elements from the input model to the output model. This rule fixes references
 	 in the output elements, as after copying, they still point to elements in the input model, but they must point to the
 	 copies in the output model."
@@ -20,13 +20,13 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> execute [
 ]
 
 { #category : #'private - transforming' }
-MocoUmlRdbCopyFixReferencesTransformationRule >> fixAssociations [
+MocoUmlCopyFixReferencesTransformationRule >> fixAssociations [
 	"Relinks association source and target to the copied elements."
 	
 	| associations |
 	associations := engine output
 		selectElementsOfKind: MocoUmlAssociation
-		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		notGuarded: #MocoUmlCopyFixReferencesTransformationRule.
 	
 	associations do: [ :each |
 		| original |
@@ -42,13 +42,13 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixAssociations [
 			each target element: target
 		].
 		
-		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		engine output guard: each with: #MocoUmlCopyFixReferencesTransformationRule.
 		engine output setModified
 	]
 ]
 
 { #category : #'private - transforming' }
-MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditions: aCollection [
+MocoUmlCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditions: aCollection [
 	"Relinks associations in exclusive association OCLs to output elements."
 	
 	| ocls |
@@ -68,13 +68,13 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixExclusiveAssociationConditio
 ]
 
 { #category : #'private - transforming' }
-MocoUmlRdbCopyFixReferencesTransformationRule >> fixGeneralizationSets [
+MocoUmlCopyFixReferencesTransformationRule >> fixGeneralizationSets [
 	"Relinks members of generalization sets to generalizations in the output model."
 	
 	| sets |
 	sets := engine output
 		selectElementsOfKind: MocoUmlGeneralizationSet
-		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		notGuarded: #MocoUmlCopyFixReferencesTransformationRule.
 	
 	sets do: [ :each |
 		| original members |
@@ -85,19 +85,19 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixGeneralizationSets [
 		each members removeAll.
 		each members addAll: members.
 		
-		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		engine output guard: each with: #MocoUmlCopyFixReferencesTransformationRule.
 		engine output setModified
 	]
 ]
 
 { #category : #'private - transforming' }
-MocoUmlRdbCopyFixReferencesTransformationRule >> fixGeneralizations [
+MocoUmlCopyFixReferencesTransformationRule >> fixGeneralizations [
 	"Relinks classes in generalizations to elements in the output model."
 	
 	| generalizations |
 	generalizations := engine output
 		selectElementsOfKind: MocoUmlGeneralization
-		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		notGuarded: #MocoUmlCopyFixReferencesTransformationRule.
 	
 	generalizations do: [ :each |
 		| original general specific |
@@ -109,19 +109,19 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixGeneralizations [
 		each supertype: general.
 		each subtype: specific.
 		
-		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		engine output guard: each with: #MocoUmlCopyFixReferencesTransformationRule.
 		engine output setModified
 	]
 ]
 
 { #category : #'private - transforming' }
-MocoUmlRdbCopyFixReferencesTransformationRule >> fixOcl [
+MocoUmlCopyFixReferencesTransformationRule >> fixOcl [
 	"Relinks the context of OCL constraints to the elements in the output model."
 	
 	| ocls |
 	ocls := engine output
 		selectElementsOfKind: MocoOclConstraint
-		notGuarded: #MocoUmlRdbCopyFixReferencesTransformationRule.
+		notGuarded: #MocoUmlCopyFixReferencesTransformationRule.
 	
 	ocls do: [ :each |
 		| original context |
@@ -135,13 +135,13 @@ MocoUmlRdbCopyFixReferencesTransformationRule >> fixOcl [
 			engine output setModified
 		].
 		
-		engine output guard: each with: #MocoUmlRdbCopyFixReferencesTransformationRule
+		engine output guard: each with: #MocoUmlCopyFixReferencesTransformationRule
 	].
 
 	self fixExclusiveAssociationConditions: ocls
 ]
 
 { #category : #accessing }
-MocoUmlRdbCopyFixReferencesTransformationRule >> priority [
+MocoUmlCopyFixReferencesTransformationRule >> priority [
 	^ 49
 ]
