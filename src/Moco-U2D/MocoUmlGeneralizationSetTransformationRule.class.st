@@ -75,7 +75,10 @@ MocoUmlGeneralizationSetTransformationRule >> generateDiscriminatorColumn: aMoco
 	type := (dataTypeMapper map: 'String') new.
 	
 	lengths := OrderedCollection new.
-	lengths add: (aMocoUmlGeneralizationSet members first supertype name size).
+	
+	aMocoUmlGeneralizationSet ifNotCovering: [
+		lengths add: (aMocoUmlGeneralizationSet members first supertype name size)
+	].
 	
 	aMocoUmlGeneralizationSet ifDisjoint: [
 		lengths addAll: (aMocoUmlGeneralizationSet members collect: [ :each | each subtype name size ])
