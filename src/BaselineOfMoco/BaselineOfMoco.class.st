@@ -21,6 +21,7 @@ BaselineOfMoco >> baseline: spec [
 					package: 'Moco-OntoUml' with: [ spec requires: #('Moco-Core' 'Moco-Uml') ];
 					package: 'Moco-Ocl' with: [ spec requires: #('Moco-Core') ];
 					package: 'Moco-O2U' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-Uml' 'Moco-Ocl') ];
+					package: 'Moco-O2U-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-OpenPonk') ];
 					package: 'Moco-Rdb' with: [ spec requires: #('Moco-Core') ];
 					package: 'Moco-U2D' with: [ spec requires: #('Moco-Core' 'Moco-Uml' 'Moco-Ocl' 'Moco-Rdb') ];
 					package: 'Moco-SqlOracle' with: [ spec requires: #('Moco-Core') ];
