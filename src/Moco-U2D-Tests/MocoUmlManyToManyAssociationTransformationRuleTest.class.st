@@ -8,7 +8,7 @@ Class {
 	#category : #'Moco-U2D-Tests-Rule-Preprocess'
 }
 
-{ #category : #execution }
+{ #category : #'private - processing' }
 MocoUmlManyToManyAssociationTransformationRuleTest >> execute [
 	^ self execute: MocoUmlManyToManyAssociationTransformationRule
 ]
@@ -45,6 +45,9 @@ MocoUmlManyToManyAssociationTransformationRuleTest >> testDecomposition [
 	self assert: (class size) equals: 1.
 	
 	class := class first.
+	
+	self assert: (engine output metaOf: class at: #generatedBy) equals: #MocoUmlManyToManyAssociationTransformationRule.
+	
 	associations := engine output elements select: [ :each | (each isKindOf: MocoUmlAssociation) and: [ each anySideIncludes: class ] ].
 	
 	self assert: (associations size) equals: 2;

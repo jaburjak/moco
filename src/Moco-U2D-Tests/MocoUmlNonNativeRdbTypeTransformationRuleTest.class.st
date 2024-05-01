@@ -4,7 +4,7 @@ Class {
 	#category : #'Moco-U2D-Tests-Rule-Preprocess'
 }
 
-{ #category : #execution }
+{ #category : #'private - processing' }
 MocoUmlNonNativeRdbTypeTransformationRuleTest >> execute [
 	^ self execute: MocoUmlNonNativeRdbTypeTransformationRule
 ]
