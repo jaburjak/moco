@@ -28,13 +28,14 @@ MocoUmlGeneralizationSetTransformationRule >> generateConstraint: aMocoUmlGenera
 	
 	name := 'GS_' , (aMocoUmlGeneralizationSet members first supertype name).
 	aMocoUmlGeneralizationSet name ifNotEmpty: [ name := name , '_' , (aMocoUmlGeneralizationSet name) ].
+	name := MocoNamingUtils toUpperSnakeCase: name.
 	name := MocoUniqueNameGenerator
 		at: [ :candidate | (engine output selectElementsOfKind: MocoOclRdbGeneralizationSetConstraint) anySatisfy: [ :each | (each name) = candidate ] ]
 		seed: name.
 	
 	ocl := MocoOclRdbGeneralizationSetConstraint new.
 	
-	ocl name: (MocoNamingUtils toUpperSnakeCase: name);
+	ocl name: name;
 		context: aMocoRdbTable;
 		discriminatorColumn: aMocoRdbColumn;
 		keyColumn: ((aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).
