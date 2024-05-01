@@ -35,8 +35,9 @@ MocoUmlClass >> attributes [
 MocoUmlClass >> initialize [
 	super initialize.
 	
+	name := ''.
 	abstract := false.
-	attributes := OrderedCollection new.
+	attributes := OrderedCollection new
 ]
 
 { #category : #accessing }
