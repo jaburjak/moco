@@ -2,6 +2,7 @@ Class {
 	#name : #MocoOpenPonkOntoUmlGeneralizationSetTransformationRuleTest,
 	#superclass : #MocoTransformationRuleTestCase,
 	#instVars : [
+		'general',
 		'members'
 	],
 	#category : #'Moco-OpenPonk-Tests-Rule'
@@ -16,28 +17,34 @@ MocoOpenPonkOntoUmlGeneralizationSetTransformationRuleTest >> execute [
 MocoOpenPonkOntoUmlGeneralizationSetTransformationRuleTest >> setUp [
 	super setUp.
 	
+	general := { OPUMLClass new name: 'Gen'; yourself. MocoOntoUmlClass new name: 'Gen'; yourself }.
+	
+	engine input addElement: (general first).
+	engine addOutputElement: (general second) withSource: (general first).
+	
 	members := OrderedCollection
-		with: { OPUMLClass new name: 'Ag'; yourself. OPUMLClass new name: 'As'; yourself. OPUMLGeneralization new. MocoOntoUmlGeneralization new }
-		with: { OPUMLClass new name: 'Bg'; yourself. OPUMLClass new name: 'Bs'; yourself. OPUMLGeneralization new. MocoOntoUmlGeneralization new }.
+		with: { OPUMLClass new name: 'A'; yourself. OPUMLGeneralization new }
+		with: { OPUMLClass new name: 'B'; yourself. OPUMLGeneralization new }.
 
-	members do: [ :each |
-		| general specific |
-		general := MocoOntoUmlClass new name: ((each at: 1) name); yourself.
-		specific := MocoOntoUmlClass new name: ((each at: 2) name); yourself.
+	members := members collect: [ :each |
+		| member |
+		member := each asOrderedCollection.
 		
-		engine input addElement: (each at: 1).
-		engine addOutputElement: general withSource: (each at: 1).
-		engine input addElement: (each at: 2).
-		engine addOutputElement: specific withSource: (each at: 2).
+		(member second) general: (general first);
+			specific: (member first).
 		
-		(each at: 3) general: (each at: 1);
-			specific: (each at: 2).
+		member add: (MocoOntoUmlClass new name: (member first name); yourself);
+			add: (MocoOntoUmlGeneralization new).
 		
-		(each at: 4) supertype: general;
-			subtype: specific.
+		(member at: 4) supertype: (general second);
+			subtype: (member at: 3).
 		
-		engine input addElement: (each at: 3).
-		engine addOutputElement: (each at: 4) withSource: (each at: 3)
+		(engine input) addElement: (member first); addElement: (member second).
+		
+		engine addOutputElement: (member at: 3) withSource: (member first);
+			addOutputElement: (member at: 4) withSource: (member second).
+		
+		member
 	]
 ]
 
@@ -73,7 +80,7 @@ MocoOpenPonkOntoUmlGeneralizationSetTransformationRuleTest >> testDisjoint [
 MocoOpenPonkOntoUmlGeneralizationSetTransformationRuleTest >> testGeneralizationSet [
 	| op m |
 	op := OPUMLGeneralizationSet new name: 'GenSet'; yourself.
-	members do: [ :each | op generalizations add: (each at: 3) ].
+	members do: [ :each | op generalizations add: (each at: 2) ].
 	
 	engine input addElement: op.
 	
