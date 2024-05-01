@@ -86,7 +86,7 @@ MocoOntoUmlGeneralizationSetTransformationRule >> toDiscriminator: aMocoOntoUmlG
 	
 	ocl := MocoOclEnumerationConstraint new.
 	ocl context: (engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype) ofKind: MocoUmlClass).
-	ocl name: 'EN_' , (ocl context name) , '_' , (attribute name);
+	ocl name: 'EN_' , (ocl context name) , '_' , (MocoNamingUtils toFirstUpperCase: (attribute name));
 		attribute: attribute.
 	
 	ocl values addAll: ((aMocoOntoUmlGeneralizationSet subtypeCombinations) collect: [ :each | '' join: (each collect: [ :e | e name ]) ]).
