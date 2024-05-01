@@ -15,7 +15,15 @@ MocoU2DTestSuite >> initialize [
 	            MocoUmlEnumerationTransformationRuleTest.
 	            MocoUmlManyToManyAssociationTransformationRuleTest.
 	            MocoUmlNonNativeRdbTypeTransformationRuleTest.
-	            MocoUmlMultiValueAttributeTransformationRuleTest }.
+	            MocoUmlMultiValueAttributeTransformationRuleTest.
+	            MocoUmlClassTransformationRuleTest.
+	            MocoUmlAssociationTransformationRuleTest.
+	            MocoUmlGeneralizationTransformationRuleTest.
+	            MocoUmlGeneralizationSetTransformationRuleTest.
+	            MocoUmlOclEnumerationConstraintTransformationRuleTest.
+	            MocoUmlOclExclusiveAssociationConditionTransformationRuleTest.
+	            MocoUmlMediatingClassOptimizationTransformationRuleTest
+	}.
 	
 	suites do: [ :each | self addTest: each suite ]
 ]
