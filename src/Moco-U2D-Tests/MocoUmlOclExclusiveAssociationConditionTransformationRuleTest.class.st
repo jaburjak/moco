@@ -67,7 +67,7 @@ MocoUmlOclExclusiveAssociationConditionTransformationRuleTest >> testOcl [
 	
 	self assert: (engine output elements noneSatisfy: [ :each | each isKindOf: MocoOclExclusiveAssociationCondition ]).
 	
-	self assert: (ocl2 name) equals: 'TEST_OCL';
+	self assert: (ocl2 name) equals: (ocl name);
 		assert: (ocl2 context) identicalTo: (source second);
 		assert: (ocl2 column) identicalTo: (source second columns first);
 		assert: (ocl2 referencingTables size) equals: 2;

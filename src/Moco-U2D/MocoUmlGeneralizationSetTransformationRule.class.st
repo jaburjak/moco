@@ -26,9 +26,7 @@ MocoUmlGeneralizationSetTransformationRule >> generateConstraint: aMocoUmlGenera
 	
 	| ocl name params |
 	
-	name := 'GS_' , (aMocoUmlGeneralizationSet members first supertype name).
-	aMocoUmlGeneralizationSet name ifNotEmpty: [ name := name , '_' , (aMocoUmlGeneralizationSet name) ].
-	name := MocoNamingUtils toUpperSnakeCase: name.
+	name := 'GS_' , (aMocoUmlGeneralizationSet members first supertype name) , '_' , (aMocoUmlGeneralizationSet name ifNotEmpty: [ aMocoUmlGeneralizationSet name ] ifEmpty: [ 'Type' ]).
 	name := MocoUniqueNameGenerator
 		at: [ :candidate | (engine output selectElementsOfKind: MocoOclRdbGeneralizationSetConstraint) anySatisfy: [ :each | (each name) = candidate ] ]
 		seed: name.

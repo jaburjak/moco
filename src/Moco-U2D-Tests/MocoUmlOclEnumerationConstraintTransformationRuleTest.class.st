@@ -47,7 +47,7 @@ MocoUmlOclEnumerationConstraintTransformationRuleTest >> testOcl [
 	ocl2 := ocl2 first.
 	
 	self assert: (engine output elements noneSatisfy: [ :each | each isKindOf: MocoOclEnumerationConstraint ]);
-		assert: (ocl2 name) equals: 'TEST_OCL';
+		assert: (ocl2 name) equals: (ocl name);
 		assert: (ocl2 context) identicalTo: table;
 		assert: (ocl2 column) identicalTo: (table columns first);
 		assert: (ocl2 values) equals: (ocl values)

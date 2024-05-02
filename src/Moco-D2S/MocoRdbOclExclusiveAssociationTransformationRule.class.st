@@ -65,7 +65,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMoco
 	| trigger body first column |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: ((aMocoOclRdbExclusiveAssociationCondition name) , '_' , (aMocoRdbTable name) , '_INS');
+	trigger name: ((MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbExclusiveAssociationCondition name)) , '_' , (aMocoRdbTable name) , '_INS');
 		table: (aMocoRdbTable name);
 		time: #BEFORE;
 		event: #INSERT;
@@ -132,7 +132,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMoco
 	| trigger body |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: (aMocoOclRdbExclusiveAssociationCondition name);
+	trigger name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbExclusiveAssociationCondition name));
 		table: (aMocoOclRdbExclusiveAssociationCondition context name);
 		time: #BEFORE;
 		event: #'INSERT OR UPDATE';
@@ -193,7 +193,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMoco
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: ((aMocoOclRdbExclusiveAssociationCondition name) , '_' , (aMocoRdbTable name) , '_UPD_DEL');
+	trigger name: ((MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbExclusiveAssociationCondition name)) , '_' , (aMocoRdbTable name) , '_UPD_DEL');
 		table: (aMocoRdbTable name);
 		time: #AFTER;
 		event: #'UPDATE OR DELETE'.

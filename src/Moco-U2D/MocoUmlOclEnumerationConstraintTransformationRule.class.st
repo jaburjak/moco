@@ -17,7 +17,7 @@ MocoUmlOclEnumerationConstraintTransformationRule >> execute [
 	conditions do: [ :each |
 		| ocl |
 		ocl := MocoOclRdbEnumerationConstraint new.
-		ocl name: (MocoNamingUtils toUpperSnakeCase: (each name)).
+		ocl name: (each name).
 		ocl context: (engine detectOutputElement: (each context) ofKind: MocoRdbTable).
 		ocl column: (ocl context columns detect: [ :e | (e name) = (MocoNamingUtils toUpperSnakeCase: (each attribute name)) ]).
 		ocl values addAll: (each values).

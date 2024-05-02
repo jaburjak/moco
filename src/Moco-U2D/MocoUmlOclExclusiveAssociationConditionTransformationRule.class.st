@@ -46,7 +46,7 @@ MocoUmlOclExclusiveAssociationConditionTransformationRule >> transformCondition:
 	
 	context := engine detectOutputElement: (aMocoOclExclusiveAssociationCondition context).
 	
-	ocl name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclExclusiveAssociationCondition name));
+	ocl name: (aMocoOclExclusiveAssociationCondition name);
 		context: context;
 		column: ((context constraints select: [ :each | each isKindOf: MocoRdbPrimaryKey ]) first columns first).
 	

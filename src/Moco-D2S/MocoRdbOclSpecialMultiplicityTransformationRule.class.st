@@ -44,7 +44,7 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoO
 	| trigger events condition body varName varName2 |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: ((aMocoOclRdbSpecialMultiplicityConstraint name) , '_REL');
+	trigger name: ((MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbSpecialMultiplicityConstraint name)) , '_REL');
 		table: (aMocoOclRdbSpecialMultiplicityConstraint sourceTable name);
 		time: #AFTER.
 	
@@ -116,7 +116,7 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> generateTargetTrigger: aMocoO
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: (aMocoOclRdbSpecialMultiplicityConstraint name);
+	trigger name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbSpecialMultiplicityConstraint name));
 		table: (aMocoOclRdbSpecialMultiplicityConstraint context name);
 		time: #BEFORE;
 		event: #'INSERT OR UPDATE';

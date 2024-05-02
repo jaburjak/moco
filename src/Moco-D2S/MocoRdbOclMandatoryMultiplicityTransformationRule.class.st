@@ -32,7 +32,7 @@ MocoRdbOclMandatoryMultiplicityTransformationRule >> generateSourceTrigger: aMoc
 	| trigger body varName varName2 |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: ((aMocoOclRdbMandatoryMultiplicityConstraint name) , '_REL');
+	trigger name: ((MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbMandatoryMultiplicityConstraint name)) , '_REL');
 		table: (aMocoOclRdbMandatoryMultiplicityConstraint sourceTable name);
 		time: #AFTER;
 		event: #'UPDATE OR DELETE'.
@@ -89,7 +89,7 @@ MocoRdbOclMandatoryMultiplicityTransformationRule >> generateTargetTrigger: aMoc
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: (aMocoOclRdbMandatoryMultiplicityConstraint name);
+	trigger name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbMandatoryMultiplicityConstraint name));
 		table: (aMocoOclRdbMandatoryMultiplicityConstraint context name);
 		time: #BEFORE;
 		event: #'INSERT OR UPDATE';

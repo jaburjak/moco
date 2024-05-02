@@ -35,7 +35,7 @@ MocoRdbOclGeneralizationSetTransformationRule >> generateSubclassDeleteTrigger: 
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: ((aMocoOclRdbGeneralizationSetTransformationConstraint name) , '_' , (aMocoRdbTable name) , '_DEL');
+	trigger name: ((MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbGeneralizationSetTransformationConstraint name)) , '_' , (aMocoRdbTable name) , '_DEL');
 		table: (aMocoRdbTable name);
 		time: #BEFORE;
 		event: #DELETE;
@@ -93,7 +93,7 @@ MocoRdbOclGeneralizationSetTransformationRule >> generateSubclassInsertTrigger: 
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: ((aMocoOclRdbGeneralizationSetTransformationConstraint name) , '_' , (aMocoRdbTable name) , '_INS');
+	trigger name: ((MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbGeneralizationSetTransformationConstraint name)) , '_' , (aMocoRdbTable name) , '_INS');
 		table: (aMocoRdbTable name);
 		time: #BEFORE;
 		event: #INSERT;
@@ -151,7 +151,7 @@ MocoRdbOclGeneralizationSetTransformationRule >> generateSubclassUpdateTrigger: 
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: ((aMocoOclRdbGeneralizationSetTransformationConstraint name) , '_' , (aMocoRdbTable name) , '_UPD');
+	trigger name: ((MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbGeneralizationSetTransformationConstraint name)) , '_' , (aMocoRdbTable name) , '_UPD');
 		table: (aMocoRdbTable name);
 		time: #BEFORE;
 		event: #UPDATE;
@@ -223,7 +223,7 @@ MocoRdbOclGeneralizationSetTransformationRule >> generateSuperclassTrigger: aMoc
 	| trigger body |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: (aMocoOclRdbGeneralizationSetTransformationConstraint name);
+	trigger name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbGeneralizationSetTransformationConstraint name));
 		table: (aMocoOclRdbGeneralizationSetTransformationConstraint context name);
 		time: #BEFORE;
 		event: #'INSERT OR UPDATE';

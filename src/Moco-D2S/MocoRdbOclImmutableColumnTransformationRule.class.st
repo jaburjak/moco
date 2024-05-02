@@ -28,7 +28,7 @@ MocoRdbOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdbImmut
 	| trigger body |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: (aMocoOclRdbImmutableColumnCondition name);
+	trigger name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbImmutableColumnCondition name));
 		table: (aMocoOclRdbImmutableColumnCondition context name);
 		time: #BEFORE;
 		event: #UPDATE;

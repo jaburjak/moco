@@ -70,7 +70,7 @@ MocoUmlGeneralizationSetTransformationRuleTest >> testDisjointCovering [
 	self assert: (ocl size) equals: 1.
 	ocl := ocl first.
 	
-	self assert: (ocl name) equals: 'GS_GENERAL_GEN_SET';
+	self assert: (ocl name) equals: 'GS_General_GenSet';
 		assert: (ocl context) identicalTo: (general second);
 		assert: (ocl discriminatorColumn) identicalTo: discr;
 		assert: (ocl keyColumn) identicalTo: (general second columns first);
@@ -126,8 +126,8 @@ MocoUmlGeneralizationSetTransformationRuleTest >> testMultiple [
 	ocl := engine output elements select: [ :each | each isKindOf: MocoOclRdbGeneralizationSetConstraint ].
 	
 	self assert: (ocl size) equals: 2;
-		assert: (ocl first name) equals: 'GS_GENERAL';
-		assert: (ocl second name) equals: 'GS_GENERAL2'
+		assert: (ocl first name) equals: 'GS_General_Type';
+		assert: (ocl second name) equals: 'GS_General_Type2'
 ]
 
 { #category : #tests }
@@ -190,5 +190,5 @@ MocoUmlGeneralizationSetTransformationRuleTest >> testUnnamed [
 	
 	ocl := engine output elements detect: [ :each | each isKindOf: MocoOclRdbGeneralizationSetConstraint ].
 	
-	self assert: (ocl name) equals: 'GS_GENERAL'
+	self assert: (ocl name) equals: 'GS_General_Type'
 ]

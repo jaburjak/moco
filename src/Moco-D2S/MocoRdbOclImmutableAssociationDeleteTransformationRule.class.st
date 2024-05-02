@@ -28,7 +28,7 @@ MocoRdbOclImmutableAssociationDeleteTransformationRule >> generateTrigger: aMoco
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
-	trigger name: (aMocoOclRdbImmutableAssociationDeleteCondition name);
+	trigger name: (MocoNamingUtils toUpperSnakeCase: (aMocoOclRdbImmutableAssociationDeleteCondition name));
 		table: (aMocoOclRdbImmutableAssociationDeleteCondition context name);
 		time: #BEFORE;
 		event: #DELETE;
