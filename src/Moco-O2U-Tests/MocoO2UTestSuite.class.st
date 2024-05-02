@@ -34,7 +34,8 @@ MocoO2UTestSuite >> initialize [
 	            MocoOntoUmlGeneralizationTransformationRuleTest.
 	            MocoOntoUmlGeneralizationSetTransformationRuleTest.
 	            MocoOntoUmlRelatorOptimizationTransformationRuleTest.
-	            MocoOntoUmlRoleOptimizationTransformationRuleTest }.
+	            MocoOntoUmlRoleOptimizationTransformationRuleTest.
+	            MocoO2URulePriorityTest }.
 	
 	suites do: [ :each | self addTest: each suite ]
 ]

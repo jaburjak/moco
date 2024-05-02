@@ -18,7 +18,8 @@ MocoD2STestSuite >> initialize [
 	            MocoRdbOclMandatoryMultiplicityTransformationRuleTest.
 	            MocoRdbOclSpecialMultiplicityTransformationRuleTest.
 	            MocoRdbOclImmutableAssociationDeleteTransformationRuleTest.
-	            MocoRdbOclImmutableColumnTransformationRuleTest }.
+	            MocoRdbOclImmutableColumnTransformationRuleTest.
+	            MocoD2SRulePriorityTest }.
 	
 	suites do: [ :each | self addTest: each suite ]
 ]

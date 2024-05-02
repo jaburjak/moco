@@ -37,15 +37,18 @@ MocoOpenPonkTestSuite >> initialize [
 	            MocoOpenPonkOntoUmlEnumerationTransformationRuleTest.
 	            MocoOpenPonkOntoUmlGeneralizationTransformationRuleTest.
 	            MocoOpenPonkOntoUmlGeneralizationSetTransformationRuleTest.
+	            MocoOpenPonkRulePriorityTest.
 	            MocoOpenPonkUmlClassTransformationRuleTest.
 	            MocoOpenPonkUmlAssociationTransformationRuleTest.
 	            MocoOpenPonkUmlEnumerationTransformationRuleTest.
 	            MocoOpenPonkUmlGeneralizationTransformationRuleTest.
 	            MocoOpenPonkUmlGeneralizationSetTransformationRuleTest.
 	            MocoOpenPonkUmlOclTransformationRuleTest.
+	            MocoOpenPonkRuleUmlPriorityTest.
 	            MocoOpenPonkRdbTableTransformationRuleTest.
 	            MocoOpenPonkRdbForeignKeyTransformationRuleTest.
-	            MocoOpenPonkRdbOclTransformationRuleTest }.
+	            MocoOpenPonkRdbOclTransformationRuleTest.
+	            MocoOpenPonkRuleRdbPriorityTest }.
 	
 	suites do: [ :each | self addTest: each suite ]
 ]
