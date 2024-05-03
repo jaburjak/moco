@@ -90,9 +90,9 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> toOpenPonkAssociation: aMocoRdbFo
 	
 	(op memberEnds) add: source; add: target.
 	
-	op ownedEnds add: source.
+	op ownedEnds addAll: (op memberEnds).
 	
-	(source type) ownedAttributes add: target.
+	op navigableOwnedEnds add: (op memberEnds second).
 		
 	^ op
 ]

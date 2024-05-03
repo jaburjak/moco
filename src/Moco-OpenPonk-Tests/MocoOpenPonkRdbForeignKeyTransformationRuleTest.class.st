@@ -60,9 +60,8 @@ MocoOpenPonkRdbForeignKeyTransformationRuleTest >> testForeignKey [
 		assert: (op memberEnds second type) identicalTo: (target second);
 		assert: (op memberEnds second lowerValue value) equals: 1;
 		assert: (op memberEnds second upperValue value) equals: 1;
-		assert: (op ownedEnds size) equals: 1;
-		assert: (op ownedEnds first) identicalTo: (op memberEnds first);
-		assert: (source second ownedAttributes anySatisfy: [ :each | (each type) == (target second) ])
+		assert: (op navigableOwnedEnds size) equals: 1;
+		assert: (op navigableOwnedEnds first type) identicalTo: (target second)
 ]
 
 { #category : #tests }

@@ -53,6 +53,8 @@ MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkAssociation: aMocoUmlA
 	(op memberEnds) add: (self toOpenPonkEnd: (aMocoUmlAssociation source));
 		add: (self toOpenPonkEnd: (aMocoUmlAssociation target)).
 	
+	op ownedEnds addAll: (op memberEnds).
+	
 	(aMocoUmlAssociation source navigable) ifTrue: [ op navigableOwnedEnds add: (op memberEnds first) ].
 	(aMocoUmlAssociation target navigable) ifTrue: [ op navigableOwnedEnds add: (op memberEnds second) ].
 	
