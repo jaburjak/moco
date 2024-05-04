@@ -18,7 +18,7 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineSourceMultiplicity: aMoc
 	((engine input selectElementsOfKind: MocoOclRdbMandatoryMultiplicityConstraint) anySatisfy: [ :each | aMocoRdbForeignKey columns anySatisfy: [ :c | c == (each sourceColumn) ] ])
 		ifTrue: [ lower := 1 ].
 	
-	(aMocoRdbTable constraints anySatisfy: [ :each | ((each isKindOf: MocoRdbUniqueKey) or: [ each isKindOf: MocoRdbPrimaryKey ]) and: [ each columns anySatisfy: [ :c | (aMocoRdbForeignKey columns anySatisfy: [ :e | e == c ]) ] ] ])
+	(aMocoRdbTable constraints anySatisfy: [ :each | ((each isKindOf: MocoRdbUniqueKey) or: [ each isKindOf: MocoRdbPrimaryKey ]) and: [ (each columns reject: [ :c | aMocoRdbForeignKey columns anySatisfy: [ :e | e == c ] ]) isEmpty ] ])
 		ifTrue: [ upper := 1 ].
 	
 	((engine input selectElementsOfKind: MocoOclRdbSpecialMultiplicityConstraint) select: [ :each | aMocoRdbForeignKey columns anySatisfy: [ :c | c == (each sourceColumn) ] ]) do: [ :each |
