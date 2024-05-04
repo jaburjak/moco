@@ -120,10 +120,12 @@ MocoOntoUmlRelatorOptimizationTransformationRule >> optimizeRelator: aMocoOntoUm
 		derived: (associations first derived and: [ associations second derived ]).
 	
 	sourceSide := sourceClassSide copy.
-	sourceSide multiplicity: (self multiplyMultiplicities: (OrderedCollection with: (sourceClassSide multiplicity) with: (targetRelatorSide multiplicity))).
+	sourceSide multiplicity: (self multiplyMultiplicities: (OrderedCollection with: (sourceClassSide multiplicity) with: (targetRelatorSide multiplicity)));
+		frozen: ((sourceSide frozen) and: [ targetRelatorSide frozen ]).
 	
 	targetSide := targetClassSide copy.
-	targetSide multiplicity: (self multiplyMultiplicities: (OrderedCollection with: (sourceRelatorSide multiplicity) with: (targetClassSide multiplicity))).
+	targetSide multiplicity: (self multiplyMultiplicities: (OrderedCollection with: (sourceRelatorSide multiplicity) with: (targetClassSide multiplicity)));
+		frozen: ((targetSide frozen) and: [ sourceRelatorSide frozen ]).
 	
 	association source: sourceSide;
 		target: targetSide.

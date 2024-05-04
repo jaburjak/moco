@@ -106,21 +106,35 @@ MocoOntoUmlRoleOptimizationTransformationRule >> priority [
 MocoOntoUmlRoleOptimizationTransformationRule >> rewireAssociations: aMocoOntoUmlRole [
 	"Rewires associations of the given role to reference its identity bearer."
 	
-	| roleClass identityBearer associations |
+	| roleClass identityBearer associations bearerAssociation bearerImmutable roleImmutable |
 	roleClass := engine detectOutputElement: aMocoOntoUmlRole ofKind: MocoUmlClass.
 	identityBearer := self findIdentityBearer: aMocoOntoUmlRole.
 	
 	associations := engine output selectElementsOfKind: MocoUmlAssociation.
 	
+	bearerAssociation := associations detect: [ :each | (each anySideIncludes: roleClass) and: [ each anySideIncludes: identityBearer ] ] ifNone: [ nil ].
+	
+	bearerAssociation
+		ifNil: [ bearerImmutable := false. roleImmutable := false ]
+		ifNotNil: [
+			((bearerAssociation source element) == identityBearer)
+				ifTrue: [ bearerImmutable := (bearerAssociation source frozen). roleImmutable := (bearerAssociation target frozen) ]
+				ifFalse: [ bearerImmutable := (bearerAssociation target frozen). roleImmutable := (bearerAssociation source frozen) ]
+		].
+	
 	(associations select: [ :each | ((each source element) == roleClass) and: [ ((each target element) == identityBearer) not ] ]) do: [ :each |
 		each source element: identityBearer.
 		each target multiplicity lower: (MocoUmlMultiplicityBound value: 0).
-		each source name: (MocoNamingUtils toFirstLowerCase: (aMocoOntoUmlRole name))
+		each source name: (MocoNamingUtils toFirstLowerCase: (aMocoOntoUmlRole name)).
+		each source frozen: ((each source frozen) and: bearerImmutable).
+		each target frozen: ((each target frozen) and: roleImmutable)
 	].
 	
 	(associations select: [ :each | ((each target element) == roleClass) and: [ ((each source element) == identityBearer) not ] ]) do: [ :each |
 		each target element: identityBearer.
-		each source multiplicity lower: (MocoUmlMultiplicityBound value: 0)
+		each source multiplicity lower: (MocoUmlMultiplicityBound value: 0).
+		each target frozen: ((each target frozen) and: bearerImmutable).
+		each source frozen: ((each source frozen) and: roleImmutable)
 	].
 
 	(associations select: [ :each | each anySideIncludes: roleClass ]) do: [ :each | engine removeOutputElement: each ]
