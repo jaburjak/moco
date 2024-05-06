@@ -34,6 +34,8 @@ MocoRdbOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdbImmut
 		event: #UPDATE;
 		granularity: #'EACH ROW'.
 	
+	trigger name: (MocoUniqueNameGenerator at: [ :n | (engine output selectElementsOfKind: MocoSqlOracleCreateTrigger) anySatisfy: [ :each | (each name) = n ] ] seed: (trigger name)).
+	
 	body := String new writeStream.
 	
 	body
