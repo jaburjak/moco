@@ -95,7 +95,7 @@ MocoOpenPonkRunTransformationsCommand >> execute [
 	ontoModel := self readOntoUmlModel.
 	umlModel := MocoOntoUmlToUmlRound transform: ontoModel withEngineDo: [ :engine | engine choiceLog: (self class choiceLog: #ontouml of: model) ].
 	dbModel := MocoUmlToRdbRound transform: (umlModel output).
-	sqlModel := MocoRdbOracleToSqlRound transform: (dbModel last).
+	sqlModel := MocoRdbToSqlOracleRound transform: (dbModel last).
 	
 	self class saveChoiceLog: ({ #ontouml->(umlModel choiceLog) } asDictionary) of: model in: (self workbench).
 	
