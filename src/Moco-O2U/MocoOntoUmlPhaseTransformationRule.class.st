@@ -153,14 +153,14 @@ MocoOntoUmlPhaseTransformationRule >> transformUsingAp: aMocoOntoUmlGeneralizati
 	
 	association := MocoUmlAssociation new.
 	
-	source := MocoUmlAssociationSide new.
-	source element: (engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype));
+	target := MocoUmlAssociationSide new.
+	target element: (engine detectOutputElement: (aMocoOntoUmlGeneralizationSet members first supertype));
 		frozen: true;
 		multiplicity: (MocoUmlMultiplicity value: 1);
 		name: 'identityBearer'.
 	
-	target := MocoUmlAssociationSide new.
-	target element: abstract;
+	source := MocoUmlAssociationSide new.
+	source element: abstract;
 		multiplicity: (MocoUmlMultiplicity value: 1);
 		name: 'condition'.
 	

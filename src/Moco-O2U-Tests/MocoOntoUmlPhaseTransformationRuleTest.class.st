@@ -33,19 +33,19 @@ MocoOntoUmlPhaseTransformationRuleTest >> testAp [
 	association := engine output elements select: [ :each | (each isKindOf: MocoUmlAssociation) ].
 	self assert: (association size) equals: 1.
 	association := association first.
-	self assert: (association source element) identicalTo: kind2;
-		assert: (association source multiplicity lower value) equals: 1;
-		assert: (association source multiplicity upper value) equals: 1;
-		assert: (association source frozen) equals: true;
-		assert: (association source name) equals: 'identityBearer';
-		assert: (association target element isKindOf: MocoUmlClass);
+	self assert: (association target element) identicalTo: kind2;
 		assert: (association target multiplicity lower value) equals: 1;
 		assert: (association target multiplicity upper value) equals: 1;
-		assert: (association target frozen) equals: false;
-		assert: (association target name) equals: 'condition';
+		assert: (association target frozen) equals: true;
+		assert: (association target name) equals: 'identityBearer';
+		assert: (association source element isKindOf: MocoUmlClass);
+		assert: (association source multiplicity lower value) equals: 1;
+		assert: (association source multiplicity upper value) equals: 1;
+		assert: (association source frozen) equals: false;
+		assert: (association source name) equals: 'condition';
 		assert: (association name) equals: 'testPhase'.
 	
-	abstract := association target element.
+	abstract := association source element.
 	self assert: (abstract abstract) equals: true;
 		assert: (abstract name) equals: (kind name , set name).
 	
