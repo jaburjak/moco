@@ -17,7 +17,7 @@ openPonkModel := MocoOpenPonkModelStorage ontoUmlModel.
 ontoModel := MocoOpenPonkOntoUmlTransformationRound createMoco: openPonkModel.
 umlModel := MocoOntoUmlToUmlRound transform: ontoModel.
 dbModel := MocoUmlToRdbRound transform: umlModel.
-sqlModel := MocoRdbOracleToSqlRound transform: (dbModel second).
+sqlModel := MocoRdbToSqlOracleRound transform: (dbModel second).
 
 ')
 		centered
