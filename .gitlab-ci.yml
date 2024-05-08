@@ -7,13 +7,18 @@ test:
   stage: test
   before_script:
     - apt-get -q update
-    - apt-get -y -q install unzip
+    - apt-get -y -q install unzip wget
   script:
-    - mkdir test/
-    - mv build/openponk-class-editor-linux-*.zip test/openponk.zip
+    - mkdir -p test/image/
+    - mv build/openponk-class-editor-*.zip test/image/openponk.zip
     - cd test/
+    - mkdir pharo/
+    - cd pharo/
+    - wget -q -O pharo.zip 'https://files.pharo.org/get-files/110/pharo-vm-Linux-x86_64-stable.zip'
+    - unzip -q pharo.zip
+    - cd ../image/
     - unzip -q openponk.zip
-    - cd openponk-class-editor-linux/
-    - "./pharo/bin/pharo --headless image/openponk-class-editor.image eval --save \"Metacello new baseline: 'Moco'; repository: 'tonel://../../src'; load.\""
-    - mv ../../build/test.sh ./
+    - cd ../
+    - "./pharo/bin/pharo --headless image/openponk-class-editor.image eval --save \"Metacello new baseline: 'Moco'; repository: 'tonel://../src'; load.\""
+    - mv ../build/test.sh ./
     - ./test.sh
