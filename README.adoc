@@ -16,7 +16,7 @@ Target RDBM platform is Oracle Database 12c.
 
 == Usage
 
-This library is primarily intended to be used as a plugin to https://openponk.org/[OpenPonk] — a modeling tool that supports OntoUML. A prebuilt distribution of OpenPonk that includes Moco is available at https://github.com/jaburjak/openponk-moco[github.com/jaburjak/openponk-moco].
+This library is primarily intended to be used as a plugin to https://openponk.org/[OpenPonk] — a modeling tool that supports OntoUML. A prebuilt distribution of OpenPonk that includes Moco is available at https://gitlab.fit.cvut.cz/jaburjak/openponk-moco[gitlab.fit.cvut.cz/jaburjak/openponk-moco].
 
 The transformation can be invoked by menu _Diagram_ » _Moco_ » _Transform to SQL_.
 
