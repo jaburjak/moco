@@ -19,9 +19,10 @@ MocoOpenPonkSaveWorkaround class >> applyToController: anOPController [
 	| elements attributes |
 	elements := anOPController model packagedElements.
 	
-	attributes := (elements
+	attributes := ((elements
 		select: [ :each | each isKindOf: OPUMLClass ])
-		flatCollect: [ :each | each ownedAttributes ].
+		flatCollect: [ :each | each ownedAttributes ])
+		reject: [ :each | each type isNil ].
 
 	(attributes select: [ :each | each type isKindOf: OPUMLPrimitiveType ])
 		do: [ :each |
