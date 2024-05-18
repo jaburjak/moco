@@ -11,7 +11,7 @@ Class {
 MocoOntoUmlRoleOptimizationTransformationRule >> checkIfOptimizable: aMocoOntoUmlRole [
 	"Returns true if the given role has no attributes, has no subtypes and does not participate in any associations except for mediation or material relationships."
 	
-	| associations |
+	| associations identityBearer |
 	
 	aMocoOntoUmlRole attributes ifNotEmpty: [ ^ false ]. "has attributes"
 	
@@ -35,11 +35,16 @@ MocoOntoUmlRoleOptimizationTransformationRule >> checkIfOptimizable: aMocoOntoUm
 	(((associations select: [ :each | each isKindOf: MocoOntoUmlMaterialAssociation ]) size) > 1)
 		ifTrue: [ ^ false ]. "participates in multiple material relationships"
 	
-	(self findIdentityBearer: aMocoOntoUmlRole)
-		ifNil: [ ^ false ]. "has no identity -- handle invalid OntoUML models"
-	
 	((((engine input selectElementsOfKind: MocoOntoUmlGeneralization) select: [ :each | (each subtype) == aMocoOntoUmlRole ]) size) > 1)
 		ifTrue: [ ^ false ]. "has multiple supertypes"
+	
+	identityBearer := self findIdentityBearer: aMocoOntoUmlRole.
+	
+	identityBearer ifNil: [ ^ false ]. "has no identity -- handle invalid OntoUML models"
+	
+	((engine output selectElementsOfKind: MocoUmlGeneralization)
+		anySatisfy: [ :each | ((each supertype) == identityBearer) and: [ (each subtype) == (engine detectOutputElement: aMocoOntoUmlRole ofKind: MocoUmlClass) ] ])
+		ifTrue: [ ^ false ]. "unexpected supertype -- handle invalid OntoUML models"
 	
 	^ true
 ]
