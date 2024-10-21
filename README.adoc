@@ -12,7 +12,7 @@ The transformation is executed in three stages:
 2. **UML to RDB.** Classes, attributes, associations, generalizations, generalization sets and enumerations are supported.
 3. **RDB to SQL.** Tables, columns, primary, unique, foreign keys and derived OCL constraints are supported.
 
-Target RDBM platform is Oracle Database 12c.
+Moco supports PostgreSQL and Oracle as the target relational database platform.
 
 == Usage
 
@@ -25,6 +25,8 @@ image::docs/openponk-1.png[]
 image::docs/openponk-2.png[]
 
 image::docs/openponk-3.png[]
+
+The target SQL platform can be selected in the Settings Browser.
 
 === Manual Installation
 
@@ -45,6 +47,4 @@ Created by Jakub Jabůrek, released under the MIT License. Please see the https:
 
 == Acknowledgements
 
-The approach for the transformation of OntoUML to SQL was developed by Dr. Zdeněk Rybola in his Ph.D. thesis __Towards OntoUML
-for Software Engineering: Transformation of OntoUML into Relational
-Databases__ (2017).
+The approach for the transformation of OntoUML to SQL was developed by Dr. Zdeněk Rybola in his Ph.D. thesis __Towards OntoUML for Software Engineering: Transformation of OntoUML into Relational Databases__ (2017).

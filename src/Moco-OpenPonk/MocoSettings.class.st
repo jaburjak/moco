@@ -6,7 +6,8 @@ Class {
 	#superclass : #Object,
 	#classVars : [
 		'openMode',
-		'overwriteModels'
+		'overwriteModels',
+		'sqlPlatform'
 	],
 	#category : #'Moco-OpenPonk-Settings'
 }
@@ -62,4 +63,26 @@ MocoSettings class >> settingsOn: aBuilder [
 	(aBuilder group: #moco)
 		label: 'Moco';
 		description: 'OntoUML to SQL transformation settings.'
+]
+
+{ #category : #accessing }
+MocoSettings class >> sqlPlatform [
+	sqlPlatform ifNil: [ sqlPlatform := 'PostgreSQL' ].
+	^ sqlPlatform
+]
+
+{ #category : #accessing }
+MocoSettings class >> sqlPlatform: aString [
+	sqlPlatform := aString
+]
+
+{ #category : #settings }
+MocoSettings class >> sqlPlatformSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder pickOne: #sqlPlatform)
+		label: 'SQL Dialect';
+		description: 'Defines the target SQL platform.';
+		target: MocoSettings;
+		parent: #moco;
+		domainValues: #(#'PostgreSQL' #'Oracle')
 ]
