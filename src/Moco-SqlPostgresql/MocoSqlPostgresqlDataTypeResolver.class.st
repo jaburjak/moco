@@ -71,5 +71,7 @@ MocoSqlPostgresqlDataTypeResolver >> visitTimestamp: aMocoRdbTypeTimestamp [
 
 { #category : #visiting }
 MocoSqlPostgresqlDataTypeResolver >> visitVarchar: aMocoRdbTypeVarchar [
-	typeDeclaration := 'TEXT'
+	aMocoRdbTypeVarchar
+		ifNil: [ typeDeclaration := 'TEXT' ]
+		ifNotNil: [ typeDeclaration := 'VARCHAR(' , (aMocoRdbTypeVarchar length asString) , ')' ]
 ]

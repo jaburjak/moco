@@ -71,5 +71,7 @@ MocoSqlOracleDataTypeResolver >> visitTimestamp: aMocoRdbTypeTimestamp [
 
 { #category : #visiting }
 MocoSqlOracleDataTypeResolver >> visitVarchar: aMocoRdbTypeVarchar [
-	typeDeclaration := 'VARCHAR2(' , (aMocoRdbTypeVarchar length asString) , ')'
+	aMocoRdbTypeVarchar
+		ifNil: [ typeDeclaration := 'CLOB' ]
+		ifNotNil: [ typeDeclaration := 'VARCHAR2(' , (aMocoRdbTypeVarchar length asString) , ')' ]
 ]

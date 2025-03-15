@@ -1,5 +1,7 @@
 "
 Represents a VARCHAR data type.
+
+When length is nil, corresponds to a type with unlimited variable length.
 "
 Class {
 	#name : #MocoRdbTypeVarchar,
@@ -13,13 +15,6 @@ Class {
 { #category : #'private - processing' }
 MocoRdbTypeVarchar >> acceptVisitor: aMocoRdbDataTypeVisitor [
 	aMocoRdbDataTypeVisitor visitVarchar: self
-]
-
-{ #category : #initialization }
-MocoRdbTypeVarchar >> initialize [
-	super initialize.
-	
-	length := 4000.
 ]
 
 { #category : #accessing }
