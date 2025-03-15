@@ -25,10 +25,10 @@ BaselineOfMoco >> baseline: spec [
 					package: 'Moco-Rdb' with: [ spec requires: #('Moco-Core') ];
 					package: 'Moco-U2D' with: [ spec requires: #('Moco-Core' 'Moco-Uml' 'Moco-Ocl' 'Moco-Rdb') ];
 					package: 'Moco-U2D-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-U2D') ];
-					package: 'Moco-SqlOracle' with: [ spec requires: #('Moco-Core') ];
+					package: 'Moco-SqlOracle' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
 					package: 'Moco-D2S' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlOracle') ];
 					package: 'Moco-D2S-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-D2S') ];
-					package: 'Moco-SqlPostgresql' with: [ spec requires: #('Moco-Core') ];
+					package: 'Moco-SqlPostgresql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
 					package: 'Moco-D2SPostgresql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlPostgresql') ];
 					package: 'Moco-OpenPonk' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-O2U' 'Moco-U2D' 'Moco-D2S') ] ];
 					package: 'Moco-OpenPonk-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-OpenPonk') ]
