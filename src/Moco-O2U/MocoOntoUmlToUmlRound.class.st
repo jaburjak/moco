@@ -8,6 +8,16 @@ Class {
 }
 
 { #category : #transforming }
+MocoOntoUmlToUmlRound class >> transform: aMocoModel [
+	"Transforms the given OntoUML model to UML."
+	| output |
+
+	self transform: aMocoModel withEngineDo: [ :e | output := e output ].
+	
+	^ output
+]
+
+{ #category : #transforming }
 MocoOntoUmlToUmlRound class >> transform: aMocoModel withEngineDo: aBlock [
 	"Transforms the given OntoUML model to UML."
 	
