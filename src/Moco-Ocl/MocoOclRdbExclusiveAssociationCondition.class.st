@@ -68,7 +68,7 @@ MocoOclRdbExclusiveAssociationCondition >> printAssociations: aCollection withCo
 		nextPutAll: ': Boolean =';
 		cr;
 		nextPutAll: '  ';
-		nextPutAll: (' AND ' join: ((aCollection with: aCollection2 collect: [ :t :c | self generateExistsClause: t withColumn: t ])))
+		nextPutAll: (' AND ' join: ((aCollection with: aCollection2 collect: [ :t :c | self generateExistsClause: t withColumn: c ])))
 ]
 
 { #category : #printing }
