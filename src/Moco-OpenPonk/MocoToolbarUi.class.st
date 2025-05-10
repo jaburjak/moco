@@ -24,9 +24,9 @@ sqlModel := MocoRdbToSqlOracleRound transform: (dbModel second).
 ]
 
 { #category : #'private - processing' }
-MocoToolbarUi class >> runTransformations: aBuilder [
+MocoToolbarUi class >> runTransformationToSql: aBuilder [
 	| command |
-	command := MocoOpenPonkRunTransformationsCommand new.
+	command := MocoOpenPonkRunTransformationToSqlCommand new.
 	command workbench: (aBuilder model workbench).
 	
 	command execute
@@ -55,6 +55,6 @@ MocoToolbarUi class >> toolbarMenu: aBuilder [
 		parent: #opmoco;
 		label: 'Transform to SQL';
 		action: [
-			self runTransformations: aBuilder
+			self runTransformationToSql: aBuilder
 		]
 ]

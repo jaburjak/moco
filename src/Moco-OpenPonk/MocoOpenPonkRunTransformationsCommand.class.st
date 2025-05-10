@@ -1,5 +1,5 @@
 "
-UI command that transforms an OntoUML model to SQL and displays the results.
+Base class for UI commands that execute Moco transformations.
 "
 Class {
 	#name : #MocoOpenPonkRunTransformationsCommand,
@@ -27,6 +27,13 @@ MocoOpenPonkRunTransformationsCommand class >> choiceLogOf: anOPPackage [
 	choiceLogs ifNil: [ ^ Dictionary new ].
 	
 	^ choiceLogs at: anOPPackage ifAbsent: [ Dictionary new ]
+]
+
+{ #category : #'instance creation' }
+MocoOpenPonkRunTransformationsCommand class >> new [
+	(self asString = 'MocoOpenPonkRunTransformationsCommand')
+		ifTrue: [ ^ self subclassResponsibility ]
+		ifFalse: [ ^ super new ]
 ]
 
 { #category : #'private - accessing' }
@@ -89,30 +96,7 @@ MocoOpenPonkRunTransformationsCommand >> determineModelName: aString or: aString
 
 { #category : #execution }
 MocoOpenPonkRunTransformationsCommand >> execute [
-	| model ontoModel umlModel dbModel sqlModel transcript models |
-	model := self currentWorkbenchDiagram model.
-	
-	ontoModel := self readOntoUmlModel.
-	umlModel := MocoOntoUmlToUmlRound transform: ontoModel withEngineDo: [ :engine | engine choiceLog: (self class choiceLog: #ontouml of: model) ].
-	dbModel := MocoUmlToRdbRound transform: (umlModel output).
-	sqlModel := (self sqlRound) transform: (dbModel last).
-	
-	self class saveChoiceLog: ({ #ontouml->(umlModel choiceLog) } asDictionary) of: model in: (self workbench).
-	
-	transcript := (MocoSpApplication instance) new: MocoTranscriptPresenter.
-	
-	self addModel: ontoModel withLabel: 'OntoUML' toTranscript: transcript.
-	self addModel: (umlModel output) withLabel: 'UML' toTranscript: transcript.
-	self addModel: (dbModel first) withLabel: 'UML for RDB' toTranscript: transcript.
-	self addModel: (dbModel last) withLabel: 'Database' toTranscript: transcript.
-	self addModel: sqlModel withLabel: (self sqlRoundLabel) toTranscript: transcript.
-	
-	models := OrderedCollection new.
-	models add: (self packageModel: (umlModel output) as: (self determineModelName: 'UML Model' or: 'UML') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
-		add: (self packageModel: (dbModel first) as: (self determineModelName: 'UML Model for RDB' or: 'UML for RDB') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
-		add: (self packageModel: (dbModel last) as: (self determineModelName: 'RDB Model' or: 'RDB') usingRulesWithTag: 'Rule-Rdb' andClassPrefix: 'MocoOpenPonkRdb').
-	
-	self showModels: models andTranscript: transcript
+	^ self subclassResponsibility
 ]
 
 { #category : #'private - processing' }
@@ -120,6 +104,9 @@ MocoOpenPonkRunTransformationsCommand >> openModels: aCollection in: anOPWorkben
 	"Adds the given collection of models to the given workbench instance, opens them and focuses the last one."
 	
 	| controller replace |
+
+	aCollection ifEmpty: [ ^ self ].
+
 	controller := anOPWorkbench projectController.
 	
 	replace := nil.
@@ -185,6 +172,9 @@ MocoOpenPonkRunTransformationsCommand >> openOpenPonk: aCollection [
 	"Opens a new OpenPonk workbench instance."
 	
 	| project wb |
+
+	aCollection ifEmpty: [ ^ nil ].
+
 	project := OPProject new.
 	project name: 'Transformation Result'.
 	
@@ -276,26 +266,6 @@ MocoOpenPonkRunTransformationsCommand >> showModels: aCollection andTranscript: 
 	
 	aMocoTranscriptPresenter tabs layout children last click.
 	aMocoTranscriptPresenter body takeKeyboardFocus
-]
-
-{ #category : #'private - accessing' }
-MocoOpenPonkRunTransformationsCommand >> sqlRound [
-	| platform |
-	platform := MocoSettings sqlPlatform.
-	
-	(platform = 'Oracle') ifTrue: [ ^ MocoRdbToSqlOracleRound ].
-	
-	^ MocoRdbToSqlPostgresqlRound
-]
-
-{ #category : #'private - accessing' }
-MocoOpenPonkRunTransformationsCommand >> sqlRoundLabel [
-	| platform |
-	platform := MocoSettings sqlPlatform.
-	
-	(platform endsWith: 'SQL')
-		ifTrue: [ ^ platform ]
-		ifFalse: [ ^ (platform , ' SQL') ]
 ]
 
 { #category : #accessing }
