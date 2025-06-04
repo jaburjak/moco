@@ -11,7 +11,8 @@ Class {
 		'multiplicity',
 		'aggregation',
 		'frozen',
-		'navigable'
+		'navigable',
+		'ordered'
 	],
 	#category : #'Moco-Uml-Model'
 }
@@ -63,7 +64,8 @@ MocoUmlAssociationSide >> initialize [
 	visibility := MocoUmlVisibility public.
 	aggregation := MocoUmlAssociationAggregation new.
 	frozen := false.
-	navigable := false
+	navigable := false.
+	ordered := false
 ]
 
 { #category : #accessing }
@@ -104,6 +106,16 @@ MocoUmlAssociationSide >> navigable: aBoolean [
 	navigable := aBoolean ifNil: [ false ]
 ]
 
+{ #category : #accessing }
+MocoUmlAssociationSide >> ordered [
+	^ ordered
+]
+
+{ #category : #accessing }
+MocoUmlAssociationSide >> ordered: aBoolean [
+	ordered := aBoolean
+]
+
 { #category : #printing }
 MocoUmlAssociationSide >> printTo: aStream [
 	visibility printTo: aStream.
@@ -113,6 +125,7 @@ MocoUmlAssociationSide >> printTo: aStream [
 	multiplicity printTo: aStream.
 	aggregation ifShared: [ aStream nextPutAll: ' (shared)' ]; ifComposite: [ aStream nextPutAll: ' (composite)' ].
 	frozen ifTrue: [ aStream nextPutAll: ' {frozen}' ].
+	ordered ifTrue: [ aStream nextPutAll: ' {ordered}' ]
 ]
 
 { #category : #accessing }

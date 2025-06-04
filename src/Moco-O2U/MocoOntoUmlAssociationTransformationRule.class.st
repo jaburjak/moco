@@ -63,7 +63,8 @@ MocoOntoUmlAssociationTransformationRule >> toUmlAssociationSide: aMocoOntoUmlAs
 		multiplicity: (aMocoOntoUmlAssociationSide multiplicity);
 		name: (aMocoOntoUmlAssociationSide name);
 		frozen: (aMocoOntoUmlAssociationSide frozen);
-		navigable: (aMocoOntoUmlAssociationSide navigable).
+		navigable: (aMocoOntoUmlAssociationSide navigable);
+		ordered: (aMocoOntoUmlAssociationSide ordered).
 	
 	^ uml
 ]

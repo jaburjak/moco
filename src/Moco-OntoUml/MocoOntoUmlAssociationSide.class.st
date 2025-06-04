@@ -11,7 +11,8 @@ Class {
 		'multiplicity',
 		'shareability',
 		'frozen',
-		'navigable'
+		'navigable',
+		'ordered'
 	],
 	#category : #'Moco-OntoUml-Model'
 }
@@ -46,6 +47,7 @@ MocoOntoUmlAssociationSide >> initialize [
 	shareability := MocoOntoUmlAssociationShareability new.
 	frozen := false.
 	navigable := false.
+	ordered := false.
 	
 	^ self
 ]
@@ -88,6 +90,16 @@ MocoOntoUmlAssociationSide >> navigable: aBoolean [
 	navigable := aBoolean ifNil: [ false ]
 ]
 
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> ordered [
+	^ ordered
+]
+
+{ #category : #accessing }
+MocoOntoUmlAssociationSide >> ordered: aBoolean [
+	ordered := aBoolean
+]
+
 { #category : #printing }
 MocoOntoUmlAssociationSide >> printTo: aStream [
 	visibility printTo: aStream.
@@ -96,7 +108,8 @@ MocoOntoUmlAssociationSide >> printTo: aStream [
 	aStream nextPutAll: ' '.
 	multiplicity printTo: aStream.
 	shareability ifShared: [ aStream nextPutAll: ' (shared)' ]; ifExclusive: [ aStream nextPutAll: ' (exclusive)' ].
-	frozen ifTrue: [ aStream nextPutAll: ' {frozen}' ]
+	frozen ifTrue: [ aStream nextPutAll: ' {frozen}' ].
+	ordered ifTrue: [ aStream nextPutAll: ' {ordered}' ]
 ]
 
 { #category : #accessing }

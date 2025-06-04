@@ -71,7 +71,8 @@ MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkEnd: aMocoUmlAssociati
 	op name: (aMocoUmlAssociationSide name ifEmpty: [ nil ] ifNotEmpty: [ aMocoUmlAssociationSide name ]);
 		isReadOnly: (aMocoUmlAssociationSide frozen);
 		visibility: (aMocoUmlAssociationSide visibility visibility);
-		aggregation: (aMocoUmlAssociationSide aggregation type).
+		aggregation: (aMocoUmlAssociationSide aggregation type);
+		isOrdered: (aMocoUmlAssociationSide ordered).
 		
 	multiplicity := MocoOpenPonkUmlAttributeTransformation toOpenPonkMultiplicity: (aMocoUmlAssociationSide multiplicity).
 	
