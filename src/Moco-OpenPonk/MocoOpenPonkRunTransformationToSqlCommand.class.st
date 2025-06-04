@@ -42,7 +42,7 @@ MocoOpenPonkRunTransformationToSqlCommand >> sqlRound [
 	
 	(platform = 'Oracle') ifTrue: [ ^ MocoRdbToSqlOracleRound ].
 	(platform = 'PostgreSQL') ifTrue: [ ^ MocoRdbToSqlPostgresqlRound ].
-	(platform = 'MySQL') ifTrue: [ ^ MocoRdbToSqlMysqlRound ].
+	"(platform = 'MySQL') ifTrue: [ ^ MocoRdbToSqlMysqlRound ]."
 	
 	self error: 'Unrecognized SQL platform.'
 ]
