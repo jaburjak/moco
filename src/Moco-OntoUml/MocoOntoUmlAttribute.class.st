@@ -10,7 +10,8 @@ Class {
 		'static',
 		'immutable',
 		'multiplicity',
-		'type'
+		'type',
+		'ordered'
 	],
 	#category : #'Moco-OntoUml-Model'
 }
@@ -33,7 +34,8 @@ MocoOntoUmlAttribute >> initialize [
 	static := false.
 	visibility := MocoUmlVisibility public.
 	multiplicity := MocoUmlMultiplicity new.
-	immutable := false
+	immutable := false.
+	ordered := false
 ]
 
 { #category : #accessing }
@@ -55,6 +57,16 @@ MocoOntoUmlAttribute >> name: aString [
 	]
 ]
 
+{ #category : #accessing }
+MocoOntoUmlAttribute >> ordered [
+	^ ordered
+]
+
+{ #category : #accessing }
+MocoOntoUmlAttribute >> ordered: aBoolean [
+	ordered := aBoolean
+]
+
 { #category : #printing }
 MocoOntoUmlAttribute >> printTo: aStream [
 	aStream nextPutAll: '| '.
@@ -65,7 +77,8 @@ MocoOntoUmlAttribute >> printTo: aStream [
 	aStream nextPutAll: ' '.
 	multiplicity printTo: aStream.
 	
-	immutable ifTrue: [ aStream nextPutAll: ' {readOnly}' ]
+	immutable ifTrue: [ aStream nextPutAll: ' {readOnly}' ].
+	ordered ifTrue: [ aStream nextPutAll: ' {ordered}' ]
 ]
 
 { #category : #accessing }

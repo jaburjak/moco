@@ -41,7 +41,8 @@ MocoOntoUmlClassTransformationRule >> toUmlAttribute: aMocoOntoUmlAttribute [
 		name: (aMocoOntoUmlAttribute name);
 		static: (aMocoOntoUmlAttribute static);
 		immutable: (aMocoOntoUmlAttribute immutable);
-		visibility: (aMocoOntoUmlAttribute visibility).
+		visibility: (aMocoOntoUmlAttribute visibility);
+		ordered: (aMocoOntoUmlAttribute ordered).
 	
 	aMocoOntoUmlAttribute type ifNotNil: [ uml type: (MocoUmlType newFromName: (aMocoOntoUmlAttribute type name)) ].
 	

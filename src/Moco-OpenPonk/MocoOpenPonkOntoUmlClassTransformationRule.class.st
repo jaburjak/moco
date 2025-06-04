@@ -50,6 +50,7 @@ MocoOpenPonkOntoUmlClassTransformationRule >> transformAttribute: anOPUMLAttribu
 	attr visibility visibility: ((MocoOpenPonkUmlAttributeTransformation toMocoVisibility: (anOPUMLAttribute visibility)) visibility).
 	attr static: anOPUMLAttribute isStatic.
 	attr immutable: anOPUMLAttribute isReadOnly.
+	attr ordered: anOPUMLAttribute isOrdered.
 	attr multiplicity lower: (MocoUmlMultiplicityBound value: ((anOPUMLAttribute lowerValue) ifNil: [ 1 ] ifNotNil: [ anOPUMLAttribute lowerValue value ])).
 	attr multiplicity upper: (MocoUmlMultiplicityBound value: ((anOPUMLAttribute upperValue) ifNil: [ 1 ] ifNotNil: [ anOPUMLAttribute upperValue value ])).
 	anOPUMLAttribute type ifNotNil: [ attr type: (MocoUmlType newFromName: (anOPUMLAttribute type name)) ].

@@ -53,7 +53,8 @@ MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttribute: aMocoUmlAttribute
 	attr name: (aMocoUmlAttribute name);
 		visibility: (aMocoUmlAttribute visibility visibility);
 		isReadOnly: (aMocoUmlAttribute immutable);
-		isStatic: (aMocoUmlAttribute static).
+		isStatic: (aMocoUmlAttribute static);
+		isOrdered: (aMocoUmlAttribute ordered).
 	
 	aMocoUmlAttribute type ifNotNil: [
 		attr type: (self resolveAttributeType: (aMocoUmlAttribute type))
