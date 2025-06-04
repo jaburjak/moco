@@ -1,8 +1,10 @@
 = Moco
 
-Moco{empty}footnote:moco[Moco is an acronym for “model converter”.] is a library that implements automated transformation of an OntoUML model to SQL.
+Moco{empty}footnote:moco[Moco is an acronym for “model converter”.] is a library that implements automated transformations of OntoUML model to SQL and https://alloytools.org/[Alloy].
 
 == Features
+
+=== OntoUML to SQL
 
 The library can transform any valid OntoUML model into a SQL script that instantiates an empty database, which can store data described by the conceptual model. All constraints implied by the OntoUML model are transformed to database triggers to ensure data consistency.
 
@@ -14,19 +16,27 @@ The transformation is executed in three stages:
 
 Moco supports PostgreSQL and Oracle as the target relational database platform.
 
+=== OntoUML to Alloy
+
+The library generates an Alloy specification from any valid OntoUML model, which can be used to verify that the model is instantiable and to generate example instances in the https://alloytools.org/download.html[Alloy Analyzer].
+
+The modal aspects of OntoUML are verified by using instances of a `World` signature that correspond to different points in the life-time of the model (https://lib.jucs.org/article/29828/[Benevides, 2010]).
+
+To succesfully execute the verification, the transformed Alloy specification must be placed into a skeleton. Additionally, the World Structure and Ontological Properties modules must be available. All three artifacts are attached in the `docs/alloy` directory in this repository.
+
 == Usage
 
 This library is primarily intended to be used as a plugin to https://openponk.org/[OpenPonk] — a modeling tool that supports OntoUML. A prebuilt distribution of OpenPonk that includes Moco is available at https://gitlab.fit.cvut.cz/jaburjak/openponk-moco[gitlab.fit.cvut.cz/jaburjak/openponk-moco].
 
-The transformation can be invoked by menu _Diagram_ » _Moco_ » _Transform to SQL_.
+The transformation can be invoked by menu _Diagram_ » _Moco_ » _Transform to SQL_ (or Alloy).
 
-image::docs/openponk-1.png[]
+image::docs/readme_files/openponk-1.png[]
 
-image::docs/openponk-2.png[]
+image::docs/readme_files/openponk-2.png[]
 
-image::docs/openponk-3.png[]
+image::docs/readme_files/openponk-3.png[]
 
-The target SQL platform can be selected in the Settings Browser.
+For the SQL transformation, the target platform (Oracle or PostgreSQL) can be selected in the Settings Browser.
 
 === Manual Installation
 
@@ -47,4 +57,5 @@ Created by Jakub Jabůrek, released under the MIT License. Please see the https:
 
 == Acknowledgements
 
-The approach for the transformation of OntoUML to SQL was developed by Dr. Zdeněk Rybola in his Ph.D. thesis __Towards OntoUML for Software Engineering: Transformation of OntoUML into Relational Databases__ (2017).
+* The approach for the transformation of OntoUML to Oracle SQL was developed by Dr. Zdeněk Rybola in his Ph.D. thesis __Towards OntoUML for Software Engineering: Transformation of OntoUML into Relational Databases__ (2017).
+* The approach for the transformation of OntoUML to Alloy was developed by Dr. Tiago P. Sales in their Ph.D. thesis __Ontology Validation for Managers__ (2014).

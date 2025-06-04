@@ -1,0 +1,10 @@
+= OntoUML to Alloy
+
+To succesfully execute the OntoUML model simulation in the https://alloytools.org/download.html[Alloy Analyzer], you must
+
+1. obtain the World Structure module — file `world_structure.als`,
+2. obtain the Ontological Properties module — file `ontological_properties.als`,
+3. obtain the skeleton — file `skeleton.als`, and
+4. place the transformation result into the skeleton at the line indicated by the appropriate comment.
+
+All three files were sourced from the https://github.com/fernandoam14/ontouml-js/tree/41bf42b1ada449f28021fbf0b04b729feeb792ff[fernandoam14/ontouml-js] repository, which is licensed under Apache License 2.0.
