@@ -15,7 +15,7 @@ jobs:
           cd test/
           mkdir pharo/
           cd pharo/
-          wget -q -O pharo.zip 'https://files.pharo.org/get-files/110/pharo-vm-Linux-x86_64-stable.zip'
+          wget -q -O pharo.zip 'https://files.pharo.org/get-files/120/pharo-vm-Linux-x86_64-stable.zip'
           unzip -q pharo.zip
           cd ../image/
           unzip -q openponk.zip

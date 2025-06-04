@@ -39,7 +39,7 @@ Metacello new baseline: 'Moco';
 	load.
 ----
 
-Currently, OpenPonk nightly released on 2024/03/02 and Pharo 11 are supported.
+Currently, https://github.com/OpenPonk/class-editor/releases/tag/v4.1.3[OpenPonk 4.1.3] and Pharo 12 are supported.
 
 == License
 
