@@ -78,6 +78,24 @@ MocoTranscriptPresenter >> initializeWindow: aWindowPresenter [
 		initialExtent: 800@500
 ]
 
+{ #category : #'private - processing' }
+MocoTranscriptPresenter >> populateSaveDialogFileExtensions: aStSaveFilePresenter [
+	| tabName |
+	tabName := self focusedSection.
+
+	(tabName includesSubstring: 'SQL') ifTrue: [
+		aStSaveFilePresenter extensions: #(sql) named: 'SQL file'.
+		^ self
+	].
+
+	(tabName = 'Alloy') ifTrue: [
+		aStSaveFilePresenter extensions: #(als) named: 'Alloy specification'.
+		^ self
+	].
+
+	aStSaveFilePresenter extensions: #(txt) named: 'Plain text file'
+]
+
 { #category : #accessing }
 MocoTranscriptPresenter >> saveButton [
 	^ saveButton
@@ -86,12 +104,10 @@ MocoTranscriptPresenter >> saveButton [
 { #category : #'private - processing' }
 MocoTranscriptPresenter >> saveTranscript [
 	| file |
-	file := StFBSaveFileDialog new
+	file := StSaveFilePresenter new
 		title: 'Save Transformation Transcript'.
-	
-	(self focusedSection includesSubstring: 'SQL')
-		ifTrue: [ file extensions: #(sql) named: 'SQL file' ]
-		ifFalse: [ file extensions: #(txt) named: 'Plain text file' ].
+
+	self populateSaveDialogFileExtensions: file.
 	
 	file := file openModal.
 	
