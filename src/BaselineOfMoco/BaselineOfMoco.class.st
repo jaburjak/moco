@@ -30,6 +30,7 @@ BaselineOfMoco >> baseline: spec [
 					package: 'Moco-D2S-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-D2S') ];
 					package: 'Moco-SqlPostgresql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
 					package: 'Moco-D2SPostgresql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlPostgresql') ];
+					package: 'Moco-SqlMysql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
 					package: 'Moco-OpenPonk' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-O2U' 'Moco-U2D' 'Moco-D2S') ] ];
 					package: 'Moco-OpenPonk-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-OpenPonk') ]
 ]
