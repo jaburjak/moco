@@ -47,7 +47,7 @@ MocoUmlMultiplicityBound >> isBounded [
 
 { #category : #testing }
 MocoUmlMultiplicityBound >> isMandatory [
-	^ (value isNil) or: [ value > 0 ]
+	^ (value isNotNil) and: [ value > 0 ]
 ]
 
 { #category : #testing }
@@ -72,7 +72,7 @@ MocoUmlMultiplicityBound >> isOne [
 
 { #category : #testing }
 MocoUmlMultiplicityBound >> isOptional [
-	^ (value isNotNil) and: [ value <= 0 ]
+	^ (value isNil) or: [ value <= 0 ]
 ]
 
 { #category : #testing }
