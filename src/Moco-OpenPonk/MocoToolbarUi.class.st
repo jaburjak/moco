@@ -24,6 +24,15 @@ sqlModel := MocoRdbToSqlOracleRound transform: (dbModel second).
 ]
 
 { #category : #'private - processing' }
+MocoToolbarUi class >> runTransformationToAlloy: aBuilder [
+	| command |
+	command := MocoOpenPonkRunTransformationToAlloyCommand new.
+	command workbench: (aBuilder model workbench).
+	
+	command execute
+]
+
+{ #category : #'private - processing' }
 MocoToolbarUi class >> runTransformationToSql: aBuilder [
 	| command |
 	command := MocoOpenPonkRunTransformationToSqlCommand new.
@@ -56,5 +65,12 @@ MocoToolbarUi class >> toolbarMenu: aBuilder [
 		label: 'Transform to SQL';
 		action: [
 			self runTransformationToSql: aBuilder
+		].
+		
+	(aBuilder item: #opmocotransformalloy)
+		parent: #opmoco;
+		label: 'Transform to Alloy';
+		action: [
+			self runTransformationToAlloy: aBuilder
 		]
 ]
