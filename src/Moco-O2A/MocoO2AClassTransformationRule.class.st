@@ -2,8 +2,8 @@
 Transforms OntoUML classes to an Alloy specification.
 "
 Class {
-	#name : #MocoO2AClassTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
+	#name : 'MocoO2AClassTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
 	#instVars : [
 		'natureCache'
 	],
@@ -13,10 +13,12 @@ Class {
 		'rigidTypes',
 		'substantials'
 	],
-	#category : #'Moco-O2A-Rule'
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AClassTransformationRule class >> antiRigidTypes [
 	antiRigidTypes ifNotNil: [ ^ antiRigidTypes ].
 
@@ -25,7 +27,7 @@ MocoO2AClassTransformationRule class >> antiRigidTypes [
 	^ antiRigidTypes
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AClassTransformationRule class >> moments [
 	moments ifNotNil: [ ^ moments ].
 	
@@ -34,7 +36,7 @@ MocoO2AClassTransformationRule class >> moments [
 	^ moments
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AClassTransformationRule class >> rigidTypes [
 	rigidTypes ifNotNil: [ ^ rigidTypes ].
 
@@ -43,7 +45,7 @@ MocoO2AClassTransformationRule class >> rigidTypes [
 	^ rigidTypes
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AClassTransformationRule class >> substantials [
 	substantials ifNotNil: [ ^ substantials ].
 	
@@ -52,24 +54,24 @@ MocoO2AClassTransformationRule class >> substantials [
 	^ substantials
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AClassTransformationRule >> abstractFact [
 	^ self findFact: 'abstractClass'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AClassTransformationRule >> antiRigidFact [
 	^ self findFact: 'antiRigid'
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> determineIntrinsicNatureOf: aMocoOntoUmlClass [
 	(self is: aMocoOntoUmlClass aKindOf: (self class substantials)) ifTrue: [ ^ #Object ].
 	(self is: aMocoOntoUmlClass aKindOf: (self class moments)) ifTrue: [ ^ #Aspect ].
 	^ #Endurant
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> determineNatureOf: aMocoOntoUmlClass [
 	| nature |
 
@@ -82,7 +84,7 @@ MocoO2AClassTransformationRule >> determineNatureOf: aMocoOntoUmlClass [
 	^ nature
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> determineNatureOf: aMocoOntoUmlClass ignore: aCollection [
 	| nature coll ignore |
 	nature := self determineIntrinsicNatureOf: aMocoOntoUmlClass.
@@ -115,7 +117,7 @@ MocoO2AClassTransformationRule >> determineNatureOf: aMocoOntoUmlClass ignore: a
 	^ nature
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2AClassTransformationRule >> execute [
 	| classes |
 	natureCache := OrderedCollection new.
@@ -136,12 +138,12 @@ MocoO2AClassTransformationRule >> execute [
 	natureCache := OrderedCollection new. "do not leak memory with references to model objects"
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> findAlloyNameOf: aMocoOntoUmlClass [
 	^ (engine detectOutputElement: aMocoOntoUmlClass ofKind: MocoAlloySignatureField) name
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassTransformationRule >> generateAbstractFactFor: aMocoOntoUmlClass withField: aMocoAlloySignatureField [
 	| subtypes |
 
@@ -153,12 +155,12 @@ MocoO2AClassTransformationRule >> generateAbstractFactFor: aMocoOntoUmlClass wit
 	self appendFact: (self abstractFact) with: ('all w: World | w.' , (aMocoAlloySignatureField name) , ' = ' , ('+' join: subtypes))
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> generateAbstractFacts: aCollection [
 	aCollection do: [ :each | self generateAbstractFactFor: each withField: (engine detectOutputElement: each ofKind: MocoAlloySignatureField) ]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassTransformationRule >> generateExistenceConstraint: aCollection [
 	| universals facts |
 	universals := Dictionary new.
@@ -196,12 +198,12 @@ MocoO2AClassTransformationRule >> generateExistenceConstraint: aCollection [
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassTransformationRule >> generateFieldSignatureOf: aMocoOntoUmlClass [
 	^ 'exists:>' , (self determineNatureOf: aMocoOntoUmlClass)
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassTransformationRule >> generateIdentityConstraint: aCollection [
 	| classes fact |
 	classes := (aCollection select: [ :e | self isTopLevel: e ]) collect: [ :e | self findAlloyNameOf: e ].
@@ -216,7 +218,7 @@ MocoO2AClassTransformationRule >> generateIdentityConstraint: aCollection [
 	engine output setModified
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassTransformationRule >> generateRigidityFactFor: aMocoOntoUmlClass withField: aMocoAlloySignatureField [
 	| rigid antiRigid |
 
@@ -235,39 +237,39 @@ MocoO2AClassTransformationRule >> generateRigidityFactFor: aMocoOntoUmlClass wit
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> generateRigidityFacts: aCollection [
 	aCollection do: [ :each | self generateRigidityFactFor: each withField: (engine detectOutputElement: each ofKind: MocoAlloySignatureField) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoO2AClassTransformationRule >> initialize [
 	super initialize.
 
 	natureCache := OrderedCollection new
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> is: anObject aKindOf: aCollection [
 	^ aCollection anySatisfy: [ :e | anObject class == e ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassTransformationRule >> isTopLevel: aMocoOntoUmlClass [
 	^ engine input elements noneSatisfy: [ :e | (e isKindOf: MocoOntoUmlGeneralization) and: [ e subtype == aMocoOntoUmlClass ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2AClassTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AClassTransformationRule >> rigidFact [
 	^ self findFact: 'rigid'
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassTransformationRule >> transformClass: aMocoOntoUmlClass [
 	| world field |
 	world := self worldSig.

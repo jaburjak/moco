@@ -2,12 +2,14 @@
 Transforms OntoUML generalization relationships to an Alloy specification.
 "
 Class {
-	#name : #MocoO2AGeneralizationTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2AGeneralizationTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2AGeneralizationTransformationRule >> execute [
 	| generalizations |
 	generalizations := engine input
@@ -20,22 +22,22 @@ MocoO2AGeneralizationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AGeneralizationTransformationRule >> findAlloyNameOf: aMocoOntoUmlClass [
 	^ (engine detectOutputElement: aMocoOntoUmlClass ofKind: MocoAlloySignatureField) name
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AGeneralizationTransformationRule >> generalizationFact [
 	^ self findFact: 'generalization'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2AGeneralizationTransformationRule >> priority [
 	^ 70
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AGeneralizationTransformationRule >> transformGeneralization: aMocoOntoUmlGeneralization [
 	| fact |
 	fact := self generalizationFact.

@@ -2,26 +2,28 @@
 Abstract base for OntoUML to Alloy transformation rules.
 "
 Class {
-	#name : #MocoO2ATransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2ATransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoO2ATransformationRule class >> new [
 	(self asString = 'MocoO2ATransformationRule')
 		ifTrue: [ ^ self subclassResponsibility ]
 		ifFalse: [ ^ super new ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoO2ATransformationRule class >> newWithEngine: anEngine [
 	(self asString = 'MocoO2ATransformationRule')
 		ifTrue: [ ^ self subclassResponsibility ]
 		ifFalse: [ ^ super newWithEngine: anEngine ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ATransformationRule >> appendFact: aMocoAlloyFact with: aString [
 	(aMocoAlloyFact body) ifNotEmpty: [
 		aMocoAlloyFact body: ((aMocoAlloyFact body) , (String cr))
@@ -32,7 +34,7 @@ MocoO2ATransformationRule >> appendFact: aMocoAlloyFact with: aString [
 	engine output setModified
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2ATransformationRule >> findFact: aString [
 	"Returns or creates an Alloy fact with the given name."
 
@@ -49,19 +51,19 @@ MocoO2ATransformationRule >> findFact: aString [
 		]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ATransformationRule >> toAlloyName: aString [
 	^ self toAlloyName: aString withConverter: [ :n | MocoNamingUtils toPascalCase: n ] ifEmpty: [ nil ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ATransformationRule >> toAlloyName: aString ifEmpty: aString2 [
 	(aString isEmptyOrNil) ifTrue: [ ^ self toAlloyName: aString2 ].
 
 	^ self toAlloyName: aString
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ATransformationRule >> toAlloyName: aString withConverter: aBlock ifEmpty: aString2 [
 	| name |
 	name := aString.
@@ -80,7 +82,7 @@ MocoO2ATransformationRule >> toAlloyName: aString withConverter: aBlock ifEmpty:
 	] seed: name
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ATransformationRule >> toLowerAlloyName: aString [
 	^ self toAlloyName: aString withConverter: [ :n |
 		| parts |
@@ -107,14 +109,14 @@ MocoO2ATransformationRule >> toLowerAlloyName: aString [
 	] ifEmpty: [ nil ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ATransformationRule >> toLowerAlloyName: aString ifEmpty: aString2 [
 	(aString isEmptyOrNil) ifTrue: [ ^ self toLowerAlloyName: aString2 ].
 
 	^ self toLowerAlloyName: aString
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2ATransformationRule >> worldSig [
 	"Returns the World main signature."
 

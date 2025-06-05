@@ -2,12 +2,14 @@
 Transforms OntoUML generalization sets to an Alloy specification.
 "
 Class {
-	#name : #MocoO2AGeneralizationSetTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2AGeneralizationSetTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2AGeneralizationSetTransformationRule >> execute [
 	| sets |
 	sets := engine input
@@ -20,34 +22,33 @@ MocoO2AGeneralizationSetTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AGeneralizationSetTransformationRule >> findAlloyNameOf: aMocoOntoUmlClass [
 	^ (engine detectOutputElement: aMocoOntoUmlClass ofKind: MocoAlloySignatureField) name
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2AGeneralizationSetTransformationRule >> generalizationSetFact [
 	^ self findFact: 'generalizationSet'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2AGeneralizationSetTransformationRule >> priority [
 	^ 69
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AGeneralizationSetTransformationRule >> transformGeneralizationSet: aMocoOntoUmlGeneralizationSet [
-	| fact subclasses |
-	fact := self generalizationSetFact.
+	| subclasses |
 	subclasses := aMocoOntoUmlGeneralizationSet members collect: [ :e | self findAlloyNameOf: (e subtype) ].
 
 	(aMocoOntoUmlGeneralizationSet disjoint) ifTrue: [
 		((subclasses size) > 1) ifTrue: [
-			self appendFact: fact with: ('disj[' , (', ' join: subclasses) , ']')
+			self appendFact: (self generalizationSetFact) with: ('disj[' , (', ' join: subclasses) , ']')
 		]
 	].
 
 	(aMocoOntoUmlGeneralizationSet covering) ifTrue: [
-		self appendFact: fact with: ((self findAlloyNameOf: (aMocoOntoUmlGeneralizationSet members first supertype)) , ' = ' , ('+' join: subclasses))
+		self appendFact: (self generalizationSetFact) with: ((self findAlloyNameOf: (aMocoOntoUmlGeneralizationSet members first supertype)) , ' = ' , ('+' join: subclasses))
 	]
 ]

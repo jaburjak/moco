@@ -2,12 +2,14 @@
 Transforms associations between universals in an OntoUML model to an Alloy specification.
 "
 Class {
-	#name : #MocoO2ARelationTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2ARelationTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2ARelationTransformationRule >> execute [
 	| associations |
 	associations := engine input
@@ -19,12 +21,12 @@ MocoO2ARelationTransformationRule >> execute [
 	associations do: [ :each |  engine input guard: each with: #MocoO2ARelationTransformationRule ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelationTransformationRule >> findClassFieldFor: aMocoOntoUmlClass [
 	^ engine detectOutputElement: aMocoOntoUmlClass ofKind: MocoAlloySignatureField
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelationTransformationRule >> findEndFunctionFor: aMocoOntoUmlAssociationSide ofRelation: aMocoOntoUmlAssociation [
 	| fns |
 	fns := engine selectOutputElements: aMocoOntoUmlAssociation ofKind: MocoAlloyFunction.
@@ -36,7 +38,7 @@ MocoO2ARelationTransformationRule >> findEndFunctionFor: aMocoOntoUmlAssociation
 	^ nil
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> generateAcyclicFactFor: aMocoOntoUmlAssociation [
 	| fact field expr |
 	fact := self findFact: 'acyclic'.
@@ -54,7 +56,7 @@ MocoO2ARelationTransformationRule >> generateAcyclicFactFor: aMocoOntoUmlAssocia
 	engine output setModified
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> generateImmutabilityFactOf: aMocoOntoUmlAssociation [
 	| relation immSrc immTgt |
 	relation := (engine detectOutputElement: aMocoOntoUmlAssociation ofKind: MocoAlloySignatureField) name.
@@ -83,7 +85,7 @@ MocoO2ARelationTransformationRule >> generateImmutabilityFactOf: aMocoOntoUmlAss
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> generateMultiplicityFactFor: aMocoOntoUmlAssociationSide of: aMocoOntoUmlAssociation [
 	| lower upper fact name conditions |
 	lower := aMocoOntoUmlAssociationSide multiplicity lower.
@@ -110,13 +112,13 @@ MocoO2ARelationTransformationRule >> generateMultiplicityFactFor: aMocoOntoUmlAs
 	engine output setModified
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelationTransformationRule >> generateMultiplicityFactOf: aMocoOntoUmlAssociation [
 	self generateMultiplicityFactFor: (aMocoOntoUmlAssociation source) of: aMocoOntoUmlAssociation;
 		generateMultiplicityFactFor: (aMocoOntoUmlAssociation target) of: aMocoOntoUmlAssociation
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> generateOrderingFactFor: aMocoOntoUmlAssociation withField: aMocoAlloySignatureField [
 	| className |
 
@@ -131,7 +133,7 @@ MocoO2ARelationTransformationRule >> generateOrderingFactFor: aMocoOntoUmlAssoci
 		with: ('all w:World, x: w.' , className ,', y:w.' , className , ' | lone x.((w.' , (aMocoAlloySignatureField name) , ').y)')
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> generateSourceEndFnFor: aMocoOntoUmlAssociation withField: aMocoAlloySignatureField [
 	| name fun |
 	(aMocoOntoUmlAssociation source name)
@@ -160,7 +162,7 @@ MocoO2ARelationTransformationRule >> generateSourceEndFnFor: aMocoOntoUmlAssocia
 	^ fun
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> generateTargetEndFnFor: aMocoOntoUmlAssociation withField: aMocoAlloySignatureField [
 	| name fun |
 	(aMocoOntoUmlAssociation target name)
@@ -189,17 +191,17 @@ MocoO2ARelationTransformationRule >> generateTargetEndFnFor: aMocoOntoUmlAssocia
 	^ fun
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2ARelationTransformationRule >> immutabilityFact [
 	^ self findFact: 'associationProperties'
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelationTransformationRule >> isOrdered: aMocoOntoUmlAssociation [
 	^ (aMocoOntoUmlAssociation source ordered) or: [ aMocoOntoUmlAssociation target ordered ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelationTransformationRule >> isTernary: aMocoOntoUmlAssociation [
 	| field |
 	field := engine selectOutputElements: aMocoOntoUmlAssociation ofKind: MocoAlloySignatureField.
@@ -211,17 +213,17 @@ MocoO2ARelationTransformationRule >> isTernary: aMocoOntoUmlAssociation [
 	^ false
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoO2ARelationTransformationRule >> orderingFact [
 	^ self findFact: 'ordering'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2ARelationTransformationRule >> priority [
 	^ 50
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelationTransformationRule >> transformCardinality: aMocoOntoUmlAssociationSide [
 	| multiplicity |
 	multiplicity := aMocoOntoUmlAssociationSide multiplicity.
@@ -235,7 +237,7 @@ MocoO2ARelationTransformationRule >> transformCardinality: aMocoOntoUmlAssociati
 	^ #set
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> transformRelation: aMocoOntoUmlAssociation [
 	| sig field |
 	sig := ((self findClassFieldFor: (aMocoOntoUmlAssociation source element)) name) , ' ' , (self transformCardinality: (aMocoOntoUmlAssociation source)).

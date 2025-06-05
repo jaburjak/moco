@@ -2,12 +2,14 @@
 Transforms attributes defined in OntoUML classes to an Alloy specification.
 "
 Class {
-	#name : #MocoO2AClassAttributeTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2AClassAttributeTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassAttributeTransformationRule >> determineCardinality: aMocoOntoUmlAttribute [
 	| mult |
 	mult := #set.
@@ -21,7 +23,7 @@ MocoO2AClassAttributeTransformationRule >> determineCardinality: aMocoOntoUmlAtt
 	^ mult
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AClassAttributeTransformationRule >> determineTypeName: aMocoOntoUmlAttribute [
 	| type |
 	type := engine input elements select: [ :e | (e isKindOf: MocoOntoUmlClass) and: [ (e name) = (aMocoOntoUmlAttribute type name) ] ].
@@ -31,7 +33,7 @@ MocoO2AClassAttributeTransformationRule >> determineTypeName: aMocoOntoUmlAttrib
 	^ type
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2AClassAttributeTransformationRule >> execute [
 	| classes |
 	classes := engine input
@@ -43,7 +45,7 @@ MocoO2AClassAttributeTransformationRule >> execute [
 	classes do: [ :each | engine input guard: each with: #MocoO2AClassAttributeTransformationRule ]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassAttributeTransformationRule >> generateFunctionFor: aMocoOntoUmlAttribute of: aMocoAlloySignatureField withField: aMocoAlloySignatureField2 [
 	| name fun |
 	aMocoOntoUmlAttribute name
@@ -68,7 +70,7 @@ MocoO2AClassAttributeTransformationRule >> generateFunctionFor: aMocoOntoUmlAttr
 	^ fun
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassAttributeTransformationRule >> generateImmutabilityConstraintFor: aMocoAlloySignatureField fromAttr: aMocoOntoUmlAttribute of: aMocoOntoUmlClass [
 	| fact |
 	aMocoOntoUmlAttribute immutable ifFalse: [ ^ self ].
@@ -79,7 +81,7 @@ MocoO2AClassAttributeTransformationRule >> generateImmutabilityConstraintFor: aM
 	engine output setModified
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassAttributeTransformationRule >> generateMultiplicityFactFor: aMocoOntoUmlAttribute of: aMocoAlloySignatureField withFunction: aMocoAlloyFunction [
 	| clauses |
 	clauses := OrderedCollection new.
@@ -102,12 +104,12 @@ MocoO2AClassAttributeTransformationRule >> generateMultiplicityFactFor: aMocoOnt
 		with: ('all w: World, x: World.' , (aMocoAlloySignatureField name) , ' | (' , (' and ' join: clauses) , ')')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2AClassAttributeTransformationRule >> priority [
 	^ 99
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassAttributeTransformationRule >> transformAttribute: aMocoOntoUmlAttribute of: aMocoOntoUmlClass [
 	| cls sig field |
 	cls := engine detectOutputElement: aMocoOntoUmlClass ofKind: MocoAlloySignatureField.
@@ -128,7 +130,7 @@ MocoO2AClassAttributeTransformationRule >> transformAttribute: aMocoOntoUmlAttri
 		generateImmutabilityConstraintFor: field fromAttr: aMocoOntoUmlAttribute of: aMocoOntoUmlClass
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AClassAttributeTransformationRule >> transformAttributesOf: aMocoOntoUmlClass [
 	aMocoOntoUmlClass attributes do: [ :e | self transformAttribute: e of: aMocoOntoUmlClass ]
 ]

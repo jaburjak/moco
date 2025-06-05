@@ -2,12 +2,14 @@
 Transforms part-whole relationships in an OntoUML model to an Alloy specification.
 "
 Class {
-	#name : #MocoO2APartWholeRelationTransformationRule,
-	#superclass : #MocoO2ARelationTransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2APartWholeRelationTransformationRule',
+	#superclass : 'MocoO2ARelationTransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2APartWholeRelationTransformationRule >> execute [
 	| associations |
 	associations := engine input
@@ -19,7 +21,7 @@ MocoO2APartWholeRelationTransformationRule >> execute [
 	associations do: [ :each |  engine input guard: each with: #MocoO2APartWholeRelationTransformationRule ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2APartWholeRelationTransformationRule >> generateNonShareableFactFor: aMocoOntoUmlPartWholeAssociation withSide: aMocoOntoUmlAssociationSide [
 	| wholeSide wholeFn fact otherWholes |
 	wholeSide := aMocoOntoUmlPartWholeAssociation source.
@@ -46,12 +48,12 @@ MocoO2APartWholeRelationTransformationRule >> generateNonShareableFactFor: aMoco
 	] 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2APartWholeRelationTransformationRule >> priority [
 	^ 49
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2APartWholeRelationTransformationRule >> transformRelation: aMocoOntoUmlPartWholeAssociation [
 	"basic transformation already performed by MocoO2ARelationTransformationRule"
 

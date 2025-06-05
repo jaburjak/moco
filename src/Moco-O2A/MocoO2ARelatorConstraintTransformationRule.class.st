@@ -2,12 +2,14 @@
 Generates Alloy facts based on the Relator universals in an OntoUML model.
 "
 Class {
-	#name : #MocoO2ARelatorConstraintTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2ARelatorConstraintTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2ARelatorConstraintTransformationRule >> execute [
 	| classes |
 	classes := engine input
@@ -19,12 +21,12 @@ MocoO2ARelatorConstraintTransformationRule >> execute [
 	classes do: [ :each |  engine input guard: each with: #MocoO2ARelatorConstraintTransformationRule ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelatorConstraintTransformationRule >> findClassFieldFor: aMocoOntoUmlClass [
 	^ engine detectOutputElement: aMocoOntoUmlClass ofKind: MocoAlloySignatureField
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelatorConstraintTransformationRule >> findEndFunctionOpposite: aMocoOntoUmlAssociationSide ofRelation: aMocoOntoUmlAssociation [
 	| fns |
 	fns := engine selectOutputElements: aMocoOntoUmlAssociation ofKind: MocoAlloyFunction.
@@ -36,13 +38,13 @@ MocoO2ARelatorConstraintTransformationRule >> findEndFunctionOpposite: aMocoOnto
 	^ nil
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ARelatorConstraintTransformationRule >> findMediationRelationsOf: aMocoOntoUmlRelator [
 	^ engine input elements select: [ :e | (e isKindOf: MocoOntoUmlMediationAssociation) and: [
 			((e source element) == aMocoOntoUmlRelator) or: [ (e target element) == aMocoOntoUmlRelator ] ] ]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelatorConstraintTransformationRule >> generateImmutabilityConstraintOf: aMocoOntoUmlRelator [
 	| mediations fact name |
 	mediations := self findMediationRelationsOf: aMocoOntoUmlRelator.
@@ -73,7 +75,7 @@ MocoO2ARelatorConstraintTransformationRule >> generateImmutabilityConstraintOf: 
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ARelatorConstraintTransformationRule >> generateRelatorConstraintOf: aMocoOntoUmlRelator [
 	| relations fact |
 	relations := self findMediationRelationsOf: aMocoOntoUmlRelator.
@@ -90,7 +92,7 @@ MocoO2ARelatorConstraintTransformationRule >> generateRelatorConstraintOf: aMoco
 	self generateImmutabilityConstraintOf: aMocoOntoUmlRelator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2ARelatorConstraintTransformationRule >> priority [
 	^ 30
 ]

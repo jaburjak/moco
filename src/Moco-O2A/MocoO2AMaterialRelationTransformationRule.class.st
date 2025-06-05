@@ -2,12 +2,14 @@
 Transforms the Material relationship in an OntoUML model to an Alloy specification.
 "
 Class {
-	#name : #MocoO2AMaterialRelationTransformationRule,
-	#superclass : #MocoO2ARelationTransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2AMaterialRelationTransformationRule',
+	#superclass : 'MocoO2ARelationTransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2AMaterialRelationTransformationRule >> execute [
 	| associations |
 	associations := engine input
@@ -19,7 +21,7 @@ MocoO2AMaterialRelationTransformationRule >> execute [
 	associations do: [ :each |  engine input guard: each with: #MocoO2ARelationTransformationRule ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AMaterialRelationTransformationRule >> findRelatorFor: aMocoOntoUmlAssociation [
 	| mediations relators |
 
@@ -53,12 +55,12 @@ MocoO2AMaterialRelationTransformationRule >> findRelatorFor: aMocoOntoUmlAssocia
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2AMaterialRelationTransformationRule >> priority [
 	^ 51
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AMaterialRelationTransformationRule >> transformRelation: aMocoOntoUmlAssociation [
 	| relator sig field |
 	relator := self findRelatorFor: aMocoOntoUmlAssociation.

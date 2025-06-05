@@ -2,12 +2,14 @@
 Generates Alloy facts based on part-whole structures in an OntoUML model.
 "
 Class {
-	#name : #MocoO2AWholeConstraintTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2AWholeConstraintTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2AWholeConstraintTransformationRule >> execute [
 	| classes |
 	classes := engine input
@@ -19,7 +21,7 @@ MocoO2AWholeConstraintTransformationRule >> execute [
 	classes do: [ :each | engine input guard: each with: #MocoO2AWholeConstraintTransformationRule ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2AWholeConstraintTransformationRule >> findEndFunctionFor: aMocoOntoUmlAssociationSide ofRelation: aMocoOntoUmlAssociation [
 	| fns |
 	fns := engine selectOutputElements: aMocoOntoUmlAssociation ofKind: MocoAlloyFunction.
@@ -31,7 +33,7 @@ MocoO2AWholeConstraintTransformationRule >> findEndFunctionFor: aMocoOntoUmlAsso
 	^ nil
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2AWholeConstraintTransformationRule >> generateWeakSupplementationConstraintOf: aMocoOntoUmlClass [
 	| relations parts expr |
 	relations := engine input elements select: [ :e | (e isKindOf: MocoOntoUmlPartWholeAssociation) and: [
@@ -63,7 +65,7 @@ MocoO2AWholeConstraintTransformationRule >> generateWeakSupplementationConstrain
 	engine output setModified
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2AWholeConstraintTransformationRule >> priority [
 	^ 30
 ]

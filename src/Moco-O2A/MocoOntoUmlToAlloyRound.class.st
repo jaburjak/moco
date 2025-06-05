@@ -2,12 +2,14 @@
 OntoUML model to Alloy specification transformation round.
 "
 Class {
-	#name : #MocoOntoUmlToAlloyRound,
-	#superclass : #Object,
-	#category : #'Moco-O2A-Round'
+	#name : 'MocoOntoUmlToAlloyRound',
+	#superclass : 'Object',
+	#category : 'Moco-O2A-Round',
+	#package : 'Moco-O2A',
+	#tag : 'Round'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOntoUmlToAlloyRound class >> transform: aMocoModel [
 	"Transforms the given OntoUML model to Alloy."
 	| output |
@@ -17,7 +19,7 @@ MocoOntoUmlToAlloyRound class >> transform: aMocoModel [
 	^ output
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOntoUmlToAlloyRound class >> transform: aMocoModel withEngineDo: aBlock [
 	"Transforms the given OntoUML model to Alloy."
 	

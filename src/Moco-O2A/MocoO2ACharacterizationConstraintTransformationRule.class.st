@@ -2,12 +2,14 @@
 Generates Alloy facts based on Characterization relationships defined in an OntoUML model.
 "
 Class {
-	#name : #MocoO2ACharacterizationConstraintTransformationRule,
-	#superclass : #MocoO2ATransformationRule,
-	#category : #'Moco-O2A-Rule'
+	#name : 'MocoO2ACharacterizationConstraintTransformationRule',
+	#superclass : 'MocoO2ATransformationRule',
+	#category : 'Moco-O2A-Rule',
+	#package : 'Moco-O2A',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoO2ACharacterizationConstraintTransformationRule >> execute [
 	| associations |
 	associations := engine input
@@ -23,13 +25,13 @@ MocoO2ACharacterizationConstraintTransformationRule >> execute [
 	self generateAcyclicFact
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ACharacterizationConstraintTransformationRule >> findCharacterizations [
 	^ (engine input elements select: [ :e | e isKindOf: MocoOntoUmlCharacterizationAssociation ]) collect: [ :e |
 		{e. engine detectOutputElement: e ofKind: MocoAlloySignatureField} ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoO2ACharacterizationConstraintTransformationRule >> findMoments [
 	^ ((engine input elements select: [ :e | e isKindOf: MocoOntoUmlCharacterizationAssociation ]) flatCollect: [ :e |
 		| m |
@@ -40,7 +42,7 @@ MocoO2ACharacterizationConstraintTransformationRule >> findMoments [
 	]) collect: [ :e | engine detectOutputElement: e ofKind: MocoAlloySignatureField ]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ACharacterizationConstraintTransformationRule >> generateAcyclicFact [
 	| relations moments fact |
 	relations := self findCharacterizations.
@@ -64,7 +66,7 @@ MocoO2ACharacterizationConstraintTransformationRule >> generateAcyclicFact [
 	engine output setModified
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoO2ACharacterizationConstraintTransformationRule >> generateImmutabilityConstraintOf: aMocoOntoUmlCharacterizationAssociation [
 	| moment expr |
 	moment := (aMocoOntoUmlCharacterizationAssociation source element).
@@ -85,7 +87,7 @@ MocoO2ACharacterizationConstraintTransformationRule >> generateImmutabilityConst
 	engine output setModified
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoO2ACharacterizationConstraintTransformationRule >> priority [
 	^ 30
 ]
