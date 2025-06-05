@@ -28,7 +28,11 @@ MocoO2AClassAttributeTransformationRule >> determineTypeName: aMocoOntoUmlAttrib
 	| type |
 	type := engine input elements select: [ :e | (e isKindOf: MocoOntoUmlClass) and: [ (e name) = (aMocoOntoUmlAttribute type name) ] ].
 	type ifEmpty: [ type := nil ] ifNotEmpty: [ type := ('World.' , (engine detectOutputElement: (type first) ofKind: MocoAlloySignatureField) name) ].
-	type ifNil: [ type := aMocoOntoUmlAttribute type name ].
+
+	type ifNil: [
+		type := MocoNamingUtils toFirstUpperCase: (aMocoOntoUmlAttribute type name).
+		(type = 'Integer') ifTrue: [ type := 'Int' ]
+	].
 
 	^ type
 ]
