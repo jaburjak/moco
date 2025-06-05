@@ -87,7 +87,7 @@ MocoO2ARelationTransformationRule >> generateImmutabilityFactOf: aMocoOntoUmlAss
 
 { #category : 'private - transforming' }
 MocoO2ARelationTransformationRule >> generateMultiplicityFactFor: aMocoOntoUmlAssociationSide of: aMocoOntoUmlAssociation [
-	| lower upper fact name conditions |
+	| lower upper fact name conditions otherEnd |
 	lower := aMocoOntoUmlAssociationSide multiplicity lower.
 	upper := aMocoOntoUmlAssociationSide multiplicity upper.
 
@@ -107,7 +107,10 @@ MocoO2ARelationTransformationRule >> generateMultiplicityFactFor: aMocoOntoUmlAs
 
 	conditions ifEmpty: [ ^ self ].
 
-	self appendFact: fact with: ('all w: World, x: w.' , ((self findClassFieldFor: (aMocoOntoUmlAssociationSide element)) name) , ' | (' , (' and ' join: conditions) , ')').
+	otherEnd := aMocoOntoUmlAssociation source.
+	(otherEnd == aMocoOntoUmlAssociationSide) ifTrue: [ otherEnd := aMocoOntoUmlAssociation target ].
+
+	self appendFact: fact with: ('all w: World, x: w.' , ((self findClassFieldFor: (otherEnd element)) name) , ' | (' , (' and ' join: conditions) , ')').
 
 	engine output setModified
 ]
