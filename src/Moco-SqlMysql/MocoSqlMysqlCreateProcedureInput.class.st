@@ -2,26 +2,28 @@
 Represents an input argument for a CREATE PROCEDURE statement.
 "
 Class {
-	#name : #MocoSqlMysqlCreateProcedureInput,
-	#superclass : #Object,
+	#name : 'MocoSqlMysqlCreateProcedureInput',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'type'
 	],
-	#category : #'Moco-SqlMysql-Model'
+	#category : 'Moco-SqlMysql-Model',
+	#package : 'Moco-SqlMysql',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedureInput >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedureInput >> name: aString [
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlCreateProcedureInput >> printSqlTo: aStream [
 	aStream
 		nextPutAll: (MocoSqlMysqlEscaping escapeName: name);
@@ -29,12 +31,12 @@ MocoSqlMysqlCreateProcedureInput >> printSqlTo: aStream [
 		nextPutAll: type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedureInput >> type [
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedureInput >> type: aString [
 	type := aString
 ]

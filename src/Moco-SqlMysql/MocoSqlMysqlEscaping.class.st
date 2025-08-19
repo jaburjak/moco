@@ -2,17 +2,19 @@
 String escaping utils for PostgreSQL.
 "
 Class {
-	#name : #MocoSqlMysqlEscaping,
-	#superclass : #Object,
-	#category : #'Moco-SqlMysql-Utils'
+	#name : 'MocoSqlMysqlEscaping',
+	#superclass : 'Object',
+	#category : 'Moco-SqlMysql-Utils',
+	#package : 'Moco-SqlMysql',
+	#tag : 'Utils'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoSqlMysqlEscaping class >> escapeLiteral: aString [
-	^ '"' , (aString copyReplaceAll: '"' with: '\"') , '"'
+	^ '''' , (aString copyReplaceAll: '''' with: '\''') , ''''
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoSqlMysqlEscaping class >> escapeName: aString [
 	^ '`' , (aString copyReplaceAll: '`' with: '' ) , '`'
 ]

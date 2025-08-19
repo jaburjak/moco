@@ -2,38 +2,40 @@
 Represents a CREATE PROCEDURE statement in a MySQL database.
 "
 Class {
-	#name : #MocoSqlMysqlCreateProcedure,
-	#superclass : #Object,
+	#name : 'MocoSqlMysqlCreateProcedure',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'inputs',
 		'body',
 		'comment'
 	],
-	#category : #'Moco-SqlMysql-Model'
+	#category : 'Moco-SqlMysql-Model',
+	#package : 'Moco-SqlMysql',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedure >> body [
 	^ body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedure >> body: aString [
 	body := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedure >> comment [
 	^ comment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedure >> comment: aString [
 	comment := aString
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlMysqlCreateProcedure >> initialize [
 	super initialize.
 	
@@ -43,22 +45,22 @@ MocoSqlMysqlCreateProcedure >> initialize [
 	comment := ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedure >> inputs [
 	^ inputs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedure >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateProcedure >> name: aString [
 	name := aString
 ]
 
-{ #category : #'private - printing' }
+{ #category : 'private - printing' }
 MocoSqlMysqlCreateProcedure >> printArgumentsTo: aStream [
 	| args |
 
@@ -77,7 +79,7 @@ MocoSqlMysqlCreateProcedure >> printArgumentsTo: aStream [
 		nextPutAll: ')'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlCreateProcedure >> printSqlTo: aStream [
 	comment ifNotEmpty: [
 		aStream nextPutAll: '-- '; nextPutAll: comment; cr.
@@ -97,7 +99,7 @@ MocoSqlMysqlCreateProcedure >> printSqlTo: aStream [
 		nextPutAll: 'END;'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlCreateProcedure >> printTo: aStream [
 	self printSqlTo: aStream
 ]

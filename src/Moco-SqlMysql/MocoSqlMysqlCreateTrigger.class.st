@@ -2,8 +2,8 @@
 Represents a CREATE TRIGGER statement in a MySQL database.
 "
 Class {
-	#name : #MocoSqlMysqlCreateTrigger,
-	#superclass : #Object,
+	#name : 'MocoSqlMysqlCreateTrigger',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'time',
@@ -11,30 +11,32 @@ Class {
 		'table',
 		'body'
 	],
-	#category : #'Moco-SqlMysql-Model'
+	#category : 'Moco-SqlMysql-Model',
+	#package : 'Moco-SqlMysql',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> body [
 	^ body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> body: aString [
 	body := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> event [
 	^ event
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> event: aSymbol [
 	event := aSymbol
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlMysqlCreateTrigger >> initialize [
 	super initialize.
 	
@@ -45,17 +47,17 @@ MocoSqlMysqlCreateTrigger >> initialize [
 	body := ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> name: aString [
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlCreateTrigger >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'CREATE TRIGGER ';
@@ -78,27 +80,27 @@ MocoSqlMysqlCreateTrigger >> printSqlTo: aStream [
 	aStream cr; nextPutAll: 'END;'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlCreateTrigger >> printTo: aStream [
 	self printSqlTo: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> table [
 	^ table
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> table: aString [
 	table := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> time [
 	^ time
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTrigger >> time: aSymbol [
 	time := aSymbol
 ]

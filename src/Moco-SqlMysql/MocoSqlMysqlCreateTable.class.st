@@ -2,27 +2,29 @@
 Represents a CREATE TABLE statement in a MySQL database.
 "
 Class {
-	#name : #MocoSqlMysqlCreateTable,
-	#superclass : #Object,
+	#name : 'MocoSqlMysqlCreateTable',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'columnDefinitions',
 		'constraintDefinitions'
 	],
-	#category : #'Moco-SqlMysql-Model'
+	#category : 'Moco-SqlMysql-Model',
+	#package : 'Moco-SqlMysql',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTable >> columnDefinitions [
 	^ columnDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTable >> constraintDefinitions [
 	^ constraintDefinitions
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlMysqlCreateTable >> initialize [
 	super initialize.
 	
@@ -31,17 +33,17 @@ MocoSqlMysqlCreateTable >> initialize [
 	constraintDefinitions := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTable >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlCreateTable >> name: aString [
 	name := aString
 ]
 
-{ #category : #'private - printing' }
+{ #category : 'private - printing' }
 MocoSqlMysqlCreateTable >> printColumnDefinitionsTo: aStream [
 	columnDefinitions ifEmpty: [ ^ self ].
 	
@@ -59,7 +61,7 @@ MocoSqlMysqlCreateTable >> printColumnDefinitionsTo: aStream [
 	aStream nextPutAll: ')'
 ]
 
-{ #category : #'private - printing' }
+{ #category : 'private - printing' }
 MocoSqlMysqlCreateTable >> printConstraintDefinitionsTo: aStream [
 	constraintDefinitions do: [ :each |
 		aStream
@@ -73,7 +75,7 @@ MocoSqlMysqlCreateTable >> printConstraintDefinitionsTo: aStream [
 	]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlCreateTable >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'CREATE TABLE ';
@@ -86,7 +88,7 @@ MocoSqlMysqlCreateTable >> printSqlTo: aStream [
 	self printConstraintDefinitionsTo: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlCreateTable >> printTo: aStream [
 	self printSqlTo: aStream
 ]

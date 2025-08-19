@@ -2,16 +2,18 @@
 Represents an ALTER TABLE statement in a MySQL database.
 "
 Class {
-	#name : #MocoSqlMysqlAlterTable,
-	#superclass : #Object,
+	#name : 'MocoSqlMysqlAlterTable',
+	#superclass : 'Object',
 	#instVars : [
 		'table',
 		'statement'
 	],
-	#category : #'Moco-SqlMysql-Model'
+	#category : 'Moco-SqlMysql-Model',
+	#package : 'Moco-SqlMysql',
+	#tag : 'Model'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlMysqlAlterTable >> initialize [
 	super initialize.
 	
@@ -19,7 +21,7 @@ MocoSqlMysqlAlterTable >> initialize [
 	statement := ''
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlAlterTable >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'ALTER TABLE ';
@@ -29,27 +31,27 @@ MocoSqlMysqlAlterTable >> printSqlTo: aStream [
 		nextPutAll: ';'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlMysqlAlterTable >> printTo: aStream [
 	self printSqlTo: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlAlterTable >> statement [
 	^ statement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlAlterTable >> statement: aString [
 	statement := aString 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlAlterTable >> table [
 	^ table
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlMysqlAlterTable >> table: aString [
 	table := aString
 ]
