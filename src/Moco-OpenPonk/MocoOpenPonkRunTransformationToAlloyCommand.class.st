@@ -2,12 +2,14 @@
 UI command that transforms an OntoUML model to Alloy and displays the results.
 "
 Class {
-	#name : #MocoOpenPonkRunTransformationToAlloyCommand,
-	#superclass : #MocoOpenPonkRunTransformationsCommand,
-	#category : #'Moco-OpenPonk-Ui'
+	#name : 'MocoOpenPonkRunTransformationToAlloyCommand',
+	#superclass : 'MocoOpenPonkRunTransformationsCommand',
+	#category : 'Moco-OpenPonk-Ui',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Ui'
 }
 
-{ #category : #execution }
+{ #category : 'execution' }
 MocoOpenPonkRunTransformationToAlloyCommand >> execute [
 	| model ontoModel alloyModel transcript |
 	model := self currentWorkbenchDiagram model.

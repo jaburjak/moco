@@ -2,17 +2,19 @@
 Transforms an OntoUML Category into its Moco counterpart.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlCategoryTransformationRule,
-	#superclass : #MocoOpenPonkOntoUmlClassTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlCategoryTransformationRule',
+	#superclass : 'MocoOpenPonkOntoUmlClassTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlCategoryTransformationRule class >> modelClass [
 	^ MocoOntoUmlCategory
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlCategoryTransformationRule class >> stereotypeSelector [
 	^ OntoUMLCategory
 ]

@@ -2,28 +2,30 @@
 Provides user-configurable settings.
 "
 Class {
-	#name : #MocoSettings,
-	#superclass : #Object,
+	#name : 'MocoSettings',
+	#superclass : 'Object',
 	#classVars : [
 		'openMode',
 		'overwriteModels',
 		'sqlPlatform'
 	],
-	#category : #'Moco-OpenPonk-Settings'
+	#category : 'Moco-OpenPonk-Settings',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Settings'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSettings class >> openMode [
 	openMode ifNil: [ openMode := 'New window' ].
 	^ openMode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSettings class >> openMode: aString [
 	openMode := aString
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 MocoSettings class >> openModeSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder pickOne: #openMode)
@@ -34,19 +36,19 @@ MocoSettings class >> openModeSettingsOn: aBuilder [
 		domainValues: #(#'New window' #'Current window')
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSettings class >> overwriteModels [
 	overwriteModels ifNil: [ overwriteModels := 'Always ask' ].
 	
 	^ overwriteModels
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSettings class >> overwriteModels: aString [
 	overwriteModels := aString
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 MocoSettings class >> overwriteModelsSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder pickOne: #overwriteModels)
@@ -57,7 +59,7 @@ MocoSettings class >> overwriteModelsSettingsOn: aBuilder [
 		domainValues: #(#'Always ask' #'Yes' #'No')
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 MocoSettings class >> settingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder group: #moco)
@@ -65,18 +67,18 @@ MocoSettings class >> settingsOn: aBuilder [
 		description: 'OntoUML to SQL transformation settings.'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSettings class >> sqlPlatform [
 	sqlPlatform ifNil: [ sqlPlatform := 'PostgreSQL' ].
 	^ sqlPlatform
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSettings class >> sqlPlatform: aString [
 	sqlPlatform := aString
 ]
 
-{ #category : #settings }
+{ #category : 'settings' }
 MocoSettings class >> sqlPlatformSettingsOn: aBuilder [
 	<systemsettings>
 	(aBuilder pickOne: #sqlPlatform)
@@ -84,5 +86,5 @@ MocoSettings class >> sqlPlatformSettingsOn: aBuilder [
 		description: 'Defines the target SQL platform.';
 		target: MocoSettings;
 		parent: #moco;
-		domainValues: #(#'PostgreSQL' #'Oracle' "#'MySQL'")
+		domainValues: #(#'PostgreSQL' #'Oracle' #'MySQL')
 ]

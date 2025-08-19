@@ -2,29 +2,31 @@
 Transforms OpenPonk’s OntoUML association to a Moco OntoUML association.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlAssociationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlAssociationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlAssociationTransformationRule class >> modelClass [
 	^ MocoOntoUmlAssociation
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlAssociationTransformationRule class >> stereotypeSelector [
 	^ nil
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> createOutputElement [
 	"Returns a new Moco association object."
 	
 	^ (self class modelClass) new
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> execute [
 	| associations |
 	associations := self selectInputElements.
@@ -38,12 +40,12 @@ MocoOpenPonkOntoUmlAssociationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> priority [
 	^ 51
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> selectInputElements [
 	^ engine input
 		selectElementsOfKind: OPUMLAssociation
@@ -51,7 +53,7 @@ MocoOpenPonkOntoUmlAssociationTransformationRule >> selectInputElements [
 		notGuarded: #MocoOpenPonkOntoUmlAssociationTransformationRule.
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> toMocoShareability: aSymbol [
 	"Transforms association shareability type from an OpenPonk model to Moco representation."
 	
@@ -66,7 +68,7 @@ MocoOpenPonkOntoUmlAssociationTransformationRule >> toMocoShareability: aSymbol 
 		]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> toMocoSide: aProperty [
 	"Transforms OpenPonk association side to a Moco association side."
 	
@@ -93,7 +95,7 @@ MocoOpenPonkOntoUmlAssociationTransformationRule >> toMocoSide: aProperty [
 	^ side
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlAssociationTransformationRule >> transformAssociation: anOPUMLAssociation [
 	"Transforms the given association into a Moco OntoUML association."
 	

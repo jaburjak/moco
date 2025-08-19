@@ -2,19 +2,21 @@
 Works around the issue of not being able to save OpenPonk projects with models that contain typed attributes.
 "
 Class {
-	#name : #MocoOpenPonkSaveWorkaround,
-	#superclass : #Object,
-	#category : #'Moco-OpenPonk-Utils'
+	#name : 'MocoOpenPonkSaveWorkaround',
+	#superclass : 'Object',
+	#category : 'Moco-OpenPonk-Utils',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Utils'
 }
 
-{ #category : #processing }
+{ #category : 'processing' }
 MocoOpenPonkSaveWorkaround class >> applyTo: anOPProjectController [
 	anOPProjectController controllers do: [ :each |
 		self applyToController: each
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkSaveWorkaround class >> applyToController: anOPController [
 	| elements attributes |
 	elements := anOPController model packagedElements.

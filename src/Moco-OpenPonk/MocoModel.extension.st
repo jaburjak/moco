@@ -1,6 +1,6 @@
-Extension { #name : #MocoModel }
+Extension { #name : 'MocoModel' }
 
-{ #category : #'*Moco-OpenPonk' }
+{ #category : '*Moco-OpenPonk' }
 MocoModel >> selectElementsOfKind: aClass ofStereotype: aString notGuarded: aSymbol [
 	"Returns all elements of the given kind and UML stereotype that are not guarded by the given symbol."
 	

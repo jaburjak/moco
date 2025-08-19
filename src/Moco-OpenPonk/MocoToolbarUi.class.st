@@ -2,12 +2,14 @@
 OntoUML editor toolbar extension.
 "
 Class {
-	#name : #MocoToolbarUi,
-	#superclass : #SpPresenter,
-	#category : #'Moco-OpenPonk-Ui'
+	#name : 'MocoToolbarUi',
+	#superclass : 'SpPresenter',
+	#category : 'Moco-OpenPonk-Ui',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Ui'
 }
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoToolbarUi class >> openMocoPlayground: aModel [
 	MocoOpenPonkModelStorage ontoUmlModel: aModel.
 	
@@ -23,7 +25,7 @@ sqlModel := MocoRdbToSqlOracleRound transform: (dbModel second).
 		centered
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoToolbarUi class >> runTransformationToAlloy: aBuilder [
 	| command |
 	command := MocoOpenPonkRunTransformationToAlloyCommand new.
@@ -32,7 +34,7 @@ MocoToolbarUi class >> runTransformationToAlloy: aBuilder [
 	command execute
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoToolbarUi class >> runTransformationToSql: aBuilder [
 	| command |
 	command := MocoOpenPonkRunTransformationToSqlCommand new.
@@ -41,7 +43,7 @@ MocoToolbarUi class >> runTransformationToSql: aBuilder [
 	command execute
 ]
 
-{ #category : #toolbar }
+{ #category : 'toolbar' }
 MocoToolbarUi class >> toolbarMenu: aBuilder [
 	<opEditorToolbarMenu: #OPUmlClassEditorPlugin>
 	| appliedProfiles |

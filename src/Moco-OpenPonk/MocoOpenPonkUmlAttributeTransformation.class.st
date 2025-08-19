@@ -2,12 +2,14 @@
 Contains transformation between Moco UML and OpenPonk UML related to class attributes.
 "
 Class {
-	#name : #MocoOpenPonkUmlAttributeTransformation,
-	#superclass : #Object,
-	#category : #'Moco-OpenPonk-Transformation'
+	#name : 'MocoOpenPonkUmlAttributeTransformation',
+	#superclass : 'Object',
+	#category : 'Moco-OpenPonk-Transformation',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Transformation'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkUmlAttributeTransformation class >> toMocoVisibility: aVisibility [
 	"Transforms an OpenPonk element visibility information to Moco type."
 	
@@ -24,7 +26,7 @@ MocoOpenPonkUmlAttributeTransformation class >> toMocoVisibility: aVisibility [
 		].
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkUmlAttributeTransformation class >> toOpenPonkMultiplicity: aMocoUmlMultiplicity [
 	"Transforms a Moco attribute multiplicity to an array with OpenPonk lower and upper bounds."
 	

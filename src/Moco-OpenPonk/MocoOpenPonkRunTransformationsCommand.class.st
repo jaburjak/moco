@@ -2,8 +2,8 @@
 Base class for UI commands that execute Moco transformations.
 "
 Class {
-	#name : #MocoOpenPonkRunTransformationsCommand,
-	#superclass : #Object,
+	#name : 'MocoOpenPonkRunTransformationsCommand',
+	#superclass : 'Object',
 	#instVars : [
 		'workbench'
 	],
@@ -11,10 +11,12 @@ Class {
 		'choiceLogs',
 		'transcripts'
 	],
-	#category : #'Moco-OpenPonk-Ui'
+	#category : 'Moco-OpenPonk-Ui',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Ui'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationsCommand class >> choiceLog: aSymbol of: anOPPackage [
 	| logs |
 	logs := self choiceLogOf: anOPPackage.
@@ -22,21 +24,21 @@ MocoOpenPonkRunTransformationsCommand class >> choiceLog: aSymbol of: anOPPackag
 	^ logs at: aSymbol ifAbsent: [ OrderedCollection new ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationsCommand class >> choiceLogOf: anOPPackage [
 	choiceLogs ifNil: [ ^ Dictionary new ].
 	
 	^ choiceLogs at: anOPPackage ifAbsent: [ Dictionary new ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoOpenPonkRunTransformationsCommand class >> new [
 	(self asString = 'MocoOpenPonkRunTransformationsCommand')
 		ifTrue: [ ^ self subclassResponsibility ]
 		ifFalse: [ ^ super new ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationsCommand class >> registerTranscript: aMocoTranscriptPresenter in: anOPWorkbench [
 	transcripts ifNil: [ transcripts := OrderedCollection new ].
 	
@@ -47,7 +49,7 @@ MocoOpenPonkRunTransformationsCommand class >> registerTranscript: aMocoTranscri
 	transcripts add: { anOPWorkbench. aMocoTranscriptPresenter }
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationsCommand class >> saveChoiceLog: aDictionary of: anOPPackage in: anOPWorkbench [
 	choiceLogs ifNil: [ choiceLogs := Dictionary new ].
 	
@@ -58,14 +60,14 @@ MocoOpenPonkRunTransformationsCommand class >> saveChoiceLog: aDictionary of: an
 	]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationsCommand class >> transcriptsOf: anOPWorkbench [
 	transcripts ifNil: [ ^ OrderedCollection new ].
 	
 	^ (transcripts select: [ :each | (each first) == anOPWorkbench ]) collect: [ :each | each second ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> addModel: aMocoWrappedModel withLabel: aString toTranscript: aMocoTranscriptPresenter [
 	| str |
 	str := String new writeStream.
@@ -75,14 +77,14 @@ MocoOpenPonkRunTransformationsCommand >> addModel: aMocoWrappedModel withLabel: 
 	aMocoTranscriptPresenter addSection: (str contents) withLabel: aString
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationsCommand >> currentWorkbenchDiagram [
 	"Returns the currently focused diagram controller from the workbench that invoked this command."
 	
 	^ workbench focusedEditor diagramController
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> determineModelName: aString or: aString2 [
 	"Returns the first string in case the OntoUML model has the default name. Otherwise returns the second string appended to the name of the OntoUML model."
 	
@@ -94,12 +96,12 @@ MocoOpenPonkRunTransformationsCommand >> determineModelName: aString or: aString
 		ifFalse: [ ^ name , ' (' , aString2 , ')' ]
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 MocoOpenPonkRunTransformationsCommand >> execute [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> openModels: aCollection in: anOPWorkbench [
 	"Adds the given collection of models to the given workbench instance, opens them and focuses the last one."
 	
@@ -167,7 +169,7 @@ MocoOpenPonkRunTransformationsCommand >> openModels: aCollection in: anOPWorkben
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> openOpenPonk: aCollection [
 	"Opens a new OpenPonk workbench instance."
 	
@@ -187,7 +189,7 @@ MocoOpenPonkRunTransformationsCommand >> openOpenPonk: aCollection [
 	^ wb
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> packageModel: aMocoModel as: aString usingRulesWithTag: aString2 andClassPrefix: aString3 [
 	"Returns an OPUMLPackage generated from the given model using the given transformation rules."
 	
@@ -211,14 +213,14 @@ MocoOpenPonkRunTransformationsCommand >> packageModel: aMocoModel as: aString us
 	^ model
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> readOntoUmlModel [
 	"Returns a Moco OntoUML model of the currently focused OpenPonk OntoUML model."
 	
 	^ MocoOpenPonkOntoUmlTransformationRound createMoco: (self currentWorkbenchDiagram model)
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> showElementsIn: anOPDiagramController [
 	"Shows all elements in the given diagram."
 	
@@ -237,7 +239,7 @@ MocoOpenPonkRunTransformationsCommand >> showElementsIn: anOPDiagramController [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRunTransformationsCommand >> showModels: aCollection andTranscript: aMocoTranscriptPresenter [
 	| mode newWorkbench |
 	mode := MocoSettings openMode.
@@ -268,12 +270,12 @@ MocoOpenPonkRunTransformationsCommand >> showModels: aCollection andTranscript: 
 	aMocoTranscriptPresenter body takeKeyboardFocus
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkRunTransformationsCommand >> workbench [
 	^ workbench
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkRunTransformationsCommand >> workbench: anOPWorkbench [
 	workbench := anOPWorkbench
 ]

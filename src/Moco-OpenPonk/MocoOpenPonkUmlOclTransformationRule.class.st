@@ -2,12 +2,14 @@
 Transforms OCL constraint to class comments.
 "
 Class {
-	#name : #MocoOpenPonkUmlOclTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule-Uml'
+	#name : 'MocoOpenPonkUmlOclTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule-Uml',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule-Uml'
 }
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlOclTransformationRule >> addComment: aMocoOclConstraint [
 	"Writes out the given constraint to the class generated from the constraint’s context."
 	
@@ -21,7 +23,7 @@ MocoOpenPonkUmlOclTransformationRule >> addComment: aMocoOclConstraint [
 	MocoOpenPonkCommentUtils addComment: (body contents) to: class
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkUmlOclTransformationRule >> execute [
 	| constraints |
 	constraints := engine input
@@ -36,14 +38,14 @@ MocoOpenPonkUmlOclTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkUmlOclTransformationRule >> findOutClassFor: aMocoUmlClass [
 	"Returns the OpenPonk model class that was generated from the given Moco class."
 	
 	^ engine detectOutputElement: aMocoUmlClass ofKind: OPUMLClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkUmlOclTransformationRule >> priority [
 	^ 40
 ]

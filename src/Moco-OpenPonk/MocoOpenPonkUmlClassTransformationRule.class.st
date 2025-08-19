@@ -2,12 +2,14 @@
 Transforms a UML Class from Moco’s model to OpenPonk’s model.
 "
 Class {
-	#name : #MocoOpenPonkUmlClassTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule-Uml'
+	#name : 'MocoOpenPonkUmlClassTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule-Uml',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule-Uml'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkUmlClassTransformationRule >> execute [
 	| classes |
 	classes := engine input
@@ -25,12 +27,12 @@ MocoOpenPonkUmlClassTransformationRule >> execute [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkUmlClassTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkUmlClassTransformationRule >> resolveAttributeType: aMocoUmlType [
 	"Returns either an OPUMLPrimitiveType or an OPUMLClass representing the given data type."
 	
@@ -43,7 +45,7 @@ MocoOpenPonkUmlClassTransformationRule >> resolveAttributeType: aMocoUmlType [
 	^ OPUMLClass new name: (aMocoUmlType name); yourself
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttribute: aMocoUmlAttribute [
 	"Creates an OpenPonk class attribute from the given Moco element."
 	
@@ -67,7 +69,7 @@ MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttribute: aMocoUmlAttribute
 	^ attr
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttributes: aMocoUmlClass [
 	"Adds attributes to the given class."
 	
@@ -77,7 +79,7 @@ MocoOpenPonkUmlClassTransformationRule >> toOpenPonkAttributes: aMocoUmlClass [
 	aMocoUmlClass attributes do: [ :each | op ownedAttributes add: (self toOpenPonkAttribute: each) ]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlClassTransformationRule >> toOpenPonkClass: aMocoUmlClass [
 	"Creates an empty OpenPonk class from the given Moco element."
 	

@@ -2,17 +2,19 @@
 Transforms an OntoUML Collective into its Moco counterpart.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlCollectiveTransformationRule,
-	#superclass : #MocoOpenPonkOntoUmlClassTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlCollectiveTransformationRule',
+	#superclass : 'MocoOpenPonkOntoUmlClassTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlCollectiveTransformationRule class >> modelClass [
 	^ MocoOntoUmlCollective
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlCollectiveTransformationRule class >> stereotypeSelector [
 	^ OntoUMLCollective
 ]

@@ -2,12 +2,14 @@
 Transforms OpenPonk’s OntoUML generalization sets into their Moco counterparts.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlGeneralizationSetTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlGeneralizationSetTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkOntoUmlGeneralizationSetTransformationRule >> execute [
 	| sets |
 	sets := engine input
@@ -17,7 +19,7 @@ MocoOpenPonkOntoUmlGeneralizationSetTransformationRule >> execute [
 	sets do: [ :each | self transformGeneralizationSet: each ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkOntoUmlGeneralizationSetTransformationRule >> findGeneralization: anOPUMLGeneralization [
 	"Returns a Moco generalization element corresponding to the given OpenPonk element."
 	
@@ -30,12 +32,12 @@ MocoOpenPonkOntoUmlGeneralizationSetTransformationRule >> findGeneralization: an
 			detect: [ :each | ((each supertype) == general) and: [ (each subtype) == specific ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkOntoUmlGeneralizationSetTransformationRule >> priority [
 	^ 59
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlGeneralizationSetTransformationRule >> transformGeneralizationSet: anOPUMLGeneralizationSet [
 	"Transforms an OntoUML generalization set from the OpenPonk model to Moco model."
 	

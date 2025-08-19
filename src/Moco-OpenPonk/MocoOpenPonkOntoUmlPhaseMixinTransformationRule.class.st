@@ -2,17 +2,19 @@
 Transforms an OntoUML PhaseMixin into its Moco counterpart.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlPhaseMixinTransformationRule,
-	#superclass : #MocoOpenPonkOntoUmlClassTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlPhaseMixinTransformationRule',
+	#superclass : 'MocoOpenPonkOntoUmlClassTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlPhaseMixinTransformationRule class >> modelClass [
 	^ MocoOntoUmlPhaseMixin
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlPhaseMixinTransformationRule class >> stereotypeSelector [
 	^ OntoUMLPhaseMixin
 ]

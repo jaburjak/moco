@@ -2,17 +2,19 @@
 Transforms an OntoUML Relator into its Moco counterpart.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlRelatorTransformationRule,
-	#superclass : #MocoOpenPonkOntoUmlClassTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlRelatorTransformationRule',
+	#superclass : 'MocoOpenPonkOntoUmlClassTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlRelatorTransformationRule class >> modelClass [
 	^ MocoOntoUmlRelator
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlRelatorTransformationRule class >> stereotypeSelector [
 	^ OntoUMLRelator
 ]

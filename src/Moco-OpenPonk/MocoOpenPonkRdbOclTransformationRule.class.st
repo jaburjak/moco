@@ -2,12 +2,14 @@
 Transforms OCL constraints to OpenPonk class comments.
 "
 Class {
-	#name : #MocoOpenPonkRdbOclTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule-Rdb'
+	#name : 'MocoOpenPonkRdbOclTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule-Rdb',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule-Rdb'
 }
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkRdbOclTransformationRule >> addComment: aMocoOclConstraint [
 	"Writes out the given constraint as a comment at the element generated from the constraint’s context."
 	
@@ -21,7 +23,7 @@ MocoOpenPonkRdbOclTransformationRule >> addComment: aMocoOclConstraint [
 	MocoOpenPonkCommentUtils addComment: (body contents) to: class
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkRdbOclTransformationRule >> execute [
 	| constraints |
 	constraints := engine input
@@ -36,14 +38,14 @@ MocoOpenPonkRdbOclTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRdbOclTransformationRule >> findOutClassFor: aMocoRdbTable [
 	"Returns the class element that was generated from the given table."
 
 	^ engine detectOutputElement: aMocoRdbTable ofKind: OPUMLClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkRdbOclTransformationRule >> priority [
 	^ 50
 ]

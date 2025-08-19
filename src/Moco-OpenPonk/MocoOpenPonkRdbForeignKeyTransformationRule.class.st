@@ -2,12 +2,14 @@
 Transforms foreign keys to associations in OpenPonk’s class model.
 "
 Class {
-	#name : #MocoOpenPonkRdbForeignKeyTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule-Rdb'
+	#name : 'MocoOpenPonkRdbForeignKeyTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule-Rdb',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule-Rdb'
 }
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> determineSourceMultiplicity: aMocoRdbForeignKey inTable: aMocoRdbTable [
 	"Returns multiplicity at the source side of the association generated from the given foreign key."
 	
@@ -29,7 +31,7 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineSourceMultiplicity: aMoc
 	^ { lower. upper }
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> determineTargetMultiplicity: aMocoRdbForeignKey inTable: aMocoRdbTable [
 	"Returns multiplicity at the target side of the association generated from the given foreign key."
 	
@@ -44,7 +46,7 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> determineTargetMultiplicity: aMoc
 	^ { lower. upper }
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -55,19 +57,19 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> execute [
 	tables do: [ :each | self transformTable: each ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> findOutClassFor: aMocoRdbTable [
 	"Returns the class element that was generated from the given table."
 	
 	^ engine detectOutputElement: aMocoRdbTable ofKind: OPUMLClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> priority [
 	^ 90
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> toOpenPonkAssociation: aMocoRdbForeignKey inTable: aMocoRdbTable [
 	"Creates an OpenPonk association from the given foreign key that originates in the given database table."
 	
@@ -97,7 +99,7 @@ MocoOpenPonkRdbForeignKeyTransformationRule >> toOpenPonkAssociation: aMocoRdbFo
 	^ op
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkRdbForeignKeyTransformationRule >> transformTable: aMocoRdbTable [
 	"Transforms foreign keys in the given table to associations."
 	

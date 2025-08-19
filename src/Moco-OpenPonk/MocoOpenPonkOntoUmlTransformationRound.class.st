@@ -2,12 +2,14 @@
 Transforms an OpenPonk OntoUML model to a Moco OntoUML model.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlTransformationRound,
-	#superclass : #Object,
-	#category : #'Moco-OpenPonk-Round'
+	#name : 'MocoOpenPonkOntoUmlTransformationRound',
+	#superclass : 'Object',
+	#category : 'Moco-OpenPonk-Round',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Round'
 }
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkOntoUmlTransformationRound class >> addAssociations: anOpenPonkModel to: aMocoModel [
 	"Adds associations from an OpenPonk model to the given Moco model."
 	
@@ -17,7 +19,7 @@ MocoOpenPonkOntoUmlTransformationRound class >> addAssociations: anOpenPonkModel
 	associations do: [ :each | aMocoModel addElement: each ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkOntoUmlTransformationRound class >> addClasses: anOpenPonkModel to: aMocoModel [
 	"Adds classes from the given OpenPonk model to the given Moco model."
 	
@@ -27,7 +29,7 @@ MocoOpenPonkOntoUmlTransformationRound class >> addClasses: anOpenPonkModel to: 
 	classes do: [ :each | aMocoModel addElement: each ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkOntoUmlTransformationRound class >> addElements: anOpenPonkModel to: aMocoModel [
 	"Adds elements from the given OpenPonk model to the given Moco model."
 	
@@ -40,7 +42,7 @@ MocoOpenPonkOntoUmlTransformationRound class >> addElements: anOpenPonkModel to:
 	^ aMocoModel
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 MocoOpenPonkOntoUmlTransformationRound class >> addEnumerations: anOpenPonkModel to: aMocoModel [
 	"Adds enumerations from the given OpenPonk model to the given Moco model."
 	
@@ -50,7 +52,7 @@ MocoOpenPonkOntoUmlTransformationRound class >> addEnumerations: anOpenPonkModel
 	enumerations do: [ :each | aMocoModel addElement: each ]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkOntoUmlTransformationRound class >> addGeneralizationSets: anOpenPonkModel to: aMocoModel [
 	"Adds generalization sets from the given OpenPonk model to the given Moco model."
 	
@@ -71,7 +73,7 @@ MocoOpenPonkOntoUmlTransformationRound class >> addGeneralizationSets: anOpenPon
 	]
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkOntoUmlTransformationRound class >> createMoco: anOpenPonkModel [
 	"Creates a Moco OntoUML model from the given OpenPonk OntoUML model."
 	

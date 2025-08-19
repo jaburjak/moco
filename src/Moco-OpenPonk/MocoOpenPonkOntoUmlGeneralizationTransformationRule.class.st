@@ -2,12 +2,14 @@
 Transforms OpenPonk’s OntoUML generalizations into their Moco counterparts.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlGeneralizationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlGeneralizationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkOntoUmlGeneralizationTransformationRule >> execute [
 	| generalizations |
 	generalizations := engine input selectElementsNotGuarded: #MocoOntoUmlGeneralizationTransformationRule.
@@ -25,12 +27,12 @@ MocoOpenPonkOntoUmlGeneralizationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkOntoUmlGeneralizationTransformationRule >> priority [
 	^ 60
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlGeneralizationTransformationRule >> toGeneralization: anOPUMLGeneralization [
 	"Returns Moco generalization create from an OpenPonk model."
 	

@@ -2,12 +2,14 @@
 UI command that transforms an OntoUML model to SQL and displays the results.
 "
 Class {
-	#name : #MocoOpenPonkRunTransformationToSqlCommand,
-	#superclass : #MocoOpenPonkRunTransformationsCommand,
-	#category : #'Moco-OpenPonk-Ui'
+	#name : 'MocoOpenPonkRunTransformationToSqlCommand',
+	#superclass : 'MocoOpenPonkRunTransformationsCommand',
+	#category : 'Moco-OpenPonk-Ui',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Ui'
 }
 
-{ #category : #execution }
+{ #category : 'execution' }
 MocoOpenPonkRunTransformationToSqlCommand >> execute [
 	| model ontoModel umlModel dbModel sqlModel transcript models |
 	model := self currentWorkbenchDiagram model.
@@ -35,7 +37,7 @@ MocoOpenPonkRunTransformationToSqlCommand >> execute [
 	self showModels: models andTranscript: transcript
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationToSqlCommand >> sqlRound [
 	| platform |
 	platform := MocoSettings sqlPlatform.
@@ -47,7 +49,7 @@ MocoOpenPonkRunTransformationToSqlCommand >> sqlRound [
 	self error: 'Unrecognized SQL platform.'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkRunTransformationToSqlCommand >> sqlRoundLabel [
 	| platform |
 	platform := MocoSettings sqlPlatform.

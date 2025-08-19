@@ -2,12 +2,14 @@
 Transforms Moco UML enumerations into an OpenPonk UML model.
 "
 Class {
-	#name : #MocoOpenPonkUmlEnumerationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule-Uml'
+	#name : 'MocoOpenPonkUmlEnumerationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule-Uml',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule-Uml'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkUmlEnumerationTransformationRule >> execute [
 	| enumerations |
 	enumerations := engine input
@@ -17,12 +19,12 @@ MocoOpenPonkUmlEnumerationTransformationRule >> execute [
 	enumerations do: [ :each | self transformEnumeration: each ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkUmlEnumerationTransformationRule >> priority [
 	^ 90
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlEnumerationTransformationRule >> toOpenPonkLiteral: aMocoUmlEnumerationLiteral [
 	"Returns the given enumeration literal as an OpenPonk model class."
 	
@@ -31,7 +33,7 @@ MocoOpenPonkUmlEnumerationTransformationRule >> toOpenPonkLiteral: aMocoUmlEnume
 		yourself
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlEnumerationTransformationRule >> transformEnumeration: aMocoUmlEnumeration [
 	"Transforms the given UML enumeration to the OpenPonk model."
 	

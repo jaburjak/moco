@@ -2,15 +2,17 @@
 Transforms a table element from a relational model into OpenPonk’s class model.
 "
 Class {
-	#name : #MocoOpenPonkRdbTableTransformationRule,
-	#superclass : #MocoTransformationRule,
+	#name : 'MocoOpenPonkRdbTableTransformationRule',
+	#superclass : 'MocoTransformationRule',
 	#classVars : [
 		'DataTypeCache'
 	],
-	#category : #'Moco-OpenPonk-Rule-Rdb'
+	#category : 'Moco-OpenPonk-Rule-Rdb',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule-Rdb'
 }
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkRdbTableTransformationRule class >> toOpenPonkDataType: aMocoRdbColumn [
 	"Converts the data type of the given column to an OpenPonk data type."
 	
@@ -26,7 +28,7 @@ MocoOpenPonkRdbTableTransformationRule class >> toOpenPonkDataType: aMocoRdbColu
 		ifAbsentPut: [ OPUMLClass new name: type; yourself ]
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkRdbTableTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -36,12 +38,12 @@ MocoOpenPonkRdbTableTransformationRule >> execute [
 	tables do: [ :each | self transformTable: each ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkRdbTableTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> toOpenPonkElement: aMocoRdbTable [
 	"Creates an OpenPonk class from the given Moco database table."
 	
@@ -56,7 +58,7 @@ MocoOpenPonkRdbTableTransformationRule >> toOpenPonkElement: aMocoRdbTable [
 	^ op
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> transformColumn: aMocoRdbColumn [
 	"Creates an OpenPonk class attribute from the given database column."
 	
@@ -75,7 +77,7 @@ MocoOpenPonkRdbTableTransformationRule >> transformColumn: aMocoRdbColumn [
 	^ prop
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> transformConstraint: aMocoRdbConstraint [
 	"Creates an OpenPonk class operation from the given database constraint."
 	
@@ -96,7 +98,7 @@ MocoOpenPonkRdbTableTransformationRule >> transformConstraint: aMocoRdbConstrain
 	^ op
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkRdbTableTransformationRule >> transformTable: aMocoRdbTable [
 	"Transforms a database table to a class element."
 	

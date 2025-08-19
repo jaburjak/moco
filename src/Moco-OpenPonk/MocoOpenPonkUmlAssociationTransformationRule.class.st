@@ -2,12 +2,14 @@
 Transforms a UML association from Moco’s model to OpenPonk’s model.
 "
 Class {
-	#name : #MocoOpenPonkUmlAssociationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule-Uml'
+	#name : 'MocoOpenPonkUmlAssociationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule-Uml',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule-Uml'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkUmlAssociationTransformationRule >> execute [
 	| associations |
 	associations := engine input
@@ -23,7 +25,7 @@ MocoOpenPonkUmlAssociationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOpenPonkUmlAssociationTransformationRule >> findOutClassFor: anObject [
 	"Returns an OpenPonk class that was generated from the given Moco element."
 	
@@ -35,12 +37,12 @@ MocoOpenPonkUmlAssociationTransformationRule >> findOutClassFor: anObject [
 	^ engine detectOutputElement: anObject ofKind: OPUMLEnumeration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkUmlAssociationTransformationRule >> priority [
 	^ 50
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkAssociation: aMocoUmlAssociation [
 	"Creates an OpenPonk association from the given Moco element."
 	
@@ -61,7 +63,7 @@ MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkAssociation: aMocoUmlA
 	^ op
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkUmlAssociationTransformationRule >> toOpenPonkEnd: aMocoUmlAssociationSide [
 	"Creates an OpenPonk association side from the given side of a Moco association."
 	

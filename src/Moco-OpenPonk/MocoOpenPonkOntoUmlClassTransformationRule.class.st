@@ -2,22 +2,24 @@
 Transforms an OpenPonk OntoUML class into its Moco counterpart.
 "
 Class {
-	#name : #MocoOpenPonkOntoUmlClassTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-OpenPonk-Rule'
+	#name : 'MocoOpenPonkOntoUmlClassTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-OpenPonk-Rule',
+	#package : 'Moco-OpenPonk',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlClassTransformationRule class >> modelClass [
 	^ MocoOntoUmlClass
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 MocoOpenPonkOntoUmlClassTransformationRule class >> stereotypeSelector [
 	^ nil
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoOpenPonkOntoUmlClassTransformationRule >> execute [
 	| classes |
 	classes := engine input
@@ -34,12 +36,12 @@ MocoOpenPonkOntoUmlClassTransformationRule >> execute [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOpenPonkOntoUmlClassTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlClassTransformationRule >> transformAttribute: anOPUMLAttribute [
 	"Transforms OpenPonk class attribute to a Moco class attribute."
 	
@@ -58,7 +60,7 @@ MocoOpenPonkOntoUmlClassTransformationRule >> transformAttribute: anOPUMLAttribu
 	^ attr
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlClassTransformationRule >> transformAttributes: anOPUMLClass [
 	"Returns attributes of the given OpenPonk UML class a Moco attributes."
 	
@@ -66,7 +68,7 @@ MocoOpenPonkOntoUmlClassTransformationRule >> transformAttributes: anOPUMLClass 
 		collect: [ :each | self transformAttribute: each ]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoOpenPonkOntoUmlClassTransformationRule >> transformClass: anOPUMLClass [
 	"Transforms an OpenPonk OntoUML class into a Moco OntoUML class."
 	
