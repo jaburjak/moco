@@ -2,8 +2,8 @@
 Represents a special multiplicity constraint in an RDB model.
 "
 Class {
-	#name : #MocoOclRdbSpecialMultiplicityConstraint,
-	#superclass : #MocoOclInvariant,
+	#name : 'MocoOclRdbSpecialMultiplicityConstraint',
+	#superclass : 'MocoOclInvariant',
 	#instVars : [
 		'lower',
 		'upper',
@@ -11,20 +11,22 @@ Class {
 		'sourceTable',
 		'sourceColumn'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> lower [
 	^ lower
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> lower: aNumber [
 	lower := aNumber
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbSpecialMultiplicityConstraint >> printOclTo: aStream [
 	| varName |
 	
@@ -47,54 +49,58 @@ MocoOclRdbSpecialMultiplicityConstraint >> printOclTo: aStream [
 		nextPutAll: (targetColumn name);
 		nextPutAll: ')';
 		cr.
-	
-	lower ifNotNil: [
-		aStream nextPutAll: (lower asString); nextPutAll: ' <= count'.
-		
-		upper ifNotNil: [ aStream nextPutAll: ' AND ' ]
-	].
 
-	upper ifNotNil: [
-		aStream nextPutAll: 'count <= '; nextPutAll: (upper asString)
-	]
+	((lower isNotNil and: (upper isNotNil)) and: [ lower = upper ])
+		ifTrue: [ aStream nextPutAll: 'count = ' , (lower asString) ]
+		ifFalse: [
+			lower ifNotNil: [
+				aStream nextPutAll: (lower asString); nextPutAll: ' <= count'.
+				
+				upper ifNotNil: [ aStream nextPutAll: ' AND ' ]
+			].
+
+			upper ifNotNil: [
+				aStream nextPutAll: 'count <= '; nextPutAll: (upper asString)
+			]
+		]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> sourceColumn [
 	^ sourceColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> sourceColumn: aMocoRdbColumn [
 	sourceColumn := aMocoRdbColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> sourceTable [
 	^ sourceTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> sourceTable: aMocoRdbTable [
 	sourceTable := aMocoRdbTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> targetColumn [
 	^ targetColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> targetColumn: aMocoRdbColumn [
 	targetColumn := aMocoRdbColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> upper [
 	^ upper
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbSpecialMultiplicityConstraint >> upper: aNumber [
 	upper := aNumber
 ]

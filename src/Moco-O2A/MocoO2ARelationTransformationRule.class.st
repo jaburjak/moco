@@ -105,6 +105,11 @@ MocoO2ARelationTransformationRule >> generateMultiplicityFactFor: aMocoOntoUmlAs
 	((upper isBounded) and: [ upper isNotOne ]) ifTrue: [
 		conditions add: ('#' , name , '[x, w] <= ' , (upper value asString)) ].
 
+	((conditions isNotEmpty) and: [ lower value = upper value ]) ifTrue: [
+		conditions := OrderedCollection new.
+		conditions add: ('#', name , '[x, w] = ' , (lower value asString))
+	].
+
 	conditions ifEmpty: [ ^ self ].
 
 	otherEnd := aMocoOntoUmlAssociation source.

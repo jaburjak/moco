@@ -2,17 +2,19 @@
 Base class that represents an OCL postcondition.
 "
 Class {
-	#name : #MocoOclPostCondition,
-	#superclass : #MocoOclCondition,
-	#category : #'Moco-Ocl-Model'
+	#name : 'MocoOclPostCondition',
+	#superclass : 'MocoOclCondition',
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclPostCondition class >> type [
 	^ #post
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoOclPostCondition >> initialize [
 	super initialize.
 	

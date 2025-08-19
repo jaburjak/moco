@@ -2,12 +2,14 @@
 Transformation round realizing an Oracle relational database model in SQL statements.
 "
 Class {
-	#name : #MocoRdbToSqlOracleRound,
-	#superclass : #Object,
-	#category : #'Moco-D2S-Round'
+	#name : 'MocoRdbToSqlOracleRound',
+	#superclass : 'Object',
+	#category : 'Moco-D2S-Round',
+	#package : 'Moco-D2S',
+	#tag : 'Round'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbToSqlOracleRound class >> transform: aMocoModel [
 	| engine ruleRepo |
 	engine := MocoTransformationEngine new.

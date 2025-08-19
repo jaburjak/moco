@@ -2,17 +2,19 @@
 Represents a mandatory association multiplicity constraint in an RDB model.
 "
 Class {
-	#name : #MocoOclRdbMandatoryMultiplicityConstraint,
-	#superclass : #MocoOclInvariant,
+	#name : 'MocoOclRdbMandatoryMultiplicityConstraint',
+	#superclass : 'MocoOclInvariant',
 	#instVars : [
 		'targetColumn',
 		'sourceTable',
 		'sourceColumn'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbMandatoryMultiplicityConstraint >> printOclTo: aStream [
 	| varName |
 	
@@ -33,32 +35,32 @@ MocoOclRdbMandatoryMultiplicityConstraint >> printOclTo: aStream [
 		nextPutAll: ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbMandatoryMultiplicityConstraint >> sourceColumn [
 	^ sourceColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbMandatoryMultiplicityConstraint >> sourceColumn: aMocoRdbColumn [
 	sourceColumn := aMocoRdbColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbMandatoryMultiplicityConstraint >> sourceTable [
 	^ sourceTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbMandatoryMultiplicityConstraint >> sourceTable: aMocoRdbTable [
 	sourceTable := aMocoRdbTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbMandatoryMultiplicityConstraint >> targetColumn [
 	^ targetColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbMandatoryMultiplicityConstraint >> targetColumn: aMocoRdbColumn [
 	targetColumn := aMocoRdbColumn
 ]

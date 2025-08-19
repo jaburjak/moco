@@ -2,12 +2,14 @@
 Transforms special association multiplicity OCL constraint to CREATE TRIGGER statements in an Oracle relational database.
 "
 Class {
-	#name : #MocoRdbOclSpecialMultiplicityTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2S-Rule'
+	#name : 'MocoRdbOclSpecialMultiplicityTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2S-Rule',
+	#package : 'Moco-D2S',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbOclSpecialMultiplicityTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -27,7 +29,7 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclSpecialMultiplicityTransformationRule >> generateBetweenClause: aString forLower: aNumber andUpper: aNumber2 [
 	| value |
 	value := aString.
@@ -36,10 +38,11 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> generateBetweenClause: aStrin
 	
 	aNumber ifNil: [ ^ value , ' <= ' , (aNumber2 asString) ].
 	aNumber2 ifNil: [ ^ value , ' >= ' , (aNumber asString) ].
+	(aNumber = aNumber2) ifTrue: [ ^ value , ' = ' , (aNumber asString) ].
 	^ value , ' BETWEEN ' , (aNumber asString) , ' AND ' , (aNumber2 asString)
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
 	| trigger events condition body varName varName2 |
 	trigger := MocoSqlOracleCreateTrigger new.
@@ -111,7 +114,7 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoO
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclSpecialMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.

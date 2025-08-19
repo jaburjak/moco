@@ -2,32 +2,34 @@
 Represents an OCL invariant for exclusive phase associations after transforming them to a relational database model.
 "
 Class {
-	#name : #MocoOclRdbExclusiveAssociationCondition,
-	#superclass : #MocoOclInvariant,
+	#name : 'MocoOclRdbExclusiveAssociationCondition',
+	#superclass : 'MocoOclInvariant',
 	#instVars : [
 		'column',
 		'referencingTables',
 		'referencingColumns'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbExclusiveAssociationCondition >> column [
 	^ column
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbExclusiveAssociationCondition >> column: aMocoRdbColumn [
 	column := aMocoRdbColumn
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOclRdbExclusiveAssociationCondition >> generateAssociationVariableName: aCollection [
 	^ (MocoNamingUtils toPascalCase: ((' ' join: (aCollection collect: [ :e | e name asLowercase])) copyReplaceAll: '_' with: ' ')) , '_Instance'
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoOclRdbExclusiveAssociationCondition >> generateExistsClause: aMocoRdbTable withColumn: aMocoRdbColumn [
 	| varName stream |
 	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
@@ -49,7 +51,7 @@ MocoOclRdbExclusiveAssociationCondition >> generateExistsClause: aMocoRdbTable w
 	^ stream contents
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoOclRdbExclusiveAssociationCondition >> initialize [
 	super initialize.
 	
@@ -57,7 +59,7 @@ MocoOclRdbExclusiveAssociationCondition >> initialize [
 	referencingColumns := OrderedCollection new
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbExclusiveAssociationCondition >> printAssociations: aCollection withColumns: aCollection2 to: aStream [
 	| varName |
 	varName := MocoNamingUtils toShortName: ('_' join: (aCollection collect: [ :e | e name ])).
@@ -71,7 +73,7 @@ MocoOclRdbExclusiveAssociationCondition >> printAssociations: aCollection withCo
 		nextPutAll: (' AND ' join: ((aCollection with: aCollection2 collect: [ :t :c | self generateExistsClause: t withColumn: c ])))
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbExclusiveAssociationCondition >> printOclTo: aStream [
 	super printOclTo: aStream.
 	
@@ -84,12 +86,12 @@ MocoOclRdbExclusiveAssociationCondition >> printOclTo: aStream [
 		nextPutAll: (' XOR ' join: (referencingTables collect: [ :each | self generateAssociationVariableName: each ]))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbExclusiveAssociationCondition >> referencingColumns [
 	^ referencingColumns
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbExclusiveAssociationCondition >> referencingTables [
 	^ referencingTables
 ]

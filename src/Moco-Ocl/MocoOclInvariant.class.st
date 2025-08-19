@@ -2,24 +2,26 @@
 Base class for OCL invariants.
 "
 Class {
-	#name : #MocoOclInvariant,
-	#superclass : #MocoOclConstraint,
-	#category : #'Moco-Ocl-Model'
+	#name : 'MocoOclInvariant',
+	#superclass : 'MocoOclConstraint',
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoOclInvariant class >> new [
 	(self asString = 'MocoOclInvariant') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoOclInvariant >> initialize [
 	super initialize.
 	
 	name := ''
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclInvariant >> printOclTo: aStream [
 	aStream
 		nextPutAll: 'context ' , context name , ' inv ' , name , ':';

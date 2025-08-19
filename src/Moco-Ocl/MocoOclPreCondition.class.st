@@ -2,12 +2,14 @@
 Base class that represents an OCL precondition.
 "
 Class {
-	#name : #MocoOclPreCondition,
-	#superclass : #MocoOclCondition,
-	#category : #'Moco-Ocl-Model'
+	#name : 'MocoOclPreCondition',
+	#superclass : 'MocoOclCondition',
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclPreCondition class >> type [
 	^ #pre
 ]

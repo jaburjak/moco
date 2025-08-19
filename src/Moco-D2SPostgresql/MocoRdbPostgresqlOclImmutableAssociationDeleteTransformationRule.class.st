@@ -2,12 +2,14 @@
 Transforms the OCL postcondition preventing removal from immutable attribute set into a CREATE TRIGGER statement in a PostgreSQL database.
 "
 Class {
-	#name : #MocoRdbPostgresqlOclImmutableAssociationDeleteTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SPostgresql-Rule'
+	#name : 'MocoRdbPostgresqlOclImmutableAssociationDeleteTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlOclImmutableAssociationDeleteTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -23,7 +25,7 @@ MocoRdbPostgresqlOclImmutableAssociationDeleteTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclImmutableAssociationDeleteTransformationRule >> generateTrigger: aMocoOclRdbImmutableAssociationDeleteCondition [
 	| trigger body varName |
 	trigger := MocoSqlPostgresqlCreateTrigger new.

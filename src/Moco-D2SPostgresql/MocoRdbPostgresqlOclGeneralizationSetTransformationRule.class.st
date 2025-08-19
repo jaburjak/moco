@@ -2,12 +2,14 @@
 Transforms the generalization set OCL constraint into a series of TRIGGER definitions.
 "
 Class {
-	#name : #MocoRdbPostgresqlOclGeneralizationSetTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SPostgresql-Rule'
+	#name : 'MocoRdbPostgresqlOclGeneralizationSetTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -30,7 +32,7 @@ MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassDeleteTrigger: aMocoOclRdbGeneralizationSetTransformationConstraint forTable: aMocoRdbTable withColumn: aMocoRdbColumn [
 	| trigger body varName |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -74,14 +76,14 @@ MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassDelet
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassDeleteTriggers: aMocoOclRdbGeneralizationSetTransformationConstraint [
 	^ aMocoOclRdbGeneralizationSetTransformationConstraint tables collect: [ :each |
 		self generateSubclassDeleteTrigger: aMocoOclRdbGeneralizationSetTransformationConstraint forTable: (each first) withColumn: (each last)
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassInsertTrigger: aMocoOclRdbGeneralizationSetTransformationConstraint forTable: aMocoRdbTable withColumn: aMocoRdbColumn [
 	| trigger body varName |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -125,14 +127,14 @@ MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassInser
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassInsertTriggers: aMocoOclRdbGeneralizationSetTransformationConstraint [
 	^ aMocoOclRdbGeneralizationSetTransformationConstraint tables collect: [ :each |
 		self generateSubclassInsertTrigger: aMocoOclRdbGeneralizationSetTransformationConstraint forTable: (each first) withColumn: (each last)
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassUpdateTrigger: aMocoOclRdbGeneralizationSetTransformationConstraint forTable: aMocoRdbTable withColumn: aMocoRdbColumn [
 	| trigger body varName |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -187,14 +189,14 @@ MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassUpdat
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSubclassUpdateTriggers: aMocoOclRdbGeneralizationSetTransformationConstraint [
 	^ aMocoOclRdbGeneralizationSetTransformationConstraint tables collect: [ :each |
 		self generateSubclassUpdateTrigger: aMocoOclRdbGeneralizationSetTransformationConstraint forTable: (each first) withColumn: (each last)
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclGeneralizationSetTransformationRule >> generateSuperclassTrigger: aMocoOclRdbGeneralizationSetTransformationConstraint [
 	| trigger body |
 	trigger := MocoSqlPostgresqlCreateTrigger new.

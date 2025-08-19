@@ -2,48 +2,50 @@
 Base class for OCL constraints.
 "
 Class {
-	#name : #MocoOclConstraint,
-	#superclass : #Object,
+	#name : 'MocoOclConstraint',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'context'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoOclConstraint class >> new [
 	(self asString = 'MocoOclConstraint') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclConstraint >> context [
 	^ context
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclConstraint >> context: anObject [
 	context := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclConstraint >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclConstraint >> name: aString [
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclConstraint >> printOclTo: aStream [
 	"Prints the OCL code to the given stream."
 	
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclConstraint >> printTo: aStream [
 	| ocl |
 	ocl := String new writeStream.

@@ -2,42 +2,44 @@
 Base class that represents an OCL pre or post codition.
 "
 Class {
-	#name : #MocoOclCondition,
-	#superclass : #MocoOclConstraint,
+	#name : 'MocoOclCondition',
+	#superclass : 'MocoOclConstraint',
 	#instVars : [
 		'operation'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoOclCondition class >> new [
 	(self asString = 'MocoOclPostCondition') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclCondition class >> type [
 	^ self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoOclCondition >> initialize [
 	super initialize.
 	
 	name := ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclCondition >> operation [
 	^ operation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclCondition >> operation: aByteSymbol [
 	operation := aByteSymbol
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclCondition >> printOclTo: aStream [
 	aStream
 		nextPutAll: 'context ';

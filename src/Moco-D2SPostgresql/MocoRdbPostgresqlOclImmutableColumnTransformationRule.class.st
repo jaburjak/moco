@@ -2,12 +2,14 @@
 Transforms an OCL immutable column value constraint to a CREATE TRIGGER statement for a PostgreSQL database.
 "
 Class {
-	#name : #MocoRdbPostgresqlOclImmutableColumnTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SPostgresql-Rule'
+	#name : 'MocoRdbPostgresqlOclImmutableColumnTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlOclImmutableColumnTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -23,7 +25,7 @@ MocoRdbPostgresqlOclImmutableColumnTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdbImmutableColumnCondition [
 	| trigger body |
 	trigger := MocoSqlPostgresqlCreateTrigger new.

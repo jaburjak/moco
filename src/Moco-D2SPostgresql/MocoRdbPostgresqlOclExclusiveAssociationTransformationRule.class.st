@@ -2,12 +2,14 @@
 Transforms OCL constraints for exclusive phase associations to CREATE TRIGGER statements in a PostgreSQL database.
 "
 Class {
-	#name : #MocoRdbPostgresqlOclExclusiveAssociationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SPostgresql-Rule'
+	#name : 'MocoRdbPostgresqlOclExclusiveAssociationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -28,7 +30,7 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateExists: aBoolean clauseFor: aMocoRdbTable andColumn: aMocoRdbColumn withReferenced: aMocoRdbColumn2 andLabel: aString [
 	| str varName |
 	str := String new writeStream.
@@ -60,7 +62,7 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateExists: aB
 	^ str contents
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| trigger body first column |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -108,7 +110,7 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateInsertTrig
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	| triggers |
 	triggers := OrderedCollection new.
@@ -120,7 +122,7 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateInsertTrig
 	^ triggers
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMocoOclRdbExclusiveAssociationCondition [
 	| trigger body |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -173,7 +175,7 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateSourceTrig
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| trigger body varName |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -223,7 +225,7 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateUpdateTrig
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateUpdateTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	^ (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: (each first) ] )
 ]

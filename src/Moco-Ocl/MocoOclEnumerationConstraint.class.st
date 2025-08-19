@@ -2,33 +2,35 @@
 Represents an OCL constraint that restrict attribute values to a predefined set of values.
 "
 Class {
-	#name : #MocoOclEnumerationConstraint,
-	#superclass : #MocoOclInvariant,
+	#name : 'MocoOclEnumerationConstraint',
+	#superclass : 'MocoOclInvariant',
 	#instVars : [
 		'attribute',
 		'values'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclEnumerationConstraint >> attribute [
 	^ attribute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclEnumerationConstraint >> attribute: aMocoUmlAttribute [
 	attribute := aMocoUmlAttribute
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoOclEnumerationConstraint >> initialize [
 	super initialize.
 	
 	values := OrderedCollection new
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclEnumerationConstraint >> printOclTo: aStream [
 	super printOclTo: aStream.
 	
@@ -45,7 +47,7 @@ MocoOclEnumerationConstraint >> printOclTo: aStream [
 		nextPutAll: (' OR ' join: (values collect: [ :each | 'self.' , (attribute name) , ' = ''' , each , '''' ]))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclEnumerationConstraint >> values [
 	^ values
 ]

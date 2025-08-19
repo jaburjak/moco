@@ -2,12 +2,14 @@
 Transforms OCL constraints for exclusive phase associations to CREATE TRIGGER statements in an Oracle relational database.
 "
 Class {
-	#name : #MocoRdbOclExclusiveAssociationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2S-Rule'
+	#name : 'MocoRdbOclExclusiveAssociationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2S-Rule',
+	#package : 'Moco-D2S',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbOclExclusiveAssociationTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -28,7 +30,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclExclusiveAssociationTransformationRule >> generateExists: aBoolean clauseFor: aMocoRdbTable andColumn: aMocoRdbColumn withReferenced: aMocoRdbColumn2 andLabel: aString [
 	| str varName |
 	str := String new writeStream.
@@ -60,7 +62,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateExists: aBoolean cla
 	^ str contents
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| trigger body first column |
 	trigger := MocoSqlOracleCreateTrigger new.
@@ -115,7 +117,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMoco
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	| triggers |
 	triggers := OrderedCollection new.
@@ -127,7 +129,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMoc
 	^ triggers
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMocoOclRdbExclusiveAssociationCondition [
 	| trigger body |
 	trigger := MocoSqlOracleCreateTrigger new.
@@ -188,7 +190,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMoco
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
@@ -246,7 +248,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMoco
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	^ (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: (each first) ] )
 ]

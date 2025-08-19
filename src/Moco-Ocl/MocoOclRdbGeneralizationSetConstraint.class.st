@@ -2,8 +2,8 @@
 Represents a generalization set constraint in an RDB model.
 "
 Class {
-	#name : #MocoOclRdbGeneralizationSetConstraint,
-	#superclass : #MocoOclInvariant,
+	#name : 'MocoOclRdbGeneralizationSetConstraint',
+	#superclass : 'MocoOclInvariant',
 	#instVars : [
 		'keyColumn',
 		'discriminatorColumn',
@@ -11,25 +11,27 @@ Class {
 		'values',
 		'configurations'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbGeneralizationSetConstraint >> configurations [
 	^ configurations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbGeneralizationSetConstraint >> discriminatorColumn [
 	^ discriminatorColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbGeneralizationSetConstraint >> discriminatorColumn: aMocoRdbColumn [
 	discriminatorColumn := aMocoRdbColumn
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoOclRdbGeneralizationSetConstraint >> initialize [
 	super initialize.
 	
@@ -38,17 +40,17 @@ MocoOclRdbGeneralizationSetConstraint >> initialize [
 	configurations := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbGeneralizationSetConstraint >> keyColumn [
 	^ keyColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbGeneralizationSetConstraint >> keyColumn: aMocoRdbColumn [
 	keyColumn := aMocoRdbColumn
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbGeneralizationSetConstraint >> printOclTo: aStream [
 	super printOclTo: aStream.
 	
@@ -58,7 +60,7 @@ MocoOclRdbGeneralizationSetConstraint >> printOclTo: aStream [
 		nextPutAll: (' OR ' join: (values collect: [ :each | each , '_Instance' ]))
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbGeneralizationSetConstraint >> printVariant: aString to: aStream [
 	values with: configurations do: [ :v :c |
 		(v = aString) ifTrue: [
@@ -96,12 +98,12 @@ MocoOclRdbGeneralizationSetConstraint >> printVariant: aString to: aStream [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbGeneralizationSetConstraint >> tables [
 	^ tables
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbGeneralizationSetConstraint >> values [
 	^ values
 ]

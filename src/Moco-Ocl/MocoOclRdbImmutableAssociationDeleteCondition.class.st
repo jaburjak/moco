@@ -2,27 +2,29 @@
 Represents a DELETE OCL precondition for immutable associations.
 "
 Class {
-	#name : #MocoOclRdbImmutableAssociationDeleteCondition,
-	#superclass : #MocoOclPostCondition,
+	#name : 'MocoOclRdbImmutableAssociationDeleteCondition',
+	#superclass : 'MocoOclPostCondition',
 	#instVars : [
 		'column',
 		'targetTable',
 		'targetColumn'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableAssociationDeleteCondition >> column [
 	^ column
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableAssociationDeleteCondition >> column: aMocoRdbColumn [
 	column := aMocoRdbColumn
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbImmutableAssociationDeleteCondition >> printOclTo: aStream [
 	| varName |
 	
@@ -46,22 +48,22 @@ MocoOclRdbImmutableAssociationDeleteCondition >> printOclTo: aStream [
 		nextPutAll: '@pre))'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableAssociationDeleteCondition >> targetColumn [
 	^ targetColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableAssociationDeleteCondition >> targetColumn: aMocoRdbColumn [
 	targetColumn := aMocoRdbColumn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableAssociationDeleteCondition >> targetTable [
 	^ targetTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableAssociationDeleteCondition >> targetTable: aMocoRdbTable [
 	targetTable := aMocoRdbTable
 ]

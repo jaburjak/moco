@@ -2,25 +2,27 @@
 An OCL condition representing an immutable column in a relational database model.
 "
 Class {
-	#name : #MocoOclRdbImmutableColumnCondition,
-	#superclass : #MocoOclPostCondition,
+	#name : 'MocoOclRdbImmutableColumnCondition',
+	#superclass : 'MocoOclPostCondition',
 	#instVars : [
 		'column'
 	],
-	#category : #'Moco-Ocl-Model'
+	#category : 'Moco-Ocl-Model',
+	#package : 'Moco-Ocl',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableColumnCondition >> column [
 	^ column
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoOclRdbImmutableColumnCondition >> column: aMocoRdbColumn [
 	column := aMocoRdbColumn
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoOclRdbImmutableColumnCondition >> printOclTo: aStream [
 	super printOclTo: aStream.
 

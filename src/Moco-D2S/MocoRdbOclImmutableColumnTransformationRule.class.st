@@ -2,12 +2,14 @@
 Transforms an OCL immutable column value constraint to a CREATE TRIGGER statement for an Oracle relational database.
 "
 Class {
-	#name : #MocoRdbOclImmutableColumnTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2S-Rule'
+	#name : 'MocoRdbOclImmutableColumnTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2S-Rule',
+	#package : 'Moco-D2S',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbOclImmutableColumnTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -23,7 +25,7 @@ MocoRdbOclImmutableColumnTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdbImmutableColumnCondition [
 	| trigger body |
 	trigger := MocoSqlOracleCreateTrigger new.

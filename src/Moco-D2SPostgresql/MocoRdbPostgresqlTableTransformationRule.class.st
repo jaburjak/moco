@@ -2,15 +2,17 @@
 Transforms table definition into a CREATE TABLE statement.
 "
 Class {
-	#name : #MocoRdbPostgresqlTableTransformationRule,
-	#superclass : #MocoTransformationRule,
+	#name : 'MocoRdbPostgresqlTableTransformationRule',
+	#superclass : 'MocoTransformationRule',
 	#instVars : [
 		'typeResolver'
 	],
-	#category : #'Moco-D2SPostgresql-Rule'
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlTableTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -26,19 +28,19 @@ MocoRdbPostgresqlTableTransformationRule >> execute [
 	]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbPostgresqlTableTransformationRule >> initialize [
 	super initialize.
 	
 	typeResolver := MocoSqlPostgresqlDataTypeResolver instance
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbPostgresqlTableTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	"Returns a table column definition."
 	
@@ -60,7 +62,7 @@ MocoRdbPostgresqlTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	^ str contents
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	"Returns a CREATE TABLE statement for the given table."
 	
@@ -77,7 +79,7 @@ MocoRdbPostgresqlTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	^ sql
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 	"Returns PRIMARY KEY constraint definitions."
 	
@@ -89,7 +91,7 @@ MocoRdbPostgresqlTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTab
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
 	"Returns column type declaration for the given data type."
 	
@@ -98,7 +100,7 @@ MocoRdbPostgresqlTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType 
 	^ typeResolver typeDeclaration
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlTableTransformationRule >> toUniqueKeyDefinitions: aMocoRdbTable [
 	"Returns UNIQUE constraint definitions."
 	

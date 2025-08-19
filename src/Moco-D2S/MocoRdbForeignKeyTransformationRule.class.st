@@ -2,12 +2,14 @@
 Transforms foreign key definitions to ALTER TABLE statements for an Oracle relational database.
 "
 Class {
-	#name : #MocoRdbForeignKeyTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2S-Rule'
+	#name : 'MocoRdbForeignKeyTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2S-Rule',
+	#package : 'Moco-D2S',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbForeignKeyTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -23,12 +25,12 @@ MocoRdbForeignKeyTransformationRule >> execute [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbForeignKeyTransformationRule >> priority [
 	^ 99
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForKey: aMocoRdbForeignKey [
 	"Returns an ALTER TABLE statement for the given foreign key."
 	
@@ -54,7 +56,7 @@ MocoRdbForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForK
 	^ stmt
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbForeignKeyTransformationRule >> toAlterTableStatements: aMocoRdbTable [
 	"Returns ALTER TABLE statements for foreign keys of the given table."
 	

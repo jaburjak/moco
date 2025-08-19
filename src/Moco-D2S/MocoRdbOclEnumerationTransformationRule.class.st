@@ -2,12 +2,14 @@
 Transforms OCL enumeration constraints to CHECK constraints.
 "
 Class {
-	#name : #MocoRdbOclEnumerationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2S-Rule'
+	#name : 'MocoRdbOclEnumerationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2S-Rule',
+	#package : 'Moco-D2S',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbOclEnumerationTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -23,7 +25,7 @@ MocoRdbOclEnumerationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumerationConstraint [
 	"Creates an ALTER TABLE statement with a CHECK for the given enumeration constraint."
 	
@@ -56,7 +58,7 @@ MocoRdbOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumeration
 	^ stmt
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbOclEnumerationTransformationRule >> priority [
 	^ 80
 ]

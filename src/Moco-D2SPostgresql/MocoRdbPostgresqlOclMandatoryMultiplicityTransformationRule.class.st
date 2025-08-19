@@ -2,12 +2,14 @@
 Transforms mandatory association multiplicity OCL constraint to CREATE TRIGGER statements in a PostgreSQL database.
 "
 Class {
-	#name : #MocoRdbPostgresqlOclMandatoryMultiplicityTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SPostgresql-Rule'
+	#name : 'MocoRdbPostgresqlOclMandatoryMultiplicityTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlOclMandatoryMultiplicityTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -27,7 +29,7 @@ MocoRdbPostgresqlOclMandatoryMultiplicityTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclMandatoryMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
 	| trigger body varName varName2 |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -78,7 +80,7 @@ MocoRdbPostgresqlOclMandatoryMultiplicityTransformationRule >> generateSourceTri
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclMandatoryMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
 	| trigger body varName |
 	trigger := MocoSqlPostgresqlCreateTrigger new.

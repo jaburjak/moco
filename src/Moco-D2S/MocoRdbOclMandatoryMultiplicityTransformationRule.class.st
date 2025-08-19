@@ -2,12 +2,14 @@
 Transforms mandatory association multiplicity OCL constraint to CREATE TRIGGER statements in an Oracle relational database.
 "
 Class {
-	#name : #MocoRdbOclMandatoryMultiplicityTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2S-Rule'
+	#name : 'MocoRdbOclMandatoryMultiplicityTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2S-Rule',
+	#package : 'Moco-D2S',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbOclMandatoryMultiplicityTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -27,7 +29,7 @@ MocoRdbOclMandatoryMultiplicityTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclMandatoryMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
 	| trigger body varName varName2 |
 	trigger := MocoSqlOracleCreateTrigger new.
@@ -84,7 +86,7 @@ MocoRdbOclMandatoryMultiplicityTransformationRule >> generateSourceTrigger: aMoc
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbOclMandatoryMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.

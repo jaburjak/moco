@@ -2,12 +2,14 @@
 Transforms foreign key definitions to ALTER TABLE statements for a PostgreSQL database.
 "
 Class {
-	#name : #MocoRdbPostgresqlForeignKeyTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SPostgresql-Rule'
+	#name : 'MocoRdbPostgresqlForeignKeyTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlForeignKeyTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -23,12 +25,12 @@ MocoRdbPostgresqlForeignKeyTransformationRule >> execute [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbPostgresqlForeignKeyTransformationRule >> priority [
 	^ 99
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForKey: aMocoRdbForeignKey [
 	"Returns an ALTER TABLE statement for the given foreign key."
 	
@@ -54,7 +56,7 @@ MocoRdbPostgresqlForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable sta
 	^ stmt
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbPostgresqlForeignKeyTransformationRule >> toAlterTableStatements: aMocoRdbTable [
 	"Returns ALTER TABLE statements for foreign keys of the given table."
 	

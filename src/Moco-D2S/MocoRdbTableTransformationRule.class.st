@@ -2,15 +2,17 @@
 Transforms table definition into a CREATE TABLE statement.
 "
 Class {
-	#name : #MocoRdbTableTransformationRule,
-	#superclass : #MocoTransformationRule,
+	#name : 'MocoRdbTableTransformationRule',
+	#superclass : 'MocoTransformationRule',
 	#instVars : [
 		'typeResolver'
 	],
-	#category : #'Moco-D2S-Rule'
+	#category : 'Moco-D2S-Rule',
+	#package : 'Moco-D2S',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbTableTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -26,19 +28,19 @@ MocoRdbTableTransformationRule >> execute [
 	]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbTableTransformationRule >> initialize [
 	super initialize.
 	
 	typeResolver := MocoSqlOracleDataTypeResolver instance
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTableTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	"Returns a table column definition."
 	
@@ -60,7 +62,7 @@ MocoRdbTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	^ str contents
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	"Returns a CREATE TABLE statement for the given table."
 	
@@ -77,7 +79,7 @@ MocoRdbTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	^ sql
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 	"Returns PRIMARY KEY constraint definitions."
 	
@@ -89,7 +91,7 @@ MocoRdbTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
 	"Returns column type declaration for the given data type."
 	
@@ -98,7 +100,7 @@ MocoRdbTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
 	^ typeResolver typeDeclaration
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbTableTransformationRule >> toUniqueKeyDefinitions: aMocoRdbTable [
 	"Returns UNIQUE constraint definitions."
 	

@@ -2,12 +2,14 @@
 Transformation round realizing an PostgreSQL relational database model in SQL statements.
 "
 Class {
-	#name : #MocoRdbToSqlPostgresqlRound,
-	#superclass : #Object,
-	#category : #'Moco-D2SPostgresql-Round'
+	#name : 'MocoRdbToSqlPostgresqlRound',
+	#superclass : 'Object',
+	#category : 'Moco-D2SPostgresql-Round',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Round'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbToSqlPostgresqlRound class >> transform: aMocoModel [
 	| engine ruleRepo |
 	engine := MocoTransformationEngine new.

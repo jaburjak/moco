@@ -2,12 +2,14 @@
 Transforms special association multiplicity OCL constraint to CREATE TRIGGER statements in a PostgreSQL database.
 "
 Class {
-	#name : #MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SPostgresql-Rule'
+	#name : 'MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SPostgresql-Rule',
+	#package : 'Moco-D2SPostgresql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -27,14 +29,15 @@ MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule >> generateBetweenClauseForLower: aNumber andUpper: aNumber2 [
 	aNumber ifNil: [ ^ '<= ' , (aNumber2 asString) ].
 	aNumber2 ifNil: [ ^ '>= ' , (aNumber asString) ].
+	(aNumber = aNumber2) ifTrue: [ ^ '= ' , (aNumber asString) ].
 	^ 'BETWEEN ' , (aNumber asString) , ' AND ' , (aNumber2 asString)
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
 	| trigger events condition body varName varName2 |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
@@ -99,7 +102,7 @@ MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule >> generateSourceTrigg
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbPostgresqlOclSpecialMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
 	| trigger body varName |
 	trigger := MocoSqlPostgresqlCreateTrigger new.
