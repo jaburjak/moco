@@ -2,12 +2,14 @@
 Transforms the OCL postcondition preventing removal from immutable attribute set into a CREATE TRIGGER statement in a MySQL database.
 "
 Class {
-	#name : #MocoRdbMysqlOclImmutableAssociationDeleteTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SMysql-Rule'
+	#name : 'MocoRdbMysqlOclImmutableAssociationDeleteTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SMysql-Rule',
+	#package : 'Moco-D2SMysql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbMysqlOclImmutableAssociationDeleteTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -23,7 +25,7 @@ MocoRdbMysqlOclImmutableAssociationDeleteTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclImmutableAssociationDeleteTransformationRule >> generateTrigger: aMocoOclRdbImmutableAssociationDeleteCondition [
 	| trigger body varName |
 	trigger := MocoSqlMysqlCreateTrigger new.
@@ -66,4 +68,9 @@ MocoRdbMysqlOclImmutableAssociationDeleteTransformationRule >> generateTrigger: 
 	trigger body: (body contents).
 	
 	^ trigger
+]
+
+{ #category : 'accessing' }
+MocoRdbMysqlOclImmutableAssociationDeleteTransformationRule >> priority [
+	^ 80
 ]

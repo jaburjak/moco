@@ -2,12 +2,14 @@
 Transforms foreign key definitions to ALTER TABLE statements for a MySQL database.
 "
 Class {
-	#name : #MocoRdbMysqlForeignKeyTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SMysql-Rule'
+	#name : 'MocoRdbMysqlForeignKeyTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SMysql-Rule',
+	#package : 'Moco-D2SMysql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbMysqlForeignKeyTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -23,12 +25,12 @@ MocoRdbMysqlForeignKeyTransformationRule >> execute [
 	]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbMysqlForeignKeyTransformationRule >> priority [
 	^ 99
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForKey: aMocoRdbForeignKey [
 	"Returns an ALTER TABLE statement for the given foreign key."
 	
@@ -54,7 +56,7 @@ MocoRdbMysqlForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statemen
 	^ stmt
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlForeignKeyTransformationRule >> toAlterTableStatements: aMocoRdbTable [
 	"Returns ALTER TABLE statements for foreign keys of the given table."
 	

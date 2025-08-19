@@ -2,12 +2,14 @@
 Transforms OCL constraints for exclusive phase associations to CREATE TRIGGER and CREATE PROCEDURE statements in a MySQL database.
 "
 Class {
-	#name : #MocoRdbMysqlOclExclusiveAssociationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SMysql-Rule'
+	#name : 'MocoRdbMysqlOclExclusiveAssociationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SMysql-Rule',
+	#package : 'Moco-D2SMysql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -29,7 +31,7 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateDeleteTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| column trigger body |
 	(aMocoOclRdbExclusiveAssociationCondition referencingTables) with: (aMocoOclRdbExclusiveAssociationCondition referencingColumns) do: [ :t :c | (t identityIncludes: aMocoRdbTable) ifTrue: [ column := (c first) ] ].
@@ -61,12 +63,12 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateDeleteTrigger: 
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateDeleteTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	^ (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateDeleteTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: (each first) ] )
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateExists: aBoolean clauseFor: aMocoRdbTable andColumn: aMocoRdbColumn withReferenced: aMocoRdbColumn2 andLabel: aString [
 	| str varName |
 	str := String new writeStream.
@@ -100,7 +102,7 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateExists: aBoolea
 	^ str contents
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| trigger body first column |
 	trigger := MocoSqlMysqlCreateTrigger new.
@@ -145,7 +147,7 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateInsertTrigger: 
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	| triggers |
 	triggers := OrderedCollection new.
@@ -157,7 +159,7 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateInsertTriggers:
 	^ triggers
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateSourceProcedure: aMocoOclRdbExclusiveAssociationCondition [
 	| procedure input body |
 	procedure := MocoSqlMysqlCreateProcedure new.
@@ -211,7 +213,7 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateSourceProcedure
 	^ procedure
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateSumVariableFor: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable withReferencedColumn: aMocoRdbColumn andIndent: aString [
 	| body sum |
 	body := String new writeStream.
@@ -252,7 +254,7 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateSumVariableFor:
 	^ (body contents)
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| column trigger body |
 	(aMocoOclRdbExclusiveAssociationCondition referencingTables) with: (aMocoOclRdbExclusiveAssociationCondition referencingColumns) do: [ :t :c | (t identityIncludes: aMocoRdbTable) ifTrue: [ column := (c first) ] ].
@@ -306,7 +308,12 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: 
 	^ trigger
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateUpdateTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	^ (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: (each first) ] )
+]
+
+{ #category : 'accessing' }
+MocoRdbMysqlOclExclusiveAssociationTransformationRule >> priority [
+	^ 80
 ]

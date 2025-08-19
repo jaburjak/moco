@@ -1,1 +1,1 @@
-Package { #name : #'Moco-D2SMysql' }
+Package { #name : 'Moco-D2SMysql' }

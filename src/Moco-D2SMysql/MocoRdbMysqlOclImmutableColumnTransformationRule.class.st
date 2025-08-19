@@ -2,12 +2,14 @@
 Transforms an OCL immutable column value constraint to a CREATE TRIGGER statement for a MySQL database.
 "
 Class {
-	#name : #MocoRdbMysqlOclImmutableColumnTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SMysql-Rule'
+	#name : 'MocoRdbMysqlOclImmutableColumnTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SMysql-Rule',
+	#package : 'Moco-D2SMysql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbMysqlOclImmutableColumnTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -23,7 +25,7 @@ MocoRdbMysqlOclImmutableColumnTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbMysqlOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdbImmutableColumnCondition [
 	| trigger body |
 	trigger := MocoSqlMysqlCreateTrigger new.
@@ -53,4 +55,9 @@ MocoRdbMysqlOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdb
 	trigger body: (body contents).
 	
 	^ trigger
+]
+
+{ #category : 'accessing' }
+MocoRdbMysqlOclImmutableColumnTransformationRule >> priority [
+	^ 80
 ]

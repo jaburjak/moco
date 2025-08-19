@@ -2,15 +2,17 @@
 Transforms table definition into a CREATE TABLE statement.
 "
 Class {
-	#name : #MocoRdbMysqlTableTransformationRule,
-	#superclass : #MocoTransformationRule,
+	#name : 'MocoRdbMysqlTableTransformationRule',
+	#superclass : 'MocoTransformationRule',
 	#instVars : [
 		'typeResolver'
 	],
-	#category : #'Moco-D2SMysql-Rule'
+	#category : 'Moco-D2SMysql-Rule',
+	#package : 'Moco-D2SMysql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbMysqlTableTransformationRule >> execute [
 	| tables |
 	tables := engine input
@@ -26,19 +28,19 @@ MocoRdbMysqlTableTransformationRule >> execute [
 	]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbMysqlTableTransformationRule >> initialize [
 	super initialize.
 	
 	typeResolver := MocoSqlMysqlDataTypeResolver instance
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbMysqlTableTransformationRule >> priority [
 	^ 100
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	"Returns a table column definition."
 	
@@ -60,7 +62,7 @@ MocoRdbMysqlTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	^ str contents
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	"Returns a CREATE TABLE statement for the given table."
 	
@@ -77,7 +79,7 @@ MocoRdbMysqlTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	^ sql
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 	"Returns PRIMARY KEY constraint definitions."
 	
@@ -89,7 +91,7 @@ MocoRdbMysqlTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
 	"Returns column type declaration for the given data type."
 	
@@ -98,7 +100,7 @@ MocoRdbMysqlTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
 	^ typeResolver typeDeclaration
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlTableTransformationRule >> toUniqueKeyDefinitions: aMocoRdbTable [
 	"Returns UNIQUE constraint definitions."
 	

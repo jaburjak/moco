@@ -2,12 +2,14 @@
 Transforms OCL enumeration constraints to CHECK constraints.
 "
 Class {
-	#name : #MocoRdbMysqlOclEnumerationTransformationRule,
-	#superclass : #MocoTransformationRule,
-	#category : #'Moco-D2SMysql-Rule'
+	#name : 'MocoRdbMysqlOclEnumerationTransformationRule',
+	#superclass : 'MocoTransformationRule',
+	#category : 'Moco-D2SMysql-Rule',
+	#package : 'Moco-D2SMysql',
+	#tag : 'Rule'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoRdbMysqlOclEnumerationTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
@@ -23,7 +25,7 @@ MocoRdbMysqlOclEnumerationTransformationRule >> execute [
 	]
 ]
 
-{ #category : #'private - transforming' }
+{ #category : 'private - transforming' }
 MocoRdbMysqlOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumerationConstraint [
 	"Creates an ALTER TABLE statement with a CHECK for the given enumeration constraint."
 	
@@ -56,7 +58,7 @@ MocoRdbMysqlOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumer
 	^ stmt
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbMysqlOclEnumerationTransformationRule >> priority [
 	^ 80
 ]
