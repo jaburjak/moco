@@ -2,7 +2,7 @@
 
 set -e
 
-SUITES=("MocoOpenPonkTestSuite" "MocoO2UTestSuite" "MocoU2DTestSuite" "MocoD2STestSuite")
+SUITES=("MocoOpenPonkTestSuite" "MocoO2UTestSuite" "MocoU2DTestSuite" "MocoD2SOracleTestSuite")
 
 for suite in "${SUITES[@]}"; do
 	echo "$suite:"
