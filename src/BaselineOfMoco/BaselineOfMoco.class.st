@@ -2,12 +2,13 @@
 BaselineOfMoco
 "
 Class {
-	#name : #BaselineOfMoco,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfMoco
+	#name : 'BaselineOfMoco',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfMoco',
+	#package : 'BaselineOfMoco'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfMoco >> baseline: spec [
 	<baseline>
 	spec
@@ -26,19 +27,19 @@ BaselineOfMoco >> baseline: spec [
 					package: 'Moco-U2D' with: [ spec requires: #('Moco-Core' 'Moco-Uml' 'Moco-Ocl' 'Moco-Rdb') ];
 					package: 'Moco-U2D-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-U2D') ];
 					package: 'Moco-SqlOracle' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
-					package: 'Moco-D2S' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlOracle') ];
-					package: 'Moco-D2S-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-D2S') ];
+					package: 'Moco-D2SOracle' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlOracle') ];
+					package: 'Moco-D2SOracle-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-D2SOracle') ];
 					package: 'Moco-SqlPostgresql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
 					package: 'Moco-D2SPostgresql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlPostgresql') ];
 					package: 'Moco-SqlMysql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
-					package: 'Moco-D2SMysql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlPostgresql') ];
+					package: 'Moco-D2SMysql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlMysql') ];
 					package: 'Moco-Alloy';
 					package: 'Moco-O2A' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-Alloy') ];
-					package: 'Moco-OpenPonk' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-O2U' 'Moco-U2D' 'Moco-D2S') ] ];
+					package: 'Moco-OpenPonk' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-O2U' 'Moco-U2D' 'Moco-D2SOracle' 'Moco-D2SPostgresql' 'Moco-D2SMysql' 'Moco-O2A') ] ];
 					package: 'Moco-OpenPonk-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-OpenPonk') ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BaselineOfMoco >> projectClass [
 	^ MetacelloCypressBaselineProject
 ]
