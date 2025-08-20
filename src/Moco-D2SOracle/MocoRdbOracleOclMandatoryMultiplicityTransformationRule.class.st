@@ -2,19 +2,19 @@
 Transforms mandatory association multiplicity OCL constraint to CREATE TRIGGER statements in an Oracle relational database.
 "
 Class {
-	#name : 'MocoRdbOclMandatoryMultiplicityTransformationRule',
+	#name : 'MocoRdbOracleOclMandatoryMultiplicityTransformationRule',
 	#superclass : 'MocoTransformationRule',
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbOclMandatoryMultiplicityTransformationRule >> execute [
+MocoRdbOracleOclMandatoryMultiplicityTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
 		selectElementsOfKind: MocoOclRdbMandatoryMultiplicityConstraint
-		notGuarded: #MocoRdbOclMandatoryMultiplicityTransformationRule.
+		notGuarded: #MocoRdbOracleOclMandatoryMultiplicityTransformationRule.
 	
 	ocls do: [ :each |
 		| triggers |
@@ -25,12 +25,12 @@ MocoRdbOclMandatoryMultiplicityTransformationRule >> execute [
 			add: (self generateSourceTrigger: each).
 		
 		triggers do: [ :e | engine addOutputElement: e withSource: each ].
-		engine input guard: each with: #MocoRdbOclMandatoryMultiplicityTransformationRule
+		engine input guard: each with: #MocoRdbOracleOclMandatoryMultiplicityTransformationRule
 	]
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclMandatoryMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
+MocoRdbOracleOclMandatoryMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
 	| trigger body varName varName2 |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
@@ -87,7 +87,7 @@ MocoRdbOclMandatoryMultiplicityTransformationRule >> generateSourceTrigger: aMoc
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclMandatoryMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
+MocoRdbOracleOclMandatoryMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbMandatoryMultiplicityConstraint [
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	

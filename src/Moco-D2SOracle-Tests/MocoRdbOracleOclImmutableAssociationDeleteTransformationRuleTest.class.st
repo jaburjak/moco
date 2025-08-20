@@ -1,22 +1,24 @@
 Class {
-	#name : #MocoRdbOclImmutableAssociationDeleteTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
+	#name : 'MocoRdbOracleOclImmutableAssociationDeleteTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
 	#instVars : [
 		'source',
 		'target'
 	],
-	#category : #'Moco-D2S-Tests-Rule'
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbOclImmutableAssociationDeleteTransformationRuleTest >> execute [
-	^ self execute: MocoRdbOclImmutableAssociationDeleteTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleOclImmutableAssociationDeleteTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleOclImmutableAssociationDeleteTransformationRule
 ]
 
-{ #category : #running }
-MocoRdbOclImmutableAssociationDeleteTransformationRuleTest >> setUp [
+{ #category : 'running' }
+MocoRdbOracleOclImmutableAssociationDeleteTransformationRuleTest >> setUp [
 	super setUp.
 	
 	source := MocoRdbTable new name: 'A'; yourself.
@@ -31,8 +33,8 @@ MocoRdbOclImmutableAssociationDeleteTransformationRuleTest >> setUp [
 	engine input addElement: target
 ]
 
-{ #category : #tests }
-MocoRdbOclImmutableAssociationDeleteTransformationRuleTest >> testOcl [
+{ #category : 'tests' }
+MocoRdbOracleOclImmutableAssociationDeleteTransformationRuleTest >> testOcl [
 	| ocl trigger |
 	ocl := MocoOclRdbImmutableAssociationDeleteCondition new
 		name: 'TEST_OCL';

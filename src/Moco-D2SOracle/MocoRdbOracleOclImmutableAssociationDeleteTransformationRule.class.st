@@ -2,31 +2,31 @@
 Transforms the OCL postcondition preventing removal from immutable attribute set into a CREATE TRIGGER statement in an Oracle relational database.
 "
 Class {
-	#name : 'MocoRdbOclImmutableAssociationDeleteTransformationRule',
+	#name : 'MocoRdbOracleOclImmutableAssociationDeleteTransformationRule',
 	#superclass : 'MocoTransformationRule',
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbOclImmutableAssociationDeleteTransformationRule >> execute [
+MocoRdbOracleOclImmutableAssociationDeleteTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
 		selectElementsOfKind: MocoOclRdbImmutableAssociationDeleteCondition
-		notGuarded: #MocoRdbOclImmutableAssociationDeleteTransformationRule.
+		notGuarded: #MocoRdbOracleOclImmutableAssociationDeleteTransformationRule.
 	
 	ocls do: [ :each |
 		| trigger |
 		trigger := self generateTrigger: each.
 		
 		engine addOutputElement: trigger withSource: each.
-		engine input guard: each with: #MocoRdbOclImmutableAssociationDeleteTransformationRule
+		engine input guard: each with: #MocoRdbOracleOclImmutableAssociationDeleteTransformationRule
 	]
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclImmutableAssociationDeleteTransformationRule >> generateTrigger: aMocoOclRdbImmutableAssociationDeleteCondition [
+MocoRdbOracleOclImmutableAssociationDeleteTransformationRule >> generateTrigger: aMocoOclRdbImmutableAssociationDeleteCondition [
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	

@@ -2,19 +2,19 @@
 Transforms special association multiplicity OCL constraint to CREATE TRIGGER statements in an Oracle relational database.
 "
 Class {
-	#name : 'MocoRdbOclSpecialMultiplicityTransformationRule',
+	#name : 'MocoRdbOracleOclSpecialMultiplicityTransformationRule',
 	#superclass : 'MocoTransformationRule',
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbOclSpecialMultiplicityTransformationRule >> execute [
+MocoRdbOracleOclSpecialMultiplicityTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
 		selectElementsOfKind: MocoOclRdbSpecialMultiplicityConstraint
-		notGuarded: #MocoRdbOclSpecialMultiplicityTransformationRule.
+		notGuarded: #MocoRdbOracleOclSpecialMultiplicityTransformationRule.
 	
 	ocls do: [ :each |
 		| triggers |
@@ -25,12 +25,12 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> execute [
 			add: (self generateSourceTrigger: each).
 		
 		triggers do: [ :e | engine addOutputElement: e withSource: each ].
-		engine input guard: each with: #MocoRdbOclSpecialMultiplicityTransformationRule
+		engine input guard: each with: #MocoRdbOracleOclSpecialMultiplicityTransformationRule
 	]
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclSpecialMultiplicityTransformationRule >> generateBetweenClause: aString forLower: aNumber andUpper: aNumber2 [
+MocoRdbOracleOclSpecialMultiplicityTransformationRule >> generateBetweenClause: aString forLower: aNumber andUpper: aNumber2 [
 	| value |
 	value := aString.
 	
@@ -43,7 +43,7 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> generateBetweenClause: aStrin
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
+MocoRdbOracleOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
 	| trigger events condition body varName varName2 |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
@@ -115,7 +115,7 @@ MocoRdbOclSpecialMultiplicityTransformationRule >> generateSourceTrigger: aMocoO
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclSpecialMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
+MocoRdbOracleOclSpecialMultiplicityTransformationRule >> generateTargetTrigger: aMocoOclRdbSpecialMultiplicityConstraint [
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	

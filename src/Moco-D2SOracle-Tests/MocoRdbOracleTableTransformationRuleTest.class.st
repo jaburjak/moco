@@ -1,18 +1,20 @@
 Class {
-	#name : #MocoRdbTableTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
-	#category : #'Moco-D2S-Tests-Rule'
+	#name : 'MocoRdbOracleTableTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbTableTransformationRuleTest >> execute [
-	^ self execute: MocoRdbTableTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleTableTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleTableTransformationRule
 ]
 
-{ #category : #tests }
-MocoRdbTableTransformationRuleTest >> testTable [
+{ #category : 'tests' }
+MocoRdbOracleTableTransformationRuleTest >> testTable [
 	| table |
 	table := MocoRdbTable new name: 'TEST_TABLE'; yourself.
 	table columns add: (MocoRdbColumn new name: 'ID'; type: (MocoRdbTypeInteger new); nullable: false; yourself).

@@ -2,46 +2,46 @@
 Transforms table definition into a CREATE TABLE statement.
 "
 Class {
-	#name : 'MocoRdbTableTransformationRule',
+	#name : 'MocoRdbOracleTableTransformationRule',
 	#superclass : 'MocoTransformationRule',
 	#instVars : [
 		'typeResolver'
 	],
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbTableTransformationRule >> execute [
+MocoRdbOracleTableTransformationRule >> execute [
 	| tables |
 	tables := engine input
 		selectElementsOfKind: MocoRdbTable
-		notGuarded: #MocoRdbTableTransformationRule.
+		notGuarded: #MocoRdbOracleTableTransformationRule.
 	
 	tables do: [ :each |
 		| statement |
 		statement := self toCreateTable: each.
 		
 		engine addOutputElement: statement withSource: each.
-		engine input guard: each with: #MocoRdbTableTransformationRule
+		engine input guard: each with: #MocoRdbOracleTableTransformationRule
 	]
 ]
 
 { #category : 'initialization' }
-MocoRdbTableTransformationRule >> initialize [
+MocoRdbOracleTableTransformationRule >> initialize [
 	super initialize.
 	
 	typeResolver := MocoSqlOracleDataTypeResolver instance
 ]
 
 { #category : 'accessing' }
-MocoRdbTableTransformationRule >> priority [
+MocoRdbOracleTableTransformationRule >> priority [
 	^ 100
 ]
 
 { #category : 'private - transforming' }
-MocoRdbTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
+MocoRdbOracleTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 	"Returns a table column definition."
 	
 	| str |
@@ -63,7 +63,7 @@ MocoRdbTableTransformationRule >> toColumnDefinition: aMocoRdbColumn [
 ]
 
 { #category : 'private - transforming' }
-MocoRdbTableTransformationRule >> toCreateTable: aMocoRdbTable [
+MocoRdbOracleTableTransformationRule >> toCreateTable: aMocoRdbTable [
 	"Returns a CREATE TABLE statement for the given table."
 	
 	| sql |
@@ -80,7 +80,7 @@ MocoRdbTableTransformationRule >> toCreateTable: aMocoRdbTable [
 ]
 
 { #category : 'private - transforming' }
-MocoRdbTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
+MocoRdbOracleTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 	"Returns PRIMARY KEY constraint definitions."
 	
 	| keys |
@@ -92,7 +92,7 @@ MocoRdbTableTransformationRule >> toPrimaryKeyDefinitions: aMocoRdbTable [
 ]
 
 { #category : 'private - transforming' }
-MocoRdbTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
+MocoRdbOracleTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
 	"Returns column type declaration for the given data type."
 	
 	aMocoRdbDataType accept: typeResolver.
@@ -101,7 +101,7 @@ MocoRdbTableTransformationRule >> toTypeDeclaration: aMocoRdbDataType [
 ]
 
 { #category : 'private - transforming' }
-MocoRdbTableTransformationRule >> toUniqueKeyDefinitions: aMocoRdbTable [
+MocoRdbOracleTableTransformationRule >> toUniqueKeyDefinitions: aMocoRdbTable [
 	"Returns UNIQUE constraint definitions."
 	
 	| keys |

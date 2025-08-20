@@ -2,36 +2,36 @@
 Transforms foreign key definitions to ALTER TABLE statements for an Oracle relational database.
 "
 Class {
-	#name : 'MocoRdbForeignKeyTransformationRule',
+	#name : 'MocoRdbOracleForeignKeyTransformationRule',
 	#superclass : 'MocoTransformationRule',
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbForeignKeyTransformationRule >> execute [
+MocoRdbOracleForeignKeyTransformationRule >> execute [
 	| tables |
 	tables := engine input
 		selectElementsOfKind: MocoRdbTable
-		notGuarded: #MocoRdbForeignKeyTransformationRule.
+		notGuarded: #MocoRdbOracleForeignKeyTransformationRule.
 	
 	tables do: [ :each |
 		| statements |
 		statements := self toAlterTableStatements: each.
 		
 		statements do: [ :st | engine addOutputElement: st withSource: each ].
-		engine input guard: each with: #MocoRdbForeignKeyTransformationRule
+		engine input guard: each with: #MocoRdbOracleForeignKeyTransformationRule
 	]
 ]
 
 { #category : 'accessing' }
-MocoRdbForeignKeyTransformationRule >> priority [
+MocoRdbOracleForeignKeyTransformationRule >> priority [
 	^ 99
 ]
 
 { #category : 'private - transforming' }
-MocoRdbForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForKey: aMocoRdbForeignKey [
+MocoRdbOracleForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForKey: aMocoRdbForeignKey [
 	"Returns an ALTER TABLE statement for the given foreign key."
 	
 	| stmt body |
@@ -57,7 +57,7 @@ MocoRdbForeignKeyTransformationRule >> toAlterTable: aMocoRdbTable statementForK
 ]
 
 { #category : 'private - transforming' }
-MocoRdbForeignKeyTransformationRule >> toAlterTableStatements: aMocoRdbTable [
+MocoRdbOracleForeignKeyTransformationRule >> toAlterTableStatements: aMocoRdbTable [
 	"Returns ALTER TABLE statements for foreign keys of the given table."
 	
 	^ (aMocoRdbTable constraints select: [ :each | each isKindOf: MocoRdbForeignKey ])

@@ -1,22 +1,24 @@
 Class {
-	#name : #MocoRdbForeignKeyTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
+	#name : 'MocoRdbOracleForeignKeyTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
 	#instVars : [
 		'table1',
 		'table2'
 	],
-	#category : #'Moco-D2S-Tests-Rule'
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbForeignKeyTransformationRuleTest >> execute [
-	^ self execute: MocoRdbForeignKeyTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleForeignKeyTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleForeignKeyTransformationRule
 ]
 
-{ #category : #running }
-MocoRdbForeignKeyTransformationRuleTest >> setUp [
+{ #category : 'running' }
+MocoRdbOracleForeignKeyTransformationRuleTest >> setUp [
 	super setUp.
 
 	table1 := MocoRdbTable new name: 'A'; yourself.
@@ -31,8 +33,8 @@ MocoRdbForeignKeyTransformationRuleTest >> setUp [
 	table2 constraints first columns add: (table2 columns first)
 ]
 
-{ #category : #tests }
-MocoRdbForeignKeyTransformationRuleTest >> testForeignKey [
+{ #category : 'tests' }
+MocoRdbOracleForeignKeyTransformationRuleTest >> testForeignKey [
 	| fk alter |
 	fk := MocoRdbForeignKey new name: 'FK_TEST'; yourself.
 	table1 columns add: (MocoRdbColumn new name: 'B_ID'; type: (MocoRdbTypeInteger new); yourself).

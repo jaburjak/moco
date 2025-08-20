@@ -2,31 +2,31 @@
 Transforms an OCL immutable column value constraint to a CREATE TRIGGER statement for an Oracle relational database.
 "
 Class {
-	#name : 'MocoRdbOclImmutableColumnTransformationRule',
+	#name : 'MocoRdbOracleOclImmutableColumnTransformationRule',
 	#superclass : 'MocoTransformationRule',
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbOclImmutableColumnTransformationRule >> execute [
+MocoRdbOracleOclImmutableColumnTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
 		selectElementsOfKind: MocoOclRdbImmutableColumnCondition
-		notGuarded: #MocoRdbOclImmutableColumnTransformationRule.
+		notGuarded: #MocoRdbOracleOclImmutableColumnTransformationRule.
 	
 	ocls do: [ :each |
 		| trigger |
 		trigger := self generateTrigger: each.
 		
 		engine addOutputElement: trigger withSource: each.
-		engine input guard: each with: #MocoRdbOclImmutableColumnTransformationRule
+		engine input guard: each with: #MocoRdbOracleOclImmutableColumnTransformationRule
 	]
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdbImmutableColumnCondition [
+MocoRdbOracleOclImmutableColumnTransformationRule >> generateTrigger: aMocoOclRdbImmutableColumnCondition [
 	| trigger body |
 	trigger := MocoSqlOracleCreateTrigger new.
 	

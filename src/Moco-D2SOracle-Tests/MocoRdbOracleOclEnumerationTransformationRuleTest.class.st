@@ -1,22 +1,24 @@
 Class {
-	#name : #MocoRdbOclEnumerationTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
+	#name : 'MocoRdbOracleOclEnumerationTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
 	#instVars : [
 		'table',
 		'column'
 	],
-	#category : #'Moco-D2S-Tests-Rule'
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbOclEnumerationTransformationRuleTest >> execute [
-	^ self execute: MocoRdbOclEnumerationTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleOclEnumerationTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleOclEnumerationTransformationRule
 ]
 
-{ #category : #running }
-MocoRdbOclEnumerationTransformationRuleTest >> setUp [
+{ #category : 'running' }
+MocoRdbOracleOclEnumerationTransformationRuleTest >> setUp [
 	super setUp.
 	
 	table := MocoRdbTable new name: 'TEST_TABLE'; yourself.
@@ -24,8 +26,8 @@ MocoRdbOclEnumerationTransformationRuleTest >> setUp [
 	table columns add: column
 ]
 
-{ #category : #tests }
-MocoRdbOclEnumerationTransformationRuleTest >> testOcl [
+{ #category : 'tests' }
+MocoRdbOracleOclEnumerationTransformationRuleTest >> testOcl [
 	| ocl alter |
 	ocl := MocoOclRdbEnumerationConstraint new
 		name: 'TEST_OCL';

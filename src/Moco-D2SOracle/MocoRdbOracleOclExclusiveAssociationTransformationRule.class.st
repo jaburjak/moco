@@ -2,19 +2,19 @@
 Transforms OCL constraints for exclusive phase associations to CREATE TRIGGER statements in an Oracle relational database.
 "
 Class {
-	#name : 'MocoRdbOclExclusiveAssociationTransformationRule',
+	#name : 'MocoRdbOracleOclExclusiveAssociationTransformationRule',
 	#superclass : 'MocoTransformationRule',
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbOclExclusiveAssociationTransformationRule >> execute [
+MocoRdbOracleOclExclusiveAssociationTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
 		selectElementsOfKind: MocoOclRdbExclusiveAssociationCondition
-		notGuarded: #MocoRdbOclExclusiveAssociationTransformationRule.
+		notGuarded: #MocoRdbOracleOclExclusiveAssociationTransformationRule.
 	
 	ocls do: [ :each |
 		| triggers |
@@ -26,12 +26,12 @@ MocoRdbOclExclusiveAssociationTransformationRule >> execute [
 			addAll: (self generateUpdateTriggers: each).
 		
 		triggers do: [ :e | engine addOutputElement: e withSource: each ].
-		engine input guard: each with: #MocoRdbOclExclusiveAssociationTransformationRule
+		engine input guard: each with: #MocoRdbOracleOclExclusiveAssociationTransformationRule
 	]
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclExclusiveAssociationTransformationRule >> generateExists: aBoolean clauseFor: aMocoRdbTable andColumn: aMocoRdbColumn withReferenced: aMocoRdbColumn2 andLabel: aString [
+MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateExists: aBoolean clauseFor: aMocoRdbTable andColumn: aMocoRdbColumn withReferenced: aMocoRdbColumn2 andLabel: aString [
 	| str varName |
 	str := String new writeStream.
 	
@@ -63,7 +63,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateExists: aBoolean cla
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
+MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| trigger body first column |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
@@ -118,7 +118,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTrigger: aMoco
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMocoOclRdbExclusiveAssociationCondition [
+MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	| triggers |
 	triggers := OrderedCollection new.
 	
@@ -130,7 +130,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateInsertTriggers: aMoc
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMocoOclRdbExclusiveAssociationCondition [
+MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMocoOclRdbExclusiveAssociationCondition [
 	| trigger body |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
@@ -191,7 +191,7 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateSourceTrigger: aMoco
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
+MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: aMocoRdbTable [
 	| trigger body varName |
 	trigger := MocoSqlOracleCreateTrigger new.
 	
@@ -249,6 +249,6 @@ MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTrigger: aMoco
 ]
 
 { #category : 'private - processing' }
-MocoRdbOclExclusiveAssociationTransformationRule >> generateUpdateTriggers: aMocoOclRdbExclusiveAssociationCondition [
+MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateUpdateTriggers: aMocoOclRdbExclusiveAssociationCondition [
 	^ (aMocoOclRdbExclusiveAssociationCondition referencingTables collect: [ :each | self generateUpdateTrigger: aMocoOclRdbExclusiveAssociationCondition forTable: (each first) ] )
 ]

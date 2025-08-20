@@ -1,22 +1,24 @@
 Class {
-	#name : #MocoRdbOclExclusiveAssociationTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
+	#name : 'MocoRdbOracleOclExclusiveAssociationTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
 	#instVars : [
 		'target',
 		'sources'
 	],
-	#category : #'Moco-D2S-Tests-Rule'
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbOclExclusiveAssociationTransformationRuleTest >> execute [
-	^ self execute: MocoRdbOclExclusiveAssociationTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleOclExclusiveAssociationTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleOclExclusiveAssociationTransformationRule
 ]
 
-{ #category : #running }
-MocoRdbOclExclusiveAssociationTransformationRuleTest >> setUp [
+{ #category : 'running' }
+MocoRdbOracleOclExclusiveAssociationTransformationRuleTest >> setUp [
 	super setUp.
 	
 	target := MocoRdbTable new name: 'TARGET'; yourself.
@@ -45,8 +47,8 @@ MocoRdbOclExclusiveAssociationTransformationRuleTest >> setUp [
 	]
 ]
 
-{ #category : #tests }
-MocoRdbOclExclusiveAssociationTransformationRuleTest >> testOcl [
+{ #category : 'tests' }
+MocoRdbOracleOclExclusiveAssociationTransformationRuleTest >> testOcl [
 	| ocl triggers trigger |
 	ocl := MocoOclRdbExclusiveAssociationCondition new
 		name: 'TEST_OCL';

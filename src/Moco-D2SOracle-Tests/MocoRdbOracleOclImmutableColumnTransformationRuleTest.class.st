@@ -1,22 +1,24 @@
 Class {
-	#name : #MocoRdbOclImmutableColumnTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
+	#name : 'MocoRdbOracleOclImmutableColumnTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
 	#instVars : [
 		'table',
 		'column'
 	],
-	#category : #'Moco-D2S-Tests-Rule'
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbOclImmutableColumnTransformationRuleTest >> execute [
-	^ self execute: MocoRdbOclImmutableColumnTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleOclImmutableColumnTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleOclImmutableColumnTransformationRule
 ]
 
-{ #category : #running }
-MocoRdbOclImmutableColumnTransformationRuleTest >> setUp [
+{ #category : 'running' }
+MocoRdbOracleOclImmutableColumnTransformationRuleTest >> setUp [
 	super setUp.
 	
 	table := MocoRdbTable new name: 'TEST_TABLE'; yourself.
@@ -26,8 +28,8 @@ MocoRdbOclImmutableColumnTransformationRuleTest >> setUp [
 	engine input addElement: table
 ]
 
-{ #category : #tests }
-MocoRdbOclImmutableColumnTransformationRuleTest >> testOcl [
+{ #category : 'tests' }
+MocoRdbOracleOclImmutableColumnTransformationRuleTest >> testOcl [
 	| ocl trigger |
 	ocl := MocoOclRdbImmutableColumnCondition new
 		name: 'TEST_OCL';

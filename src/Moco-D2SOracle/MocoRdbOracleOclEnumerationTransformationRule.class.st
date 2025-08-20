@@ -2,31 +2,31 @@
 Transforms OCL enumeration constraints to CHECK constraints.
 "
 Class {
-	#name : 'MocoRdbOclEnumerationTransformationRule',
+	#name : 'MocoRdbOracleOclEnumerationTransformationRule',
 	#superclass : 'MocoTransformationRule',
-	#category : 'Moco-D2S-Rule',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Rule',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Rule'
 }
 
 { #category : 'transforming' }
-MocoRdbOclEnumerationTransformationRule >> execute [
+MocoRdbOracleOclEnumerationTransformationRule >> execute [
 	| ocls |
 	ocls := engine input
 		selectElementsOfKind: MocoOclRdbEnumerationConstraint
-		notGuarded: #MocoRdbOclEnumerationTransformationRule.
+		notGuarded: #MocoRdbOracleOclEnumerationTransformationRule.
 	
 	ocls do: [ :each |
 		| statement |
 		statement := self generateCheck: each.
 		
 		engine addOutputElement: statement withSource: each.
-		engine input guard: each with: #MocoRdbOclEnumerationTransformationRule
+		engine input guard: each with: #MocoRdbOracleOclEnumerationTransformationRule
 	]
 ]
 
 { #category : 'private - transforming' }
-MocoRdbOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumerationConstraint [
+MocoRdbOracleOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumerationConstraint [
 	"Creates an ALTER TABLE statement with a CHECK for the given enumeration constraint."
 	
 	| body column stmt |
@@ -59,6 +59,6 @@ MocoRdbOclEnumerationTransformationRule >> generateCheck: aMocoOclRdbEnumeration
 ]
 
 { #category : 'accessing' }
-MocoRdbOclEnumerationTransformationRule >> priority [
+MocoRdbOracleOclEnumerationTransformationRule >> priority [
 	^ 80
 ]

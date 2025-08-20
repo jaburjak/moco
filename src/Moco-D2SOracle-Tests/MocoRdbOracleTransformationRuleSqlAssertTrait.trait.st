@@ -2,12 +2,14 @@
 Provides utility method for asserting equality of SQL statements.
 "
 Trait {
-	#name : #MocoRdbTransformationRuleSqlAssertTrait,
-	#category : #'Moco-D2S-Tests-Trait'
+	#name : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#category : 'Moco-D2SOracle-Tests-Trait',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Trait'
 }
 
-{ #category : #'private - processing' }
-MocoRdbTransformationRuleSqlAssertTrait classSide >> normalizeSql: aString [
+{ #category : 'private - processing' }
+MocoRdbOracleTransformationRuleSqlAssertTrait classSide >> normalizeSql: aString [
 	"Removes all whitespace from the given string."
 	
 	| normalized |
@@ -18,8 +20,8 @@ MocoRdbTransformationRuleSqlAssertTrait classSide >> normalizeSql: aString [
 	^ normalized
 ]
 
-{ #category : #asserting }
-MocoRdbTransformationRuleSqlAssertTrait >> assertSql: aStatement equals: aString [
+{ #category : 'asserting' }
+MocoRdbOracleTransformationRuleSqlAssertTrait >> assertSql: aStatement equals: aString [
 	"Asserts that the given Moco SQL statement element equals the given SQL string."
 	
 	| actual expected |

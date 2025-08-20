@@ -4,8 +4,8 @@ Transformation round realizing an Oracle relational database model in SQL statem
 Class {
 	#name : 'MocoRdbToSqlOracleRound',
 	#superclass : 'Object',
-	#category : 'Moco-D2S-Round',
-	#package : 'Moco-D2S',
+	#category : 'Moco-D2SOracle-Round',
+	#package : 'Moco-D2SOracle',
 	#tag : 'Round'
 }
 
@@ -17,9 +17,9 @@ MocoRdbToSqlOracleRound class >> transform: aMocoModel [
 	engine input addElements: aMocoModel.
 
 	ruleRepo := MocoTransformationRuleDynamicRepository new.
-	ruleRepo rulesPackage: 'Moco-D2S';
+	ruleRepo rulesPackage: 'Moco-D2SOracle';
 		rulesTag: 'Rule';
-		classPrefix: 'MocoRdb'.
+		classPrefix: 'MocoRdbOracle'.
 	
 	ruleRepo injectTo: engine.
 	

@@ -1,22 +1,24 @@
 Class {
-	#name : #MocoRdbOclGeneralizationSetTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
+	#name : 'MocoRdbOracleOclGeneralizationSetTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
 	#instVars : [
 		'general',
 		'specifics'
 	],
-	#category : #'Moco-D2S-Tests-Rule'
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbOclGeneralizationSetTransformationRuleTest >> execute [
-	^ self execute: MocoRdbOclGeneralizationSetTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleOclGeneralizationSetTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleOclGeneralizationSetTransformationRule
 ]
 
-{ #category : #running }
-MocoRdbOclGeneralizationSetTransformationRuleTest >> setUp [
+{ #category : 'running' }
+MocoRdbOracleOclGeneralizationSetTransformationRuleTest >> setUp [
 	super setUp.
 	
 	general := MocoRdbTable new name: 'GENERAL'; yourself.
@@ -36,8 +38,8 @@ MocoRdbOclGeneralizationSetTransformationRuleTest >> setUp [
 	]
 ]
 
-{ #category : #tests }
-MocoRdbOclGeneralizationSetTransformationRuleTest >> testOcl [
+{ #category : 'tests' }
+MocoRdbOracleOclGeneralizationSetTransformationRuleTest >> testOcl [
 	| ocl triggers trigger |
 	ocl := MocoOclRdbGeneralizationSetConstraint new
 		name: 'TEST_OCL';

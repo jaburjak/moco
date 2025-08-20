@@ -1,22 +1,24 @@
 Class {
-	#name : #MocoRdbOclSpecialMultiplicityTransformationRuleTest,
-	#superclass : #MocoTransformationRuleTestCase,
-	#traits : 'MocoRdbTransformationRuleSqlAssertTrait',
-	#classTraits : 'MocoRdbTransformationRuleSqlAssertTrait classTrait',
+	#name : 'MocoRdbOracleOclMandatoryMultiplicityTransformationRuleTest',
+	#superclass : 'MocoTransformationRuleTestCase',
+	#traits : 'MocoRdbOracleTransformationRuleSqlAssertTrait',
+	#classTraits : 'MocoRdbOracleTransformationRuleSqlAssertTrait classTrait',
 	#instVars : [
 		'source',
 		'target'
 	],
-	#category : #'Moco-D2S-Tests-Rule'
+	#category : 'Moco-D2SOracle-Tests-Rule',
+	#package : 'Moco-D2SOracle-Tests',
+	#tag : 'Rule'
 }
 
-{ #category : #'private - processing' }
-MocoRdbOclSpecialMultiplicityTransformationRuleTest >> execute [
-	^ self execute: MocoRdbOclSpecialMultiplicityTransformationRule
+{ #category : 'private - processing' }
+MocoRdbOracleOclMandatoryMultiplicityTransformationRuleTest >> execute [
+	^ self execute: MocoRdbOracleOclMandatoryMultiplicityTransformationRule
 ]
 
-{ #category : #running }
-MocoRdbOclSpecialMultiplicityTransformationRuleTest >> setUp [
+{ #category : 'running' }
+MocoRdbOracleOclMandatoryMultiplicityTransformationRuleTest >> setUp [
 	super setUp.
 	
 	source := MocoRdbTable new name: 'A'; yourself.
@@ -31,17 +33,15 @@ MocoRdbOclSpecialMultiplicityTransformationRuleTest >> setUp [
 	engine input addElement: target
 ]
 
-{ #category : #tests }
-MocoRdbOclSpecialMultiplicityTransformationRuleTest >> testOcl [
+{ #category : 'tests' }
+MocoRdbOracleOclMandatoryMultiplicityTransformationRuleTest >> testOcl [
 	| ocl triggers trigger |
-	ocl := MocoOclRdbSpecialMultiplicityConstraint new
+	ocl := MocoOclRdbMandatoryMultiplicityConstraint new
 		name: 'TEST_OCL';
 		context: target;
 		targetColumn: (target columns first);
 		sourceTable: source;
-		sourceColumn: (source columns last);
-		lower: 32;
-		upper: 42.
+		sourceColumn: (source columns last).
 	
 	engine input addElement: ocl.
 	
@@ -54,11 +54,11 @@ MocoRdbOclSpecialMultiplicityTransformationRuleTest >> testOcl [
 	trigger := triggers select: [ :each | (each table) = (source name) ].
 	self assert: (trigger size) equals: 1;
 		assertSql: (trigger first) equals: 'CREATE TRIGGER "TEST_OCL_REL"
-AFTER INSERT OR UPDATE OR DELETE ON "A"
+AFTER UPDATE OR DELETE ON "A"
 DECLARE "l_count" NUMBER := 0;
 BEGIN
-  SELECT COUNT(1) INTO "l_count" FROM "B" "b" WHERE NOT (
-    (SELECT COUNT(*) FROM "A" "a" WHERE "a"."B_ID" = "b"."B_ID") BETWEEN 32 AND 42);
+  SELECT COUNT(1) INTO "l_count" FROM "B" "b" WHERE 
+    NOT EXISTS (SELECT 1 FROM "A" "a" WHERE "a"."B_ID" = "b"."B_ID");
   IF "l_count" > 0 THEN
     raise_application_error(-20101, ''OCL constraint TEST_OCL violated!'');
   END IF; END;'.
@@ -66,11 +66,14 @@ BEGIN
 	trigger := triggers select: [ :each | (each table) = (target name) ].
 	self assert: (trigger size) equals: 1;
 		assertSql: (trigger first) equals: 'CREATE TRIGGER "TEST_OCL"
-BEFORE INSERT OR UPDATE ON "B" FOR EACH ROW
-DECLARE "l_count" NUMBER := 0;
+BEFORE INSERT OR UPDATE ON "B"
+FOR EACH ROW
+DECLARE
+  "l_count" NUMBER := 0;
 BEGIN
-  SELECT COUNT(*) INTO "l_count" FROM "A" "a" WHERE "a"."B_ID" = :new."B_ID";
-  IF NOT ("l_count" BETWEEN 32 AND 42) THEN
+  SELECT COUNT(1) INTO "l_count" FROM "A" "a" WHERE "a"."B_ID" = :new."B_ID";
+  IF "l_count" = 0 THEN
     raise_application_error(-20101, ''OCL constraint TEST_OCL violated!'');
-  END IF; END;'
+  END IF;
+END;'
 ]
