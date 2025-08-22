@@ -33,7 +33,7 @@ MocoSettings class >> openModeSettingsOn: aBuilder [
 		description: 'Controls whether to open the diagrams of the transformed models in a new OpenPonk project or to add them to the original one.';
 		target: MocoSettings;
 		parent: #moco;
-		domainValues: #(#'New window' #'Current window')
+		domainValues: #(#'New window' #'Current window' #'Nowhere')
 ]
 
 { #category : 'accessing' }

@@ -248,8 +248,10 @@ MocoOpenPonkRunTransformationsCommand >> showModels: aCollection andTranscript: 
 	(mode = 'Current window')
 		ifTrue: [
 			self openModels: aCollection in: workbench
-		]
-		ifFalse: [ "New window (default)"
+		].
+
+	(mode = 'New window')
+		ifTrue: [
 			newWorkbench := self openOpenPonk: aCollection
 		].
 	

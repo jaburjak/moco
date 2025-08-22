@@ -30,9 +30,12 @@ MocoOpenPonkRunTransformationToSqlCommand >> execute [
 	self addModel: sqlModel withLabel: (self sqlRoundLabel) toTranscript: transcript.
 	
 	models := OrderedCollection new.
-	models add: (self packageModel: (umlModel output) as: (self determineModelName: 'UML Model' or: 'UML') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
-		add: (self packageModel: (dbModel first) as: (self determineModelName: 'UML Model for RDB' or: 'UML for RDB') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
-		add: (self packageModel: (dbModel last) as: (self determineModelName: 'RDB Model' or: 'RDB') usingRulesWithTag: 'Rule-Rdb' andClassPrefix: 'MocoOpenPonkRdb').
+	
+	(MocoSettings openMode = 'Nowhere') ifFalse: [
+		models add: (self packageModel: (umlModel output) as: (self determineModelName: 'UML Model' or: 'UML') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
+			add: (self packageModel: (dbModel first) as: (self determineModelName: 'UML Model for RDB' or: 'UML for RDB') usingRulesWithTag: 'Rule-Uml' andClassPrefix: 'MocoOpenPonkUml');
+			add: (self packageModel: (dbModel last) as: (self determineModelName: 'RDB Model' or: 'RDB') usingRulesWithTag: 'Rule-Rdb' andClassPrefix: 'MocoOpenPonkRdb')
+	].
 	
 	self showModels: models andTranscript: transcript
 ]
