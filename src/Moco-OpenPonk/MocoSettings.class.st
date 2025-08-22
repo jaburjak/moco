@@ -86,5 +86,5 @@ MocoSettings class >> sqlPlatformSettingsOn: aBuilder [
 		description: 'Defines the target SQL platform.';
 		target: MocoSettings;
 		parent: #moco;
-		domainValues: #(#'PostgreSQL' #'Oracle' #'MySQL')
+		domainValues: #(#'PostgreSQL' #'Oracle' #'MySQL' #'Microsoft SQL Server')
 ]
