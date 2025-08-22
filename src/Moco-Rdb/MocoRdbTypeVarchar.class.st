@@ -4,35 +4,38 @@ Represents a VARCHAR data type.
 When length is nil, corresponds to a type with unlimited variable length.
 "
 Class {
-	#name : #MocoRdbTypeVarchar,
-	#superclass : #MocoRdbDataType,
+	#name : 'MocoRdbTypeVarchar',
+	#superclass : 'MocoRdbDataType',
 	#instVars : [
 		'length'
 	],
-	#category : #'Moco-Rdb-Model'
+	#category : 'Moco-Rdb-Model',
+	#package : 'Moco-Rdb',
+	#tag : 'Model'
 }
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbTypeVarchar >> acceptVisitor: aMocoRdbDataTypeVisitor [
 	aMocoRdbDataTypeVisitor visitVarchar: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTypeVarchar >> length [
 	^ length
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTypeVarchar >> length: aNumber [
 	length := aNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTypeVarchar >> typeDefinition [
+	length ifNil: [ ^ self typeName ].
 	^ (self typeName) , '(' , (length asString) , ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTypeVarchar >> typeName [
 	^ 'VARCHAR'
 ]

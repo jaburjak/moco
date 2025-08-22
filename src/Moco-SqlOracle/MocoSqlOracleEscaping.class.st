@@ -2,17 +2,19 @@
 String escaping utils for Oracle SQL.
 "
 Class {
-	#name : #MocoSqlOracleEscaping,
-	#superclass : #Object,
-	#category : #'Moco-SqlOracle-Utils'
+	#name : 'MocoSqlOracleEscaping',
+	#superclass : 'Object',
+	#category : 'Moco-SqlOracle-Utils',
+	#package : 'Moco-SqlOracle',
+	#tag : 'Utils'
 }
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoSqlOracleEscaping class >> escapeLiteral: aString [
 	^ '''' , (aString copyReplaceAll: '''' with: '''''') , ''''
 ]
 
-{ #category : #transforming }
+{ #category : 'transforming' }
 MocoSqlOracleEscaping class >> escapeName: aString [
 	^ '"' , (aString copyReplaceAll: '"' with: '' ) , '"'
 ]

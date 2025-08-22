@@ -2,27 +2,29 @@
 Represents a PRIMARY KEY constraint in a relational database.
 "
 Class {
-	#name : #MocoRdbPrimaryKey,
-	#superclass : #MocoRdbConstraint,
+	#name : 'MocoRdbPrimaryKey',
+	#superclass : 'MocoRdbConstraint',
 	#instVars : [
 		'columns'
 	],
-	#category : #'Moco-Rdb-Model'
+	#category : 'Moco-Rdb-Model',
+	#package : 'Moco-Rdb',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbPrimaryKey >> columns [
 	^ columns
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbPrimaryKey >> initialize [
 	super initialize.
 	
 	columns := OrderedCollection new
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoRdbPrimaryKey >> printTo: aStream [
 	aStream nextPutAll: '<<PK>> '.
 

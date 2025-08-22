@@ -2,17 +2,19 @@
 Represents a FOREIGN KEY constraint in a relational database.
 "
 Class {
-	#name : #MocoRdbForeignKey,
-	#superclass : #MocoRdbConstraint,
+	#name : 'MocoRdbForeignKey',
+	#superclass : 'MocoRdbConstraint',
 	#instVars : [
 		'columns',
 		'referencedTable',
 		'referencedColumns'
 	],
-	#category : #'Moco-Rdb-Model'
+	#category : 'Moco-Rdb-Model',
+	#package : 'Moco-Rdb',
+	#tag : 'Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoRdbForeignKey class >> newInTable: aMocoRdbTable atColumn: aMocoRdbColumn referencingTable: aMocoRdbTable2 andColumn: aMocoRdbColumn2 [
 	"Instantiates a new FOREIGN KEY constraint that at aMocoRdbColumn which references aMocoRdbTable2.aMocoRdbColumn2."
 	
@@ -27,12 +29,12 @@ MocoRdbForeignKey class >> newInTable: aMocoRdbTable atColumn: aMocoRdbColumn re
 	^ inst
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbForeignKey >> columns [
 	^ columns
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbForeignKey >> initialize [
 	super initialize.
 	
@@ -40,7 +42,7 @@ MocoRdbForeignKey >> initialize [
 	referencedColumns := OrderedCollection new
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoRdbForeignKey >> printTo: aStream [
 	aStream nextPutAll: '<<FK>> '.
 
@@ -52,17 +54,17 @@ MocoRdbForeignKey >> printTo: aStream [
 		nextPutAll: ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbForeignKey >> referencedColumns [
 	^ referencedColumns
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbForeignKey >> referencedTable [
 	^ referencedTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbForeignKey >> referencedTable: aMocoRdbTable [
 	referencedTable := aMocoRdbTable
 ]

@@ -2,17 +2,19 @@
 Represents a column of a database table.
 "
 Class {
-	#name : #MocoRdbColumn,
-	#superclass : #Object,
+	#name : 'MocoRdbColumn',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'type',
 		'nullable'
 	],
-	#category : #'Moco-Rdb-Model'
+	#category : 'Moco-Rdb-Model',
+	#package : 'Moco-Rdb',
+	#tag : 'Model'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbColumn >> initialize [
 	super initialize.
 	
@@ -20,27 +22,27 @@ MocoRdbColumn >> initialize [
 	nullable := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbColumn >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbColumn >> name: aString [
 	name := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbColumn >> nullable [
 	^ nullable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbColumn >> nullable: aBoolean [
 	nullable := aBoolean
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoRdbColumn >> printTo: aStream [
 
 	aStream
@@ -58,12 +60,12 @@ MocoRdbColumn >> printTo: aStream [
 			 ifFalse: [ 'NOT NULL' ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbColumn >> type [
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbColumn >> type: aMocoRdbDataType [
 	type := aMocoRdbDataType
 ]

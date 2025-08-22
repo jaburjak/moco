@@ -19,7 +19,7 @@ Class {
 MocoSqlMysqlDataTypeResolver class >> instance [
 	"Returns a singleton instance of this class."
 	
-	Instance ifNotNil: [ ^ Instance ].
+	(Instance isNotNil and: [ Instance isKindOf: self class ]) ifTrue: [ ^ Instance ].
 	
 	Instance := self new.
 	
@@ -73,7 +73,7 @@ MocoSqlMysqlDataTypeResolver >> visitTimestamp: aMocoRdbTypeTimestamp [
 
 { #category : 'visiting' }
 MocoSqlMysqlDataTypeResolver >> visitVarchar: aMocoRdbTypeVarchar [
-	aMocoRdbTypeVarchar
+	aMocoRdbTypeVarchar length
 		ifNil: [ typeDeclaration := 'TEXT' ]
 		ifNotNil: [ typeDeclaration := 'VARCHAR(' , (aMocoRdbTypeVarchar length asString) , ')' ]
 ]

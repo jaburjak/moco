@@ -1,5 +1,5 @@
 "
-String escaping utils for PostgreSQL.
+String escaping utils for MySQL.
 "
 Class {
 	#name : 'MocoSqlMysqlEscaping',

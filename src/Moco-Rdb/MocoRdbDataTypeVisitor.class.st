@@ -2,57 +2,59 @@
 Visitor interface for database column data types.
 "
 Class {
-	#name : #MocoRdbDataTypeVisitor,
-	#superclass : #Object,
-	#category : #'Moco-Rdb-Utils'
+	#name : 'MocoRdbDataTypeVisitor',
+	#superclass : 'Object',
+	#category : 'Moco-Rdb-Utils',
+	#package : 'Moco-Rdb',
+	#tag : 'Utils'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MocoRdbDataTypeVisitor class >> new [
 	(self asString = 'MocoRdbDataTypeVisitor') ifTrue: [ ^ self subclassResponsibility ] ifFalse: [ ^ super new ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitBlob: aMocoRdbTypeBlob [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitBoolean: aMocoRdbTypeBoolean [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitCharacter: aMocoRdbTypeCharacter [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitDate: aMocoRdbTypeDate [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitDateTime: aMocoRdbTypeDateTime [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitDouble: aMocoRdbTypeDouble [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitInteger: aMocoRdbTypeInteger [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitTimestamp: aMocoRdbTypeTimestamp [
 	self subclassResponsibility
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 MocoRdbDataTypeVisitor >> visitVarchar: aMocoRdbTypeVarchar [
 	self subclassResponsibility
 ]

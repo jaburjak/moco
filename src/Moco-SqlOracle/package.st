@@ -1,1 +1,1 @@
-Package { #name : #'Moco-SqlOracle' }
+Package { #name : 'Moco-SqlOracle' }

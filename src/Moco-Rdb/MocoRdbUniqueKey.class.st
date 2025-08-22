@@ -2,27 +2,29 @@
 Represents a UNIQUE KEY constraint in a relational database.
 "
 Class {
-	#name : #MocoRdbUniqueKey,
-	#superclass : #MocoRdbConstraint,
+	#name : 'MocoRdbUniqueKey',
+	#superclass : 'MocoRdbConstraint',
 	#instVars : [
 		'columns'
 	],
-	#category : #'Moco-Rdb-Model'
+	#category : 'Moco-Rdb-Model',
+	#package : 'Moco-Rdb',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbUniqueKey >> columns [
 	^ columns
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbUniqueKey >> initialize [
 	super initialize.
 	
 	columns := OrderedCollection new
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoRdbUniqueKey >> printTo: aStream [
 	aStream nextPutAll: '<<unique>> '.
 

@@ -2,16 +2,18 @@
 Represents an ALTER TABLE statement in an Oracle relational database.
 "
 Class {
-	#name : #MocoSqlOracleAlterTable,
-	#superclass : #Object,
+	#name : 'MocoSqlOracleAlterTable',
+	#superclass : 'Object',
 	#instVars : [
 		'table',
 		'statement'
 	],
-	#category : #'Moco-SqlOracle-Model'
+	#category : 'Moco-SqlOracle-Model',
+	#package : 'Moco-SqlOracle',
+	#tag : 'Model'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlOracleAlterTable >> initialize [
 	super initialize.
 	
@@ -19,7 +21,7 @@ MocoSqlOracleAlterTable >> initialize [
 	statement := ''
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlOracleAlterTable >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'ALTER TABLE ';
@@ -29,27 +31,27 @@ MocoSqlOracleAlterTable >> printSqlTo: aStream [
 		nextPutAll: ';'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlOracleAlterTable >> printTo: aStream [
 	self printSqlTo: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleAlterTable >> statement [
 	^ statement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleAlterTable >> statement: aString [
 	statement := aString 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleAlterTable >> table [
 	^ table
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleAlterTable >> table: aString [
 	table := aString
 ]

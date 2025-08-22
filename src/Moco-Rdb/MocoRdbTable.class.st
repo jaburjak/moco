@@ -2,27 +2,29 @@
 Represents a table in an Oracle Database.
 "
 Class {
-	#name : #MocoRdbTable,
-	#superclass : #Object,
+	#name : 'MocoRdbTable',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'columns',
 		'constraints'
 	],
-	#category : #'Moco-Rdb-Model'
+	#category : 'Moco-Rdb-Model',
+	#package : 'Moco-Rdb',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTable >> columns [
 	^ columns
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTable >> constraints [
 	^ constraints
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoRdbTable >> initialize [
 	super initialize.
 	
@@ -31,17 +33,17 @@ MocoRdbTable >> initialize [
 	constraints := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTable >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTable >> name: aString [
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoRdbTable >> printTo: aStream [
 	aStream
 		nextPutAll: '+--RDB-----------';

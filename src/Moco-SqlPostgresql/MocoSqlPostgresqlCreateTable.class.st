@@ -2,27 +2,29 @@
 Represents a CREATE TABLE statement in a PostgreSQL database.
 "
 Class {
-	#name : #MocoSqlPostgresqlCreateTable,
-	#superclass : #Object,
+	#name : 'MocoSqlPostgresqlCreateTable',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'columnDefinitions',
 		'constraintDefinitions'
 	],
-	#category : #'Moco-SqlPostgresql-Model'
+	#category : 'Moco-SqlPostgresql-Model',
+	#package : 'Moco-SqlPostgresql',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTable >> columnDefinitions [
 	^ columnDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTable >> constraintDefinitions [
 	^ constraintDefinitions
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlPostgresqlCreateTable >> initialize [
 	super initialize.
 	
@@ -31,17 +33,17 @@ MocoSqlPostgresqlCreateTable >> initialize [
 	constraintDefinitions := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTable >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTable >> name: aString [
 	name := aString
 ]
 
-{ #category : #'private - printing' }
+{ #category : 'private - printing' }
 MocoSqlPostgresqlCreateTable >> printColumnDefinitionsTo: aStream [
 	columnDefinitions ifEmpty: [ ^ self ].
 	
@@ -59,7 +61,7 @@ MocoSqlPostgresqlCreateTable >> printColumnDefinitionsTo: aStream [
 	aStream nextPutAll: ')'
 ]
 
-{ #category : #'private - printing' }
+{ #category : 'private - printing' }
 MocoSqlPostgresqlCreateTable >> printConstraintDefinitionsTo: aStream [
 	constraintDefinitions do: [ :each |
 		aStream
@@ -73,7 +75,7 @@ MocoSqlPostgresqlCreateTable >> printConstraintDefinitionsTo: aStream [
 	]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlPostgresqlCreateTable >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'CREATE TABLE ';
@@ -86,7 +88,7 @@ MocoSqlPostgresqlCreateTable >> printSqlTo: aStream [
 	self printConstraintDefinitionsTo: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlPostgresqlCreateTable >> printTo: aStream [
 	self printSqlTo: aStream
 ]

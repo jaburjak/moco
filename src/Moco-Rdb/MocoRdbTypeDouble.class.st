@@ -2,17 +2,19 @@
 Represents a DOUBLE PRECISION data type in a relational database.
 "
 Class {
-	#name : #MocoRdbTypeDouble,
-	#superclass : #MocoRdbDataType,
-	#category : #'Moco-Rdb-Model'
+	#name : 'MocoRdbTypeDouble',
+	#superclass : 'MocoRdbDataType',
+	#category : 'Moco-Rdb-Model',
+	#package : 'Moco-Rdb',
+	#tag : 'Model'
 }
 
-{ #category : #'private - processing' }
+{ #category : 'private - processing' }
 MocoRdbTypeDouble >> acceptVisitor: aMocoRdbDataTypeVisitor [
 	aMocoRdbDataTypeVisitor visitDouble: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoRdbTypeDouble >> typeName [
 	^ 'DOUBLE'
 ]

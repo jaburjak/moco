@@ -2,27 +2,29 @@
 Represents a CREATE TABLE statement in an Oracle database.
 "
 Class {
-	#name : #MocoSqlOracleCreateTable,
-	#superclass : #Object,
+	#name : 'MocoSqlOracleCreateTable',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'columnDefinitions',
 		'constraintDefinitions'
 	],
-	#category : #'Moco-SqlOracle-Model'
+	#category : 'Moco-SqlOracle-Model',
+	#package : 'Moco-SqlOracle',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTable >> columnDefinitions [
 	^ columnDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTable >> constraintDefinitions [
 	^ constraintDefinitions
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlOracleCreateTable >> initialize [
 	super initialize.
 	
@@ -31,17 +33,17 @@ MocoSqlOracleCreateTable >> initialize [
 	constraintDefinitions := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTable >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTable >> name: aString [
 	name := aString
 ]
 
-{ #category : #'private - printing' }
+{ #category : 'private - printing' }
 MocoSqlOracleCreateTable >> printColumnDefinitionsTo: aStream [
 	columnDefinitions ifEmpty: [ ^ self ].
 	
@@ -59,7 +61,7 @@ MocoSqlOracleCreateTable >> printColumnDefinitionsTo: aStream [
 	aStream nextPutAll: ')'
 ]
 
-{ #category : #'private - printing' }
+{ #category : 'private - printing' }
 MocoSqlOracleCreateTable >> printConstraintDefinitionsTo: aStream [
 	constraintDefinitions do: [ :each |
 		aStream
@@ -73,7 +75,7 @@ MocoSqlOracleCreateTable >> printConstraintDefinitionsTo: aStream [
 	]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlOracleCreateTable >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'CREATE TABLE ';
@@ -86,7 +88,7 @@ MocoSqlOracleCreateTable >> printSqlTo: aStream [
 	self printConstraintDefinitionsTo: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlOracleCreateTable >> printTo: aStream [
 	self printSqlTo: aStream
 ]

@@ -2,16 +2,18 @@
 Represents an ALTER TABLE statement in a PostgreSQL database.
 "
 Class {
-	#name : #MocoSqlPostgresqlAlterTable,
-	#superclass : #Object,
+	#name : 'MocoSqlPostgresqlAlterTable',
+	#superclass : 'Object',
 	#instVars : [
 		'table',
 		'statement'
 	],
-	#category : #'Moco-SqlPostgresql-Model'
+	#category : 'Moco-SqlPostgresql-Model',
+	#package : 'Moco-SqlPostgresql',
+	#tag : 'Model'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlPostgresqlAlterTable >> initialize [
 	super initialize.
 	
@@ -19,7 +21,7 @@ MocoSqlPostgresqlAlterTable >> initialize [
 	statement := ''
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlPostgresqlAlterTable >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'ALTER TABLE ';
@@ -29,27 +31,27 @@ MocoSqlPostgresqlAlterTable >> printSqlTo: aStream [
 		nextPutAll: ';'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlPostgresqlAlterTable >> printTo: aStream [
 	self printSqlTo: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlAlterTable >> statement [
 	^ statement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlAlterTable >> statement: aString [
 	statement := aString 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlAlterTable >> table [
 	^ table
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlAlterTable >> table: aString [
 	table := aString
 ]

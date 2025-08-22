@@ -1,1 +1,1 @@
-Package { #name : #'Moco-Rdb' }
+Package { #name : 'Moco-Rdb' }

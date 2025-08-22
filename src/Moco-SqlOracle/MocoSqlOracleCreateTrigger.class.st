@@ -2,8 +2,8 @@
 Represents a CREATE TRIGGER statement in an Oracle database.
 "
 Class {
-	#name : #MocoSqlOracleCreateTrigger,
-	#superclass : #Object,
+	#name : 'MocoSqlOracleCreateTrigger',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'time',
@@ -12,40 +12,42 @@ Class {
 		'granularity',
 		'body'
 	],
-	#category : #'Moco-SqlOracle-Model'
+	#category : 'Moco-SqlOracle-Model',
+	#package : 'Moco-SqlOracle',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> body [
 	^ body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> body: aString [
 	body := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> event [
 	^ event
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> event: aSymbol [
 	event := aSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> granularity [
 	^ granularity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> granularity: aSymbol [
 	granularity := aSymbol
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlOracleCreateTrigger >> initialize [
 	super initialize.
 	
@@ -57,17 +59,17 @@ MocoSqlOracleCreateTrigger >> initialize [
 	body := ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> name: aString [
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlOracleCreateTrigger >> printSqlTo: aStream [
 	aStream
 		nextPutAll: 'CREATE TRIGGER ';
@@ -92,27 +94,27 @@ MocoSqlOracleCreateTrigger >> printSqlTo: aStream [
 	((body isNotEmpty) and: [ (body trimRight last asString) ~= ';' ]) ifTrue: [ aStream nextPutAll: ';' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlOracleCreateTrigger >> printTo: aStream [
 	self printSqlTo: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> table [
 	^ table
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> table: aString [
 	table := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> time [
 	^ time
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlOracleCreateTrigger >> time: aSymbol [
 	time := aSymbol
 ]

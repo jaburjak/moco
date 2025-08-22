@@ -1,5 +1,5 @@
 "
-Transformation round realizing an PostgreSQL relational database model in SQL statements.
+Transformation round realizing a MySQL relational database model in SQL statements.
 "
 Class {
 	#name : 'MocoRdbToSqlMysqlRound',

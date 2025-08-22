@@ -2,8 +2,8 @@
 Represents a CREATE TRIGGER statement in a PostgreSQL database.
 "
 Class {
-	#name : #MocoSqlPostgresqlCreateTrigger,
-	#superclass : #Object,
+	#name : 'MocoSqlPostgresqlCreateTrigger',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'time',
@@ -12,40 +12,42 @@ Class {
 		'granularity',
 		'body'
 	],
-	#category : #'Moco-SqlPostgresql-Model'
+	#category : 'Moco-SqlPostgresql-Model',
+	#package : 'Moco-SqlPostgresql',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> body [
 	^ body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> body: aString [
 	body := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> event [
 	^ event
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> event: aSymbol [
 	event := aSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> granularity [
 	^ granularity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> granularity: aSymbol [
 	granularity := aSymbol
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MocoSqlPostgresqlCreateTrigger >> initialize [
 	super initialize.
 	
@@ -57,17 +59,17 @@ MocoSqlPostgresqlCreateTrigger >> initialize [
 	body := ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> name: aString [
 	name := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlPostgresqlCreateTrigger >> printSqlTo: aStream [
 	| fnName |
 	fnName := 'trg_' , (name asLowercase).
@@ -116,27 +118,27 @@ MocoSqlPostgresqlCreateTrigger >> printSqlTo: aStream [
 		nextPutAll: '();'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 MocoSqlPostgresqlCreateTrigger >> printTo: aStream [
 	self printSqlTo: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> table [
 	^ table
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> table: aString [
 	table := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> time [
 	^ time
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MocoSqlPostgresqlCreateTrigger >> time: aSymbol [
 	time := aSymbol
 ]
