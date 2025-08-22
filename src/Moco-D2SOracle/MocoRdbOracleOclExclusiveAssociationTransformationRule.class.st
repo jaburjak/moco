@@ -32,15 +32,15 @@ MocoRdbOracleOclExclusiveAssociationTransformationRule >> execute [
 
 { #category : 'private - processing' }
 MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateExists: aBoolean clauseFor: aMocoRdbTable andColumn: aMocoRdbColumn withReferenced: aMocoRdbColumn2 andLabel: aString [
-	| str varName |
+	| str varName label |
 	str := String new writeStream.
 	
 	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
-	
-	(((aString first = $") and: [ aString last = $" ]) and: [ varName = ((aString allButFirst: 1) allButLast: 1) ])
-		ifTrue: [ varName := (varName , '2') ].
-	
+	varName := MocoUniqueNameGenerator at: [ :n | n = aString ] seed: varName.
 	varName := MocoSqlOracleEscaping escapeName: varName.
+	
+	label := aString.
+	((label first) = $:) ifFalse: [ label := MocoSqlOracleEscaping escapeName: label ].
 	
 	aBoolean ifFalse: [ str nextPutAll: 'NOT ' ].
 	
@@ -54,7 +54,7 @@ MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateExists: aBoole
 		nextPutAll: '.';
 		nextPutAll: (MocoSqlOracleEscaping escapeName: (aMocoRdbColumn name));
 		nextPutAll: ' = ';
-		nextPutAll: aString;
+		nextPutAll: label;
 		nextPutAll: '.';
 		nextPutAll: (MocoSqlOracleEscaping escapeName: (aMocoRdbColumn2 name));
 		nextPutAll: ')'.
@@ -202,7 +202,7 @@ MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateUpdateTrigger:
 	
 	body := String new writeStream.
 	
-	varName := MocoSqlOracleEscaping escapeName: (MocoNamingUtils toShortName: (aMocoOclRdbExclusiveAssociationCondition context name)).
+	varName := MocoNamingUtils toShortName: (aMocoOclRdbExclusiveAssociationCondition context name).
 	
 	body
 		nextPutAll: 'DECLARE';
@@ -214,7 +214,7 @@ MocoRdbOracleOclExclusiveAssociationTransformationRule >> generateUpdateTrigger:
 		nextPutAll: '  SELECT COUNT(1) INTO "l_count" FROM ';
 		nextPutAll: (MocoSqlOracleEscaping escapeName: (aMocoOclRdbExclusiveAssociationCondition context name));
 		nextPutAll: ' ';
-		nextPutAll: varName;
+		nextPutAll: (MocoSqlOracleEscaping escapeName: varName);
 		nextPutAll: ' WHERE NOT ('.
 	
 	aMocoOclRdbExclusiveAssociationCondition referencingTables do: [ :each |

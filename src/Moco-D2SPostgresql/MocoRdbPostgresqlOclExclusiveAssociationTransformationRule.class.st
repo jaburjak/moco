@@ -32,15 +32,15 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> execute [
 
 { #category : 'private - processing' }
 MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateExists: aBoolean clauseFor: aMocoRdbTable andColumn: aMocoRdbColumn withReferenced: aMocoRdbColumn2 andLabel: aString [
-	| str varName |
+	| str varName label |
 	str := String new writeStream.
 	
 	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
-	
-	(((aString first = $") and: [ aString last = $" ]) and: [ varName = ((aString allButFirst: 1) allButLast: 1) ])
-		ifTrue: [ varName := (varName , '2') ].
-	
+	varName := MocoUniqueNameGenerator at: [ :n | n = aString ] seed: varName.
 	varName := MocoSqlPostgresqlEscaping escapeName: varName.
+	
+	label := aString.
+	(label = 'NEW') ifFalse: [ label := MocoSqlPostgresqlEscaping escapeName: label ].
 	
 	aBoolean ifFalse: [ str nextPutAll: 'NOT ' ].
 	
@@ -54,7 +54,7 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateExists: aB
 		nextPutAll: '.';
 		nextPutAll: (MocoSqlPostgresqlEscaping escapeName: (aMocoRdbColumn name));
 		nextPutAll: ' = ';
-		nextPutAll: aString;
+		nextPutAll: label;
 		nextPutAll: '.';
 		nextPutAll: (MocoSqlPostgresqlEscaping escapeName: (aMocoRdbColumn2 name));
 		nextPutAll: ')'.
@@ -187,13 +187,13 @@ MocoRdbPostgresqlOclExclusiveAssociationTransformationRule >> generateUpdateTrig
 	
 	body := String new writeStream.
 	
-	varName := MocoSqlPostgresqlEscaping escapeName: (MocoNamingUtils toShortName: (aMocoOclRdbExclusiveAssociationCondition context name)).
+	varName := MocoNamingUtils toShortName: (aMocoOclRdbExclusiveAssociationCondition context name).
 	
 	body
 	  nextPutAll: 'IF EXISTS (SELECT 1 FROM ';
 		nextPutAll: (MocoSqlPostgresqlEscaping escapeName: (aMocoOclRdbExclusiveAssociationCondition context name));
 		nextPutAll: ' ';
-		nextPutAll: varName;
+		nextPutAll: (MocoSqlPostgresqlEscaping escapeName: varName);
 		nextPutAll: ' WHERE NOT ('.
 	
 	aMocoOclRdbExclusiveAssociationCondition referencingTables do: [ :each |

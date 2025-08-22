@@ -74,10 +74,7 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateExists: aBoolea
 	str := String new writeStream.
 	
 	varName := MocoNamingUtils toShortName: (aMocoRdbTable name).
-	
-	((aString isNotEmpty) and: [ (((aString first = $`) and: [ aString last = $` ]) and: [ varName = ((aString allButFirst: 1) allButLast: 1) ]) ])
-		ifTrue: [ varName := (varName , '2') ].
-	
+	varName := MocoUniqueNameGenerator at: [ :n | n = aString ] seed: varName.
 	varName := MocoSqlMysqlEscaping escapeName: varName.
 	
 	aBoolean ifFalse: [ str nextPutAll: 'NOT ' ].
@@ -93,7 +90,12 @@ MocoRdbMysqlOclExclusiveAssociationTransformationRule >> generateExists: aBoolea
 		nextPutAll: (MocoSqlMysqlEscaping escapeName: (aMocoRdbColumn name));
 		nextPutAll: ' = '.
 	
-	aString ifNotEmpty: [ str nextPutAll: aString; nextPutAll: '.' ].
+	aString ifNotEmpty: [
+		| label |
+		label := aString.
+		(label = 'NEW') ifFalse: [ label := MocoSqlMysqlEscaping escapeName: label ].
+		str nextPutAll: label; nextPutAll: '.'
+	].
 
 	str
 		nextPutAll: (MocoSqlMysqlEscaping escapeName: (aMocoRdbColumn2 name));
