@@ -14,7 +14,7 @@ The transformation is executed in three stages:
 2. **UML to RDB.** Classes, attributes, associations, generalizations, generalization sets and enumerations are supported.
 3. **RDB to SQL.** Tables, columns, primary, unique, foreign keys and derived OCL constraints are supported.
 
-Moco supports PostgreSQL, Oracle and MySQL as the target relational database platform.
+Moco supports PostgreSQL, Oracle, Microsoft SQL Server and MySQL as the target relational database platform.
 
 === OntoUML to Alloy
 
@@ -36,7 +36,7 @@ image::docs/readme_files/openponk-2.png[]
 
 image::docs/readme_files/openponk-3.png[]
 
-For the SQL transformation, the target platform (PostgreSQL, Oracle or MySQL) can be selected in the Settings Browser.
+For the SQL transformation, the target platform (PostgreSQL, Oracle, MSSQL or MySQL) can be selected in the Settings Browser.
 
 === Manual Installation
 
