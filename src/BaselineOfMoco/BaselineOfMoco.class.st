@@ -33,9 +33,11 @@ BaselineOfMoco >> baseline: spec [
 					package: 'Moco-D2SPostgresql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlPostgresql') ];
 					package: 'Moco-SqlMysql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
 					package: 'Moco-D2SMysql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlMysql') ];
+					package: 'Moco-SqlMssql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb') ];
+					package: 'Moco-D2SMssql' with: [ spec requires: #('Moco-Core' 'Moco-Rdb' 'Moco-SqlMssql') ];
 					package: 'Moco-Alloy';
 					package: 'Moco-O2A' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-Alloy') ];
-					package: 'Moco-OpenPonk' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-O2U' 'Moco-U2D' 'Moco-D2SOracle' 'Moco-D2SPostgresql' 'Moco-D2SMysql' 'Moco-O2A') ] ];
+					package: 'Moco-OpenPonk' with: [ spec requires: #('Moco-Core' 'Moco-OntoUml' 'Moco-O2U' 'Moco-U2D' 'Moco-D2SOracle' 'Moco-D2SPostgresql' 'Moco-D2SMysql' 'Moco-D2SMssql' 'Moco-O2A') ] ];
 					package: 'Moco-OpenPonk-Tests' with: [ spec requires: #('Moco-Core-Tests' 'Moco-OpenPonk') ]
 ]
 
